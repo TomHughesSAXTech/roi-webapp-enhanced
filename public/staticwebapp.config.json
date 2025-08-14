@@ -1,10 +1,26 @@
 {
   "routes": [
     {
-      "route": "/*",
+      "route": "/.auth/*",
       "allowedRoles": ["anonymous"]
+    },
+    {
+      "route": "/favicon.ico",
+      "allowedRoles": ["anonymous"]
+    },
+    {
+      "route": "/*",
+      "allowedRoles": ["authenticated"]
     }
   ],
+  "responseOverrides": {
+    "401": {
+      "redirect": "/.auth/login/aad"
+    },
+    "403": {
+      "redirect": "/.auth/login/aad"
+    }
+  },
   "globalHeaders": {
     "X-Robots-Tag": "noindex, nofollow, nosnippet, noarchive, noimageindex"
   }

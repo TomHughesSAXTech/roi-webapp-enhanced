@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Process Automation - ROI Analysis & Pricing Model</title>
+    <title>ROI Analysis & Pricing Estimate Model - SAX Technology Advisors</title>
     <style>
         * {
             margin: 0;
@@ -296,14 +296,14 @@
         }
         
         .logo-container {
-            width: 300px;
-            height: 180px;
+            width: 400px;
+            height: 240px;
             background: transparent;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 20px;
+            margin-right: 30px;
             cursor: pointer;
             position: relative;
             overflow: hidden;
@@ -873,7 +873,7 @@
                 </div>
                 <div class="header-content">
                     <h1><span id="clientName">Your Company</span> <span id="processName">Process Name</span> Automation</h1>
-                    <p>ROI Analysis & Pricing Model - SAXTech Advisors</p>
+                    <p>ROI Analysis & Pricing Estimate Model - SAX Technology Advisors</p>
                 </div>
             </div>
             
@@ -928,6 +928,7 @@
                     <div style="margin-top: 20px;">
                         <button class="btn-update" onclick="updateCalculations()">🔄 Update All Calculations</button>
                         <button class="btn-print" onclick="printToPDF()">🖨️ Print to PDF</button>
+                        <button class="btn-update" onclick="startOverChat()" style="margin: 5px; background: #e74c3c;">🔄 Start Over Chat</button>
                     </div>
                 </div>
                 
@@ -1091,12 +1092,12 @@
                         <div class="metric-card">
                             <h3>Time Savings</h3>
                             <div class="metric-value"><span id="timeSavingsPercent">91.7</span>%</div>
-                            <div class="metric-label"><span id="timeSavingsMinutes">373</span> minutes saved per client</div>
+                            <div class="metric-label"><span id="timeSavingsMinutes">373</span> minutes saved per process</div>
                         </div>
                         <div class="metric-card">
                             <h3>Cost Savings</h3>
                             <div class="metric-value">$<span id="costSavingsPerClient">543.68</span></div>
-                            <div class="metric-label">Per client onboarded</div>
+                            <div class="metric-label">Per process instance</div>
                         </div>
                         <div class="metric-card">
                             <h3>Processing Speed</h3>
@@ -1111,7 +1112,38 @@
                     <h2 class="section-title">Implementation Cost Calculator</h2>
                     
                     <div class="config-panel">
-                        <h3>Build Your Implementation Cost</h3>
+                        <h3>🛠️ SAXTech Resource Library</h3>
+                        <p style="margin-bottom: 15px; color: #666;">Pre-configured SAXTech resources with standard rates. The chatbot can reference these when building your implementation plan.</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Resource Type</th>
+                                    <th>Role/Skill Level</th>
+                                    <th>Hourly Rate</th>
+                                    <th>Typical Tasks</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="saxTechResourcesBody">
+                                <!-- Dynamic SAXTech resources will be here -->
+                            </tbody>
+                        </table>
+                        <button class="btn-add" onclick="addSAXTechResource()">+ Add SAXTech Resource</button>
+                    </div>
+                    
+                    <div class="config-panel" style="margin-top: 20px;">
+                        <h3>📋 Build Your Implementation Cost</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-weight: 600; margin-right: 10px;">Quick Add SAXTech Resource:</label>
+                            <select id="saxTechResourceSelector" onchange="addResourceToImplementation()" style="margin-right: 10px;">
+                                <option value="">Select a SAXTech resource...</option>
+                                <!-- Dynamic options will be populated -->
+                            </select>
+                            <input type="number" id="resourceHours" placeholder="Hours" style="width: 80px; margin-right: 10px;">
+                            <button class="btn-add" onclick="addSelectedResource()">Add to Project</button>
+                        </div>
+                        
                         <table>
                             <thead>
                                 <tr>
@@ -1119,6 +1151,7 @@
                                     <th>Hours</th>
                                     <th>Rate</th>
                                     <th>Cost</th>
+                                    <th>Resource Type</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -1126,7 +1159,7 @@
                                 <!-- Dynamic implementation costs will be here -->
                             </tbody>
                         </table>
-                        <button class="btn-add" onclick="addImplementationComponent()">+ Add Component</button>
+                        <button class="btn-add" onclick="addImplementationComponent()">+ Add Custom Component</button>
                     </div>
                 </div>
                 
@@ -1157,6 +1190,10 @@
                                 <label>Contract Length (months):</label>
                                 <input type="number" id="contractLength" value="24" onchange="updateCalculations()">
                             </div>
+                            <div class="config-item">
+                                <label>Infrastructure Management Markup (%):</label>
+                                <input type="number" id="infrastructureMarkup" value="20" step="1" onchange="updateCalculations()">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1171,9 +1208,9 @@
                             <thead>
                                 <tr>
                                     <th>Add-on Service</th>
-                                    <th>Pricing Model</th>
+                                    <th>Frequency</th>
                                     <th>Amount</th>
-                                    <th>Unit</th>
+                                    <th>Description</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -1200,19 +1237,19 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Clients Processed Per Month</td>
+                                <td>Instances Processed Per Month</td>
                                 <td><span id="monthlyVolumeManual">20</span></td>
                                 <td><span id="monthlyVolumeAuto">20</span></td>
                                 <td>-</td>
                             </tr>
                             <tr>
-                                <td>Annual Client Volume</td>
+                                <td>Annual Instance Volume</td>
                                 <td><span id="annualVolumeManual">240</span></td>
                                 <td><span id="annualVolumeAuto">240</span></td>
                                 <td>-</td>
                             </tr>
                             <tr>
-                                <td>Time Per Client</td>
+                                <td>Time Per Instance</td>
                                 <td><span id="hoursPerClientManual">6.67</span> hours</td>
                                 <td><span id="hoursPerClientAuto">0.45</span> hours</td>
                                 <td><span id="hoursPerClientSaved">6.22</span> hours</td>
@@ -1224,7 +1261,7 @@
                                 <td class="savings"><span id="annualHoursSaved">1,492</span> hours saved</td>
                             </tr>
                             <tr>
-                                <td>Cost Per Client</td>
+                                <td>Cost Per Instance</td>
                                 <td>$<span id="costPerClientManual">593.32</span></td>
                                 <td>$<span id="costPerClientAuto">49.64</span></td>
                                 <td>$<span id="costPerClientSaved">543.68</span></td>
@@ -1267,9 +1304,53 @@
                     </div>
                 </div>
                 
+                <!-- Project Timeline -->
+                <div class="section">
+                    <h2 class="section-title">4. Project Timeline & Deliverables</h2>
+                    
+                    <div class="config-panel">
+                        <h3>📅 Implementation Timeline</h3>
+                        <p style="margin-bottom: 15px; color: #666;">Define project phases, durations, activities, and deliverables. The chatbot can help populate these based on your requirements.</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Phase</th>
+                                    <th>Duration (Weeks)</th>
+                                    <th>Key Activities</th>
+                                    <th>Deliverables</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="timelineBody">
+                                <!-- Dynamic timeline phases will be here -->
+                            </tbody>
+                        </table>
+                        <button class="btn-add" onclick="addTimelinePhase()">+ Add Phase</button>
+                        
+                        <div class="timeline-summary" style="margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px;">
+                            <h4>Timeline Summary</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
+                                <div>
+                                    <strong>Total Duration:</strong> <span id="totalDuration">8</span> weeks
+                                </div>
+                                <div>
+                                    <strong>Total Phases:</strong> <span id="totalPhases">4</span> phases
+                                </div>
+                                <div>
+                                    <strong>Project Start:</strong> <span id="projectStart">TBD</span>
+                                </div>
+                                <div>
+                                    <strong>Go-Live Date:</strong> <span id="goLiveDate">TBD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- SAXTech Pricing Model -->
                 <div class="section">
-                    <h2 class="section-title">4. SAXTech Pricing Recommendation</h2>
+                    <h2 class="section-title">5. SAXTech Pricing Recommendation</h2>
                     
                     <div class="pricing-options">
                         <div class="pricing-card">
@@ -1315,9 +1396,81 @@
                     </div>
                 </div>
                 
+                <!-- Competitive Pricing Analysis -->
+                <div class="section">
+                    <h2 class="section-title">6. Competitive Pricing Analysis</h2>
+                    
+                    <div class="config-panel">
+                        <h3>💰 Market Comparison</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Solution Provider</th>
+                                    <th>Implementation</th>
+                                    <th>Monthly Cost</th>
+                                    <th>Annual TCO (Y1)</th>
+                                    <th>Pros/Cons</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="competitiveAnalysisBody">
+                                <!-- Dynamic competitive analysis will be here -->
+                            </tbody>
+                        </table>
+                        <button class="btn-add" onclick="addCompetitor()">+ Add Competitor</button>
+                        
+                        <div class="competitive-summary" style="margin-top: 20px; padding: 20px; background: #d4edda; border-radius: 8px;">
+                            <h4>🎯 Why SAXTech's Pricing is Optimal:</h4>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong id="costComparison">33% of Big 4 cost</strong> with better customization</li>
+                                <li>Includes advanced AI capabilities competitors lack</li>
+                                <li>Fixed monthly pricing provides budget certainty</li>
+                                <li>Local support with industry expertise</li>
+                                <li>Proven n8n platform with enterprise reliability</li>
+                                <li>Comprehensive automation beyond basic workflow tools</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Risk Mitigation -->
+                <div class="section">
+                    <h2 class="section-title">7. Risk Mitigation & Success Factors</h2>
+                    
+                    <div class="config-panel">
+                        <h3>⚠️ Risk Assessment & Mitigation Strategies</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Risk Factor</th>
+                                    <th>Probability</th>
+                                    <th>Impact</th>
+                                    <th>Mitigation Strategy</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="riskMitigationBody">
+                                <!-- Dynamic risk mitigation will be here -->
+                            </tbody>
+                        </table>
+                        <button class="btn-add" onclick="addRiskFactor()">+ Add Risk Factor</button>
+                        
+                        <div class="success-factors" style="margin-top: 20px; padding: 20px; background: #e7f3ff; border-radius: 8px;">
+                            <h4>✅ Critical Success Factors:</h4>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>Executive Sponsorship:</strong> Clear leadership commitment and communication</li>
+                                <li><strong>Change Management:</strong> Comprehensive training and phased user adoption</li>
+                                <li><strong>Technical Excellence:</strong> Thorough testing, monitoring, and quality assurance</li>
+                                <li><strong>Ongoing Support:</strong> Regular optimization and responsive technical support</li>
+                                <li><strong>Clear Metrics:</strong> Defined KPIs and regular progress measurement</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- ROI Calculation -->
                 <div class="section">
-                    <h2 class="section-title">5. Return on Investment Analysis</h2>
+                    <h2 class="section-title">8. Return on Investment Analysis</h2>
                     
                     <table>
                         <thead>
@@ -1413,13 +1566,13 @@
                     <div class="note">
                         <strong>Additional Qualitative Benefits:</strong>
                         <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li><strong>Client Experience:</strong> Faster onboarding, digital consent, real-time updates</li>
-                            <li><strong>Data Quality:</strong> AI validation reduces errors and ensures completeness</li>
-                            <li><strong>Compliance:</strong> Automated conflict checks and risk assessments</li>
-                            <li><strong>Scalability:</strong> Can handle 10x volume without additional staff</li>
-                            <li><strong>Partner Time:</strong> Frees up <span id="partnerHoursFreed">240</span> hours/year of partner time for billable work</li>
-                            <li><strong>Staff Satisfaction:</strong> Eliminates repetitive manual data entry</li>
-                            <li><strong>Audit Trail:</strong> Complete digital documentation of all processes</li>
+                            <li><strong>Customer Experience:</strong> Faster processing times, digital interactions, real-time status updates</li>
+                            <li><strong>Data Quality:</strong> AI validation reduces errors and ensures data completeness and accuracy</li>
+                            <li><strong>Compliance & Risk:</strong> Automated validation checks and consistent risk assessment procedures</li>
+                            <li><strong>Scalability:</strong> Can handle 10x current volume without proportional staff increases</li>
+                            <li><strong>Senior Staff Time:</strong> Frees up <span id="partnerHoursFreed">240</span> hours/year of senior staff time for high-value activities</li>
+                            <li><strong>Staff Satisfaction:</strong> Eliminates repetitive manual tasks and reduces human error stress</li>
+                            <li><strong>Audit Trail:</strong> Complete digital documentation and process transparency</li>
                         </ul>
                     </div>
                 </div>
@@ -1515,17 +1668,91 @@
             { name: "Backup & Disaster Recovery", monthly: 25, notes: "Azure Backup services" }
         ];
         
+        // SAXTech Resource Library - predefined resources with rates and capabilities
+        let saxTechResources = [
+            { 
+                type: "Senior Solution Architect", 
+                role: "Principal", 
+                rate: 225, 
+                tasks: "Solution design, technical leadership, client workshops",
+                expertise: "Enterprise architecture, AI strategy, complex integrations"
+            },
+            { 
+                type: "Solution Architect", 
+                role: "Senior", 
+                rate: 175, 
+                tasks: "Technical analysis, solution design, architecture documentation",
+                expertise: "Business analysis, workflow design, system integration"
+            },
+            { 
+                type: "Senior Developer", 
+                role: "Senior", 
+                rate: 150, 
+                tasks: "Core development, API integrations, automation workflows",
+                expertise: "Full-stack development, Azure, automation platforms"
+            },
+            { 
+                type: "AI Specialist", 
+                role: "Senior", 
+                rate: 175, 
+                tasks: "AI agent configuration, prompt engineering, model optimization",
+                expertise: "OpenAI, Azure AI, natural language processing"
+            },
+            { 
+                type: "DevOps Engineer", 
+                role: "Mid", 
+                rate: 140, 
+                tasks: "Azure setup, CI/CD, monitoring, deployment automation",
+                expertise: "Azure cloud, Kubernetes, infrastructure as code"
+            },
+            { 
+                type: "QA Engineer", 
+                role: "Mid", 
+                rate: 125, 
+                tasks: "Testing, quality assurance, user acceptance testing",
+                expertise: "Automated testing, manual testing, test planning"
+            },
+            { 
+                type: "Technical Writer", 
+                role: "Mid", 
+                rate: 125, 
+                tasks: "Documentation, user guides, training materials",
+                expertise: "Technical documentation, user experience, training design"
+            },
+            { 
+                type: "Project Manager", 
+                role: "Senior", 
+                rate: 165, 
+                tasks: "Project coordination, stakeholder management, delivery oversight",
+                expertise: "Agile methodology, client communication, risk management"
+            },
+            { 
+                type: "Junior Developer", 
+                role: "Junior", 
+                rate: 95, 
+                tasks: "Support development, testing assistance, documentation",
+                expertise: "Basic development, testing, documentation support"
+            },
+            { 
+                type: "UI/UX Designer", 
+                role: "Mid", 
+                rate: 135, 
+                tasks: "User interface design, user experience optimization",
+                expertise: "Web design, user research, prototyping"
+            }
+        ];
+        
         let implementationComponents = [
-            { name: "Discovery & Business Analysis", hours: 40, rate: 175 },
-            { name: "Solution Architecture & Design", hours: 60, rate: 175 },
-            { name: "Core Automation Development", hours: 80, rate: 150 },
-            { name: "API Integration Development", hours: 60, rate: 150 },
-            { name: "AI Agent Configuration", hours: 30, rate: 175 },
-            { name: "Web Forms & Portal Development", hours: 40, rate: 150 },
-            { name: "Azure Environment Setup", hours: 25, rate: 150 },
-            { name: "Testing & Quality Assurance", hours: 40, rate: 125 },
-            { name: "User Training & Documentation", hours: 20, rate: 125 },
-            { name: "Deployment & Go-Live Support", hours: 15, rate: 150 }
+            { name: "Discovery & Business Analysis", hours: 40, rate: 175, resourceType: "Solution Architect" },
+            { name: "Solution Architecture & Design", hours: 60, rate: 175, resourceType: "Solution Architect" },
+            { name: "Core Automation Development", hours: 80, rate: 150, resourceType: "Senior Developer" },
+            { name: "API Integration Development", hours: 60, rate: 150, resourceType: "Senior Developer" },
+            { name: "AI Agent Configuration", hours: 30, rate: 175, resourceType: "AI Specialist" },
+            { name: "Web Forms & Portal Development", hours: 40, rate: 150, resourceType: "Senior Developer" },
+            { name: "Azure Environment Setup", hours: 25, rate: 140, resourceType: "DevOps Engineer" },
+            { name: "Testing & Quality Assurance", hours: 40, rate: 125, resourceType: "QA Engineer" },
+            { name: "User Training & Documentation", hours: 20, rate: 125, resourceType: "Technical Writer" },
+            { name: "Deployment & Go-Live Support", hours: 15, rate: 150, resourceType: "Senior Developer" }
         ];
         
         let monthlyServiceComponents = [
@@ -1537,11 +1764,117 @@
         ];
         
         let customAddons = [
-            { name: "Additional Integration", model: "Per API", amount: 2500, unit: "one-time" },
-            { name: "Custom Reporting Dashboard", model: "Fixed Price", amount: 5000, unit: "one-time" },
-            { name: "Extra Support Hours", model: "Hourly Rate", amount: 125, unit: "per hour" },
-            { name: "Advanced AI Features", model: "Monthly Add-on", amount: 500, unit: "per month" },
-            { name: "White-label Portal", model: "Setup + Monthly", amount: 3000, unit: "setup + $200/mo" }
+            { name: "Additional Integration", frequency: "one-time", amount: 2500, unit: "per API integration" },
+            { name: "Custom Reporting Dashboard", frequency: "one-time", amount: 5000, unit: "complete dashboard" },
+            { name: "Extra Support Hours", frequency: "monthly", amount: 125, unit: "per additional hour" },
+            { name: "Advanced AI Features", frequency: "monthly", amount: 500, unit: "AI add-on package" },
+            { name: "White-label Portal", frequency: "one-time", amount: 3000, unit: "portal customization" }
+        ];
+        
+        // Project Timeline data
+        let timelinePhases = [
+            {
+                phase: "Discovery & Planning",
+                duration: 2,
+                activities: "Requirements gathering, stakeholder interviews, current state analysis, solution design",
+                deliverables: "Requirements document, technical architecture, project plan, SOW approval"
+            },
+            {
+                phase: "Development & Configuration",
+                duration: 4,
+                activities: "Core automation development, API integrations, AI agent setup, user interface creation",
+                deliverables: "Functional automation workflows, integrated systems, AI agents, web portals"
+            },
+            {
+                phase: "Testing & Training",
+                duration: 1.5,
+                activities: "System testing, user acceptance testing, staff training, documentation creation",
+                deliverables: "Tested system, trained users, user guides, technical documentation"
+            },
+            {
+                phase: "Deployment & Go-Live",
+                duration: 0.5,
+                activities: "Production deployment, go-live support, monitoring setup, hypercare period start",
+                deliverables: "Live production system, monitoring dashboards, support procedures"
+            }
+        ];
+        
+        // Competitive Analysis data
+        let competitiveAnalysis = [
+            {
+                provider: "SAXTech (Proposed)",
+                implementation: 0, // Will be calculated dynamically
+                monthly: 0, // Will be calculated dynamically
+                annual: 0, // Will be calculated dynamically
+                proscons: "✓ Custom fit\n✓ AI-powered\n✓ Full support\n✓ Fixed pricing",
+                isSAXTech: true
+            },
+            {
+                provider: "Big 4 Consulting",
+                implementation: 150000,
+                monthly: 5000,
+                annual: 210000,
+                proscons: "✗ Expensive\n✗ Generic solution\n✗ Long timelines\n✗ Limited AI",
+                isSAXTech: false
+            },
+            {
+                provider: "Offshore Development",
+                implementation: 15000,
+                monthly: 500,
+                annual: 21000,
+                proscons: "✗ Quality risks\n✗ No AI integration\n✗ Communication barriers\n✗ Limited support",
+                isSAXTech: false
+            },
+            {
+                provider: "In-House Development",
+                implementation: 75000,
+                monthly: 3500,
+                annual: 117000,
+                proscons: "✗ Resource intensive\n✗ Ongoing maintenance\n✗ Limited expertise\n✗ Opportunity cost",
+                isSAXTech: false
+            },
+            {
+                provider: "SaaS Platform",
+                implementation: 5000,
+                monthly: 3000,
+                annual: 41000,
+                proscons: "✗ Limited customization\n✗ No AI features\n✗ Generic workflows\n✗ Data limitations",
+                isSAXTech: false
+            }
+        ];
+        
+        // Risk Mitigation data
+        let riskFactors = [
+            {
+                risk: "API Changes",
+                probability: "Low",
+                impact: "Medium",
+                mitigation: "Monthly monitoring, version control, rapid response team, fallback procedures"
+            },
+            {
+                risk: "User Adoption",
+                probability: "Medium",
+                impact: "High",
+                mitigation: "Comprehensive training, change management, phased rollout, ongoing support"
+            },
+            {
+                risk: "System Downtime",
+                probability: "Low",
+                impact: "High",
+                mitigation: "99.5% SLA, redundancy, manual fallback procedures, 24/7 monitoring"
+            },
+            {
+                risk: "Data Security",
+                probability: "Low",
+                impact: "Critical",
+                mitigation: "Azure security, encryption, regular audits, compliance frameworks"
+            },
+            {
+                risk: "Integration Issues",
+                probability: "Medium",
+                impact: "Medium",
+                mitigation: "Thorough testing, sandbox environment, rollback plans, expert support"
+            }
         ];
         
         let selectedAIModel = 'gpt4-mini';
@@ -1752,6 +2085,11 @@
                     updateQuickActions(data.suggestions);
                 }
                 
+                // Handle PDF generation
+                if (data.generatePDF) {
+                    await generateAndDownloadPDF(data.generatePDF);
+                }
+                
             } catch (error) {
                 console.error('Webhook error:', error);
                 addMessage('assistant', "I'm having trouble connecting to my analysis engine. Let me help you locally for now. " + await getLocalResponse(message));
@@ -1778,6 +2116,30 @@
             
             if (msg.includes('process') || msg.includes('step') || msg.includes('workflow')) {
                 return "Let me help you map out your current process. Can you walk me through the main steps in your current manual process? Start with step 1 and tell me who does it and roughly how long it takes. For example: '1. Partner reviews new client inquiry (10 minutes)'";
+            }
+            
+            if (msg.includes('implementation') || msg.includes('resource') || msg.includes('team') || msg.includes('who will')) {
+                const resourceList = saxTechResources.map(r => `${r.type} ($${r.rate}/hr)`).join(', ');
+                return `I can help you plan the implementation team and costs. SAXTech has these resources available: ${resourceList}. What type of complexity do you expect for your automation project? This will help me recommend the right mix of resources and estimate hours.`;
+            }
+            
+            if (msg.includes('timeline') || msg.includes('schedule') || msg.includes('duration') || msg.includes('when')) {
+                const totalWeeks = timelinePhases.reduce((sum, phase) => sum + phase.duration, 0);
+                return `I can help you plan the project timeline. Currently, the estimated timeline is ${totalWeeks} weeks across ${timelinePhases.length} phases. What are your target dates or any specific timeline constraints for this project?`;
+            }
+            
+            if (msg.includes('competitor') || msg.includes('pricing') || msg.includes('compare') || msg.includes('alternative')) {
+                return `I can help you understand how SAXTech compares to other solutions. We've analyzed several alternatives including Big 4 consulting, offshore development, in-house development, and SaaS platforms. What specific aspects would you like me to compare - pricing, capabilities, timeline, or support?`;
+            }
+            
+            if (msg.includes('pdf') || msg.includes('generate') || msg.includes('download') || msg.includes('document')) {
+                // Generate professional SAXTech SOW PDF
+                setTimeout(() => {
+                    const currentState = getCurrentROIState();
+                    const pdfData = generatePDFData(currentState);
+                    generateAndDownloadPDF(pdfData);
+                }, 500);
+                return "I'll generate a comprehensive Statement of Work PDF using the professional SAXTech template. This will include all your ROI calculations, implementation plan, investment summary, and executive recommendations.";
             }
             
             if (msg.includes('cost') || msg.includes('calculate') || msg.includes('money')) {
@@ -1821,9 +2183,13 @@
                 automatedSteps: automatedSteps,
                 selectedAIModel: selectedAIModel,
                 operatingCosts: operatingCosts,
+                saxTechResources: saxTechResources,
                 implementationComponents: implementationComponents,
                 monthlyServiceComponents: monthlyServiceComponents,
-                customAddons: customAddons
+                customAddons: customAddons,
+                timelinePhases: timelinePhases,
+                competitiveAnalysis: competitiveAnalysis,
+                riskFactors: riskFactors
             };
         }
         
@@ -2393,6 +2759,101 @@
             updateCalculations();
         }
         
+        // SAXTech Resources functions
+        function renderSAXTechResources() {
+            const tbody = document.getElementById('saxTechResourcesBody');
+            tbody.innerHTML = '';
+            
+            saxTechResources.forEach((resource, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="text" value="${resource.type}" onchange="updateSAXTechResource(${index}, 'type', this.value)"></td>
+                    <td><input type="text" value="${resource.role}" onchange="updateSAXTechResource(${index}, 'role', this.value)"></td>
+                    <td>$<input type="number" value="${resource.rate}" onchange="updateSAXTechResource(${index}, 'rate', this.value)"></td>
+                    <td><input type="text" value="${resource.tasks}" onchange="updateSAXTechResource(${index}, 'tasks', this.value)"></td>
+                    <td><button class="btn-remove" onclick="removeSAXTechResource(${index})">Remove</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Update the resource selector dropdown
+            updateResourceSelector();
+        }
+        
+        function updateResourceSelector() {
+            const selector = document.getElementById('saxTechResourceSelector');
+            if (selector) {
+                selector.innerHTML = '<option value="">Select a SAXTech resource...</option>';
+                saxTechResources.forEach((resource, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `${resource.type} (${resource.role}) - $${resource.rate}/hr`;
+                    selector.appendChild(option);
+                });
+            }
+        }
+        
+        function addSAXTechResource() {
+            saxTechResources.push({ 
+                type: "New Resource Type", 
+                role: "Mid", 
+                rate: 150, 
+                tasks: "Define tasks for this resource",
+                expertise: "Define expertise areas"
+            });
+            renderSAXTechResources();
+        }
+        
+        function updateSAXTechResource(index, field, value) {
+            if (field === 'rate') {
+                saxTechResources[index][field] = parseFloat(value) || 0;
+            } else {
+                saxTechResources[index][field] = value;
+            }
+            renderSAXTechResources();
+            renderImplementationCosts(); // Re-render in case any existing components reference this resource
+        }
+        
+        function removeSAXTechResource(index) {
+            if (saxTechResources.length > 1) {
+                saxTechResources.splice(index, 1);
+                renderSAXTechResources();
+            } else {
+                alert('Cannot remove the last SAXTech resource.');
+            }
+        }
+        
+        function addSelectedResource() {
+            const selector = document.getElementById('saxTechResourceSelector');
+            const hoursInput = document.getElementById('resourceHours');
+            
+            const resourceIndex = parseInt(selector.value);
+            const hours = parseFloat(hoursInput.value) || 0;
+            
+            if (resourceIndex >= 0 && hours > 0) {
+                const resource = saxTechResources[resourceIndex];
+                const componentName = `${resource.type} - ${resource.tasks.split(',')[0].trim()}`;
+                
+                implementationComponents.push({
+                    name: componentName,
+                    hours: hours,
+                    rate: resource.rate,
+                    resourceType: resource.type
+                });
+                
+                renderImplementationCosts();
+                updateCalculations();
+                
+                // Reset form
+                selector.value = '';
+                hoursInput.value = '';
+                
+                addMessage('system', `Added ${hours} hours of ${resource.type} to implementation plan.`);
+            } else {
+                alert('Please select a resource and enter hours.');
+            }
+        }
+        
         // Implementation costs functions
         function renderImplementationCosts() {
             const tbody = document.getElementById('implementationCostsBody');
@@ -2406,12 +2867,15 @@
                 totalHours += comp.hours;
                 totalCost += cost;
                 
+                const resourceType = comp.resourceType || 'Custom';
+                
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><input type="text" value="${comp.name}" onchange="updateImplementationComponent(${index}, 'name', this.value)"></td>
                     <td><input type="number" value="${comp.hours}" onchange="updateImplementationComponent(${index}, 'hours', this.value)"></td>
                     <td>$<input type="number" value="${comp.rate}" onchange="updateImplementationComponent(${index}, 'rate', this.value)"></td>
-                    <td>${cost.toLocaleString()}</td>
+                    <td>$${cost.toLocaleString()}</td>
+                    <td><span style="font-size: 0.9em; color: #666;">${resourceType}</span></td>
                     <td><button class="btn-remove" onclick="removeImplementationComponent(${index})">Remove</button></td>
                 `;
                 tbody.appendChild(row);
@@ -2452,7 +2916,7 @@
         }
         
         function addImplementationComponent() {
-            implementationComponents.push({ name: "New Component", hours: 20, rate: 150 });
+            implementationComponents.push({ name: "New Component", hours: 20, rate: 150, resourceType: "Custom" });
             renderImplementationCosts();
             updateCalculations();
         }
@@ -2497,20 +2961,63 @@
                 tbody.appendChild(row);
             });
             
+            // Add operating costs with markup section
+            let operatingTotal = 0;
+            operatingCosts.forEach(cost => {
+                operatingTotal += cost.monthly;
+            });
+            
+            // Add AI costs
+            const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
+            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
+            operatingTotal += aiCostPerProcess * monthlyVolume;
+            
+            // Add operating costs with dynamic markup
+            const markupPercent = parseFloat(document.getElementById('infrastructureMarkup').value) || 20;
+            const infrastructureCost = Math.round(operatingTotal * (1 + markupPercent / 100));
+            
+            const infraRow = document.createElement('tr');
+            infraRow.style.backgroundColor = '#f0f8ff';
+            infraRow.innerHTML = `
+                <td>Infrastructure Management (${markupPercent}% markup)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>${infrastructureCost.toLocaleString()}</td>
+                <td><span style="font-size: 0.85em; color: #666;">Includes AI + hosting costs</span></td>
+            `;
+            tbody.appendChild(infraRow);
+            totalCost += infrastructureCost;
+            
+            // Add monthly custom add-ons
+            customAddons.forEach((addon, index) => {
+                if (addon.frequency === 'monthly') {
+                    const addonRow = document.createElement('tr');
+                    addonRow.style.backgroundColor = '#f8f9fa';
+                    addonRow.innerHTML = `
+                        <td>${addon.name} (Monthly Add-on)</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>${addon.amount.toLocaleString()}</td>
+                        <td><span style="font-size: 0.85em; color: #666;">${addon.unit}</span></td>
+                    `;
+                    tbody.appendChild(addonRow);
+                    totalCost += addon.amount;
+                }
+            });
+            
             // Add total row
             const totalRow = document.createElement('tr');
             totalRow.className = 'highlight';
             totalRow.innerHTML = `
-                <td><strong>Total Monthly Service</strong></td>
+                <td><strong>Total Monthly Service Fee</strong></td>
                 <td><strong>${totalHours}</strong></td>
                 <td></td>
-                <td><strong>${totalCost.toLocaleString()}</strong></td>
+                <td><strong>$${totalCost.toLocaleString()}</strong></td>
                 <td></td>
             `;
             tbody.appendChild(totalRow);
             
-            // Update display
-            document.getElementById('displayMonthlyFee').textContent = totalCost.toLocaleString();
+            // Update display with calculated total (don't override here since updateCalculations will handle it)
         }
         
         function addMonthlyServiceComponent() {
@@ -2545,7 +3052,12 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><input type="text" value="${addon.name}" onchange="updateCustomAddon(${index}, 'name', this.value)"></td>
-                    <td><input type="text" value="${addon.model}" onchange="updateCustomAddon(${index}, 'model', this.value)"></td>
+                    <td>
+                        <select onchange="updateCustomAddon(${index}, 'frequency', this.value)">
+                            <option value="one-time" ${addon.frequency === 'one-time' ? 'selected' : ''}>One-time</option>
+                            <option value="monthly" ${addon.frequency === 'monthly' ? 'selected' : ''}>Monthly</option>
+                        </select>
+                    </td>
                     <td>$<input type="number" value="${addon.amount}" onchange="updateCustomAddon(${index}, 'amount', this.value)"></td>
                     <td><input type="text" value="${addon.unit}" onchange="updateCustomAddon(${index}, 'unit', this.value)"></td>
                     <td><button class="btn-remove" onclick="removeCustomAddon(${index})">Remove</button></td>
@@ -2555,14 +3067,16 @@
             
             // Update add-ons list in pricing section
             const addonsList = document.getElementById('addonsList');
-            addonsList.innerHTML = customAddons.map(addon => 
-                `<li><strong>${addon.name}:</strong> ${addon.amount.toLocaleString()} ${addon.unit}</li>`
-            ).join('');
+            addonsList.innerHTML = customAddons.map(addon => {
+                const frequency = addon.frequency === 'monthly' ? '/month' : ' one-time';
+                return `<li><strong>${addon.name}:</strong> $${addon.amount.toLocaleString()}${frequency}</li>`;
+            }).join('');
         }
         
         function addCustomAddon() {
-            customAddons.push({ name: "New Add-on", model: "Fixed Price", amount: 1000, unit: "one-time" });
+            customAddons.push({ name: "New Add-on", frequency: "one-time", amount: 1000, unit: "description" });
             renderCustomAddons();
+            updateCalculations();
         }
         
         function updateCustomAddon(index, field, value) {
@@ -2572,11 +3086,13 @@
                 customAddons[index][field] = value;
             }
             renderCustomAddons();
+            updateCalculations();
         }
         
         function removeCustomAddon(index) {
             customAddons.splice(index, 1);
             renderCustomAddons();
+            updateCalculations();
         }
         
         // AI pricing functions
@@ -2643,6 +3159,22 @@
             renderAutomatedSteps();
             renderOperatingCosts();
             updateCalculations();
+        }
+        
+        // Update competitive analysis when calculations change
+        function updateCompetitiveAnalysis() {
+            // Find and update SAXTech row
+            const saxTechIndex = competitiveAnalysis.findIndex(c => c.isSAXTech);
+            if (saxTechIndex >= 0) {
+                const implementation = calculateImplementationCost();
+                const monthly = calculateMonthlyServiceFee();
+                const annual = implementation + (monthly * 12) + calculateAnnualOperatingCosts();
+                
+                competitiveAnalysis[saxTechIndex].implementation = implementation;
+                competitiveAnalysis[saxTechIndex].monthly = monthly;
+                competitiveAnalysis[saxTechIndex].annual = annual;
+            }
+            renderCompetitiveAnalysis();
         }
         
         // Main calculation function
@@ -2751,6 +3283,8 @@
             
             // Update displays
             document.getElementById('displayContractLength').textContent = contractLength;
+            document.getElementById('displayMonthlyFee').textContent = monthlyServiceFee.toLocaleString();
+            document.getElementById('displayImplementationCost').textContent = implementationCost.toLocaleString();
             document.getElementById('formulaLaborSavings').textContent = annualCostSaved.toLocaleString();
             document.getElementById('formulaOperatingCosts').textContent = totalOperatingCosts.toFixed(0);
             document.getElementById('formulaMonthlyService').textContent = monthlyServiceFee.toLocaleString();
@@ -2828,6 +3362,263 @@
             document.getElementById('execTimeReduction').textContent = timeSavingsPercent;
             document.getElementById('execPartnerHours').textContent = partnerHoursFreed;
             document.getElementById('execContractLength').textContent = contractLength;
+            
+            // Update competitive analysis with new calculations
+            updateCompetitiveAnalysis();
+        }
+        
+        // Timeline management functions
+        function renderTimeline() {
+            const tbody = document.getElementById('timelineBody');
+            tbody.innerHTML = '';
+            
+            let totalDuration = 0;
+            
+            timelinePhases.forEach((phase, index) => {
+                totalDuration += phase.duration;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="text" value="${phase.phase}" onchange="updateTimelinePhase(${index}, 'phase', this.value)"></td>
+                    <td><input type="number" step="0.5" value="${phase.duration}" onchange="updateTimelinePhase(${index}, 'duration', this.value)"></td>
+                    <td><textarea style="min-height: 60px;" onchange="updateTimelinePhase(${index}, 'activities', this.value)">${phase.activities}</textarea></td>
+                    <td><textarea style="min-height: 60px;" onchange="updateTimelinePhase(${index}, 'deliverables', this.value)">${phase.deliverables}</textarea></td>
+                    <td><button class="btn-remove" onclick="removeTimelinePhase(${index})">Remove</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Update summary
+            document.getElementById('totalDuration').textContent = totalDuration;
+            document.getElementById('totalPhases').textContent = timelinePhases.length;
+        }
+        
+        function addTimelinePhase() {
+            timelinePhases.push({
+                phase: "New Phase",
+                duration: 1,
+                activities: "Define activities for this phase",
+                deliverables: "Define deliverables for this phase"
+            });
+            renderTimeline();
+        }
+        
+        function updateTimelinePhase(index, field, value) {
+            if (field === 'duration') {
+                timelinePhases[index][field] = parseFloat(value) || 0;
+            } else {
+                timelinePhases[index][field] = value;
+            }
+            renderTimeline();
+        }
+        
+        function removeTimelinePhase(index) {
+            if (timelinePhases.length > 1) {
+                timelinePhases.splice(index, 1);
+                renderTimeline();
+            } else {
+                alert('Cannot remove the last timeline phase.');
+            }
+        }
+        
+        // Competitive Analysis functions
+        function renderCompetitiveAnalysis() {
+            const tbody = document.getElementById('competitiveAnalysisBody');
+            tbody.innerHTML = '';
+            
+            competitiveAnalysis.forEach((competitor, index) => {
+                let implementation = competitor.implementation;
+                let monthly = competitor.monthly;
+                let annual = competitor.annual;
+                
+                // Update SAXTech row with calculated values
+                if (competitor.isSAXTech) {
+                    implementation = calculateImplementationCost();
+                    monthly = calculateMonthlyServiceFee();
+                    annual = implementation + (monthly * 12) + calculateAnnualOperatingCosts();
+                    
+                    // Update the stored values
+                    competitiveAnalysis[index].implementation = implementation;
+                    competitiveAnalysis[index].monthly = monthly;
+                    competitiveAnalysis[index].annual = annual;
+                }
+                
+                const row = document.createElement('tr');
+                row.className = competitor.isSAXTech ? 'highlight' : '';
+                row.innerHTML = `
+                    <td><strong>${competitor.provider}</strong></td>
+                    <td>$${implementation.toLocaleString()}</td>
+                    <td>$${monthly.toLocaleString()}</td>
+                    <td>$${annual.toLocaleString()}</td>
+                    <td><textarea style="min-height: 80px; white-space: pre-line;" onchange="updateCompetitor(${index}, 'proscons', this.value)" ${competitor.isSAXTech ? 'readonly' : ''}>${competitor.proscons}</textarea></td>
+                    <td>${competitor.isSAXTech ? '<span style="color: #666;">SAXTech</span>' : `<button class="btn-remove" onclick="removeCompetitor(${index})">Remove</button>`}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Update cost comparison
+            const saxTechAnnual = competitiveAnalysis.find(c => c.isSAXTech)?.annual || 0;
+            const big4Annual = competitiveAnalysis.find(c => c.provider.includes('Big 4'))?.annual || 210000;
+            const percentage = big4Annual > 0 ? Math.round((saxTechAnnual / big4Annual) * 100) : 33;
+            document.getElementById('costComparison').textContent = `${percentage}% of Big 4 cost`;
+        }
+        
+        function addCompetitor() {
+            competitiveAnalysis.push({
+                provider: "New Competitor",
+                implementation: 50000,
+                monthly: 2000,
+                annual: 74000,
+                proscons: "✓ Add pros\n✗ Add cons",
+                isSAXTech: false
+            });
+            renderCompetitiveAnalysis();
+        }
+        
+        function updateCompetitor(index, field, value) {
+            if (!competitiveAnalysis[index].isSAXTech) {
+                if (field === 'implementation' || field === 'monthly') {
+                    const numValue = parseFloat(value) || 0;
+                    competitiveAnalysis[index][field] = numValue;
+                    // Recalculate annual
+                    competitiveAnalysis[index].annual = competitiveAnalysis[index].implementation + (competitiveAnalysis[index].monthly * 12);
+                } else {
+                    competitiveAnalysis[index][field] = value;
+                }
+                renderCompetitiveAnalysis();
+            }
+        }
+        
+        function removeCompetitor(index) {
+            if (!competitiveAnalysis[index].isSAXTech) {
+                competitiveAnalysis.splice(index, 1);
+                renderCompetitiveAnalysis();
+            }
+        }
+        
+        // Risk Mitigation functions
+        function renderRiskMitigation() {
+            const tbody = document.getElementById('riskMitigationBody');
+            tbody.innerHTML = '';
+            
+            riskFactors.forEach((risk, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="text" value="${risk.risk}" onchange="updateRiskFactor(${index}, 'risk', this.value)"></td>
+                    <td>
+                        <select onchange="updateRiskFactor(${index}, 'probability', this.value)">
+                            <option value="Low" ${risk.probability === 'Low' ? 'selected' : ''}>Low</option>
+                            <option value="Medium" ${risk.probability === 'Medium' ? 'selected' : ''}>Medium</option>
+                            <option value="High" ${risk.probability === 'High' ? 'selected' : ''}>High</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select onchange="updateRiskFactor(${index}, 'impact', this.value)">
+                            <option value="Low" ${risk.impact === 'Low' ? 'selected' : ''}>Low</option>
+                            <option value="Medium" ${risk.impact === 'Medium' ? 'selected' : ''}>Medium</option>
+                            <option value="High" ${risk.impact === 'High' ? 'selected' : ''}>High</option>
+                            <option value="Critical" ${risk.impact === 'Critical' ? 'selected' : ''}>Critical</option>
+                        </select>
+                    </td>
+                    <td><textarea style="min-height: 60px;" onchange="updateRiskFactor(${index}, 'mitigation', this.value)">${risk.mitigation}</textarea></td>
+                    <td><button class="btn-remove" onclick="removeRiskFactor(${index})">Remove</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function addRiskFactor() {
+            riskFactors.push({
+                risk: "New Risk Factor",
+                probability: "Medium",
+                impact: "Medium",
+                mitigation: "Define mitigation strategy"
+            });
+            renderRiskMitigation();
+        }
+        
+        function updateRiskFactor(index, field, value) {
+            riskFactors[index][field] = value;
+            renderRiskMitigation();
+        }
+        
+        function removeRiskFactor(index) {
+            if (riskFactors.length > 1) {
+                riskFactors.splice(index, 1);
+                renderRiskMitigation();
+            } else {
+                alert('Cannot remove the last risk factor.');
+            }
+        }
+        
+        // Helper functions for calculations
+        function calculateImplementationCost() {
+            let total = 0;
+            implementationComponents.forEach(comp => {
+                total += comp.hours * comp.rate;
+            });
+            
+            // Add one-time custom add-ons
+            customAddons.forEach(addon => {
+                if (addon.frequency === 'one-time') {
+                    total += addon.amount;
+                }
+            });
+            
+            return Math.round(total * 1.15); // Add 15% PM
+        }
+        
+        function calculateMonthlyServiceFee() {
+            let total = 0;
+            
+            // Calculate base monthly service components (labor/support)
+            monthlyServiceComponents.forEach(comp => {
+                if (comp.fixedCost) {
+                    // Skip fixed infrastructure costs - will be calculated dynamically
+                    if (comp.name !== "Infrastructure Hosting") {
+                        total += comp.fixedCost;
+                    }
+                } else {
+                    total += comp.hours * comp.rate;
+                }
+            });
+            
+            // Add operating costs with markup
+            let operatingTotal = 0;
+            operatingCosts.forEach(cost => {
+                operatingTotal += cost.monthly;
+            });
+            
+            // Add AI costs
+            const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
+            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
+            operatingTotal += aiCostPerProcess * monthlyVolume;
+            
+            // Add operating costs with dynamic markup for infrastructure management
+            const markupPercent = parseFloat(document.getElementById('infrastructureMarkup').value) || 20;
+            const infrastructureCost = Math.round(operatingTotal * (1 + markupPercent / 100));
+            total += infrastructureCost;
+            
+            // Add monthly custom add-ons
+            customAddons.forEach(addon => {
+                if (addon.frequency === 'monthly') {
+                    total += addon.amount;
+                }
+            });
+            
+            return total;
+        }
+        
+        function calculateAnnualOperatingCosts() {
+            let total = 0;
+            operatingCosts.forEach(cost => {
+                total += cost.monthly * 12;
+            });
+            // Add AI costs
+            const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
+            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
+            total += aiCostPerProcess * monthlyVolume * 12;
+            return total;
         }
         
         // Render all components function
@@ -2839,12 +3630,322 @@
             renderManualSteps();
             renderAutomatedSteps();
             renderOperatingCosts();
+            renderSAXTechResources();
             renderImplementationCosts();
             renderMonthlyServiceCosts();
             renderCustomAddons();
+            renderTimeline();
+            renderCompetitiveAnalysis();
+            renderRiskMitigation();
             updateAIPricing();
             
             console.log('All components rendered');
+        }
+        
+        // Generate PDF data from current ROI state
+        function generatePDFData(currentState) {
+            const clientName = currentState.clientName || 'Your Company';
+            const processName = currentState.processName || 'process automation';
+            const implementationCost = calculateImplementationCost();
+            const monthlyServiceCost = calculateMonthlyServiceFee();
+            const contractLength = parseFloat(document.getElementById('contractLength').value) || 24;
+            const totalDuration = timelinePhases.reduce((sum, phase) => sum + phase.duration, 0);
+            
+            // Calculate ROI metrics
+            let manualTotalCost = 0;
+            let autoTotalCost = 0;
+            let manualTotalTime = 0;
+            let autoTotalTime = 0;
+            const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
+            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
+            
+            // Calculate from current steps
+            currentState.manualSteps.forEach(step => {
+                if (currentState.roles[step.role]) {
+                    const role = currentState.roles[step.role];
+                    manualTotalCost += (role.hourly * step.time / 60);
+                    manualTotalTime += step.time;
+                }
+            });
+            
+            currentState.automatedSteps.forEach(step => {
+                if (step.role >= 0 && currentState.roles[step.role]) {
+                    const role = currentState.roles[step.role];
+                    autoTotalCost += (role.hourly * step.time / 60);
+                    autoTotalTime += step.time;
+                } else if (step.isAI) {
+                    autoTotalCost += aiCostPerProcess;
+                }
+            });
+            
+            const timeSavingsPercent = manualTotalTime > 0 ? ((manualTotalTime - autoTotalTime) / manualTotalTime * 100).toFixed(1) : 0;
+            const annualLaborSavings = (manualTotalCost - autoTotalCost) * monthlyVolume * 12;
+            const totalY1Investment = implementationCost + monthlyServiceCost * 12 + calculateAnnualOperatingCosts();
+            const paybackMonths = totalY1Investment > 0 ? (totalY1Investment / (annualLaborSavings / 12)) : 0;
+            const firstYearROI = totalY1Investment > 0 ? ((annualLaborSavings - totalY1Investment) / totalY1Investment * 100) : 0;
+            
+            // Calculate partner hours freed (assuming first role is Partner)
+            let partnerMinutes = 0;
+            currentState.manualSteps.forEach(step => {
+                if (step.role === 0) {
+                    partnerMinutes += step.time;
+                }
+            });
+            const partnerHoursFreed = Math.round(partnerMinutes / 60 * monthlyVolume * 12);
+            
+            // Generate comprehensive project scope based on process analysis
+            const projectScope = generateProjectScope(currentState, processName);
+            const implementationPlan = generateImplementationPlan(currentState);
+            const deliverables = generateDeliverables(currentState, processName);
+            const technicalApproach = generateTechnicalApproach(currentState, processName);
+            
+            return {
+                clientInfo: {
+                    companyName: clientName,
+                    contactName: extractContactName(clientName), // Try to extract from company name or use default
+                    address: 'Client Address\nTo be provided', // Could be extracted from other fields if available
+                    date: new Date().toISOString().split('T')[0]
+                },
+                projectOverview: {
+                    processName: processName,
+                    description: `SAX Technology Advisors will design and deploy an AI-powered automation solution using Azure cloud services and n8n workflow orchestration to enhance ${processName.toLowerCase()} accessibility and efficiency.`,
+                    businessObjective: projectScope.businessObjective,
+                    scope: projectScope.scope,
+                    deliverables: deliverables,
+                    technicalApproach: technicalApproach
+                },
+                implementationPlan: implementationPlan,
+                commercials: {
+                    implementationFee: `$${implementationCost.toLocaleString()}`,
+                    monthlyServiceFee: `$${monthlyServiceCost.toLocaleString()}`,
+                    duration: `${totalDuration} weeks`,
+                    contractLength: `${contractLength}`,
+                    paymentTerms: '50% upfront, 50% upon completion'
+                },
+                managedServices: {
+                    monthlyFee: monthlyServiceCost,
+                    includes: [
+                        'Complete hosting and management within the SAX Tech environment',
+                        'Ongoing updates, monitoring, and optimization', 
+                        'AI token costs included',
+                        'System monitoring 24/7',
+                        'Monthly performance optimization',
+                        'Technical support included',
+                        'Workflow adjustments and enhancements',
+                        'Quarterly business reviews',
+                        '99.5% uptime SLA'
+                    ]
+                },
+                investmentSummary: {
+                    implementationCost: `$${implementationCost.toLocaleString()}`,
+                    monthlyManagedService: `$${monthlyServiceCost.toLocaleString()}`,
+                    annualLaborSavings: `$${Math.round(annualLaborSavings).toLocaleString()}`,
+                    timeReduction: timeSavingsPercent,
+                    paybackPeriod: paybackMonths.toFixed(1),
+                    firstYearROI: `${Math.round(firstYearROI)}%`,
+                    partnerHoursFreed: partnerHoursFreed.toString(),
+                    threeYearNetBenefit: Math.round((annualLaborSavings * 3 - totalY1Investment * 3) / (totalY1Investment * 3) * 100).toString()
+                },
+                riskMitigation: currentState.riskFactors?.map(risk => ({
+                    risk: risk.risk,
+                    mitigation: risk.mitigation
+                })) || [],
+                timeline: currentState.timelinePhases || timelinePhases
+            };
+        }
+        
+        // Helper function to extract contact name from company name or generate default
+        function extractContactName(companyName) {
+            if (!companyName || companyName === 'Your Company') {
+                return 'Contact Name';
+            }
+            // Simple heuristic: if company name looks like "FirstName LastName" format, use it
+            const words = companyName.split(' ');
+            if (words.length === 2 && !words[1].toLowerCase().includes('llc') && !words[1].toLowerCase().includes('inc') && !words[1].toLowerCase().includes('corp')) {
+                return companyName;
+            }
+            // Otherwise, generate a generic contact name based on company
+            const firstWord = words[0];
+            return `${firstWord} Representative`;
+        }
+        
+        // Generate comprehensive project scope based on process analysis
+        function generateProjectScope(currentState, processName) {
+            const manualStepCount = currentState.manualSteps?.length || 0;
+            const automationFeatures = currentState.automatedSteps?.map(step => step.feature).filter(f => f && f !== 'Automation') || [];
+            const hasAI = currentState.automatedSteps?.some(step => step.isAI) || false;
+            
+            return {
+                businessObjective: `Streamline and automate the ${processName.toLowerCase()} process to reduce manual effort by ${getCurrentTimeReduction()}%, eliminate errors, and improve processing speed while maintaining compliance and data quality.`,
+                scope: [
+                    `Automate ${manualStepCount} manual process steps currently requiring significant staff time`,
+                    hasAI ? 'Implement AI-powered validation and decision-making capabilities' : 'Implement intelligent workflow automation',
+                    'Integrate with existing business systems and databases',
+                    'Provide web-based interface for process initiation and monitoring',
+                    'Establish comprehensive audit trail and reporting capabilities',
+                    'Ensure enterprise-grade security and compliance standards'
+                ]
+            };
+        }
+        
+        // Generate implementation plan based on project complexity and timeline
+        function generateImplementationPlan(currentState) {
+            const phases = currentState.timelinePhases || timelinePhases;
+            return phases.map(phase => ({
+                phase: phase.phase,
+                duration: `${phase.duration} weeks`,
+                activities: phase.activities.split(',').map(a => a.trim()),
+                deliverables: phase.deliverables.split(',').map(d => d.trim())
+            }));
+        }
+        
+        // Generate deliverables based on project components
+        function generateDeliverables(currentState, processName) {
+            const hasAI = currentState.automatedSteps?.some(step => step.isAI) || false;
+            const integrationCount = currentState.automatedSteps?.filter(step => step.feature?.toLowerCase().includes('api') || step.feature?.toLowerCase().includes('integration')).length || 0;
+            
+            const deliverables = [
+                'Complete automation workflow setup and configuration',
+                'Web-based process initiation portal',
+                'Azure cloud environment with enterprise security',
+                'Comprehensive testing and quality assurance',
+                'User training and documentation package',
+                '30-day hypercare support period'
+            ];
+            
+            if (hasAI) {
+                deliverables.splice(2, 0, 'AI agent configuration and prompt optimization');
+            }
+            
+            if (integrationCount > 0) {
+                deliverables.splice(1, 0, `API integrations (${integrationCount} systems)`);
+            }
+            
+            return deliverables;
+        }
+        
+        // Generate technical approach based on automation features
+        function generateTechnicalApproach(currentState, processName) {
+            const hasAI = currentState.automatedSteps?.some(step => step.isAI) || false;
+            const hasEmailAutomation = currentState.automatedSteps?.some(step => step.feature?.toLowerCase().includes('email')) || false;
+            const hasDocumentProcessing = currentState.automatedSteps?.some(step => step.feature?.toLowerCase().includes('document') || step.feature?.toLowerCase().includes('filing')) || false;
+            const hasWebForms = currentState.automatedSteps?.some(step => step.feature?.toLowerCase().includes('web') || step.feature?.toLowerCase().includes('form')) || false;
+            
+            const approach = [
+                'Azure-hosted n8n workflow orchestration platform',
+                'Serverless architecture using Azure Functions',
+                'Enterprise-grade security with Azure Active Directory integration',
+                'Comprehensive monitoring and alerting system'
+            ];
+            
+            if (hasAI) {
+                approach.splice(1, 0, 'Azure OpenAI integration for intelligent decision-making');
+            }
+            
+            if (hasEmailAutomation) {
+                approach.push('Automated email notification and communication workflows');
+            }
+            
+            if (hasDocumentProcessing) {
+                approach.push('Document processing and digital filing capabilities');
+            }
+            
+            if (hasWebForms) {
+                approach.splice(2, 0, 'Custom web forms and client portals');
+            }
+            
+            return approach;
+        }
+        
+        // Helper function to get current time reduction percentage
+        function getCurrentTimeReduction() {
+            return document.getElementById('timeSavingsPercent')?.textContent || '90';
+        }
+        
+        // PDF Generation Function
+        async function generateAndDownloadPDF(pdfData) {
+            try {
+                addMessage('system', '🔄 Generating your professional SOW PDF...');
+                
+                // Open the template directly in a new window/tab
+                const pdfWindow = window.open('/saxtech_pdf_template.html', '_blank');
+                
+                if (!pdfWindow) {
+                    throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
+                }
+                
+                // Wait for the window to load
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Check if the populatePDFData function exists and call it
+                if (pdfWindow.populatePDFData) {
+                    pdfWindow.populatePDFData(pdfData);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                } else {
+                    // Store the data globally for the PDF window to pick up
+                    window.pdfDataForTemplate = pdfData;
+                }
+                
+                const clientName = pdfData.clientInfo?.companyName || 'Client';
+                const processName = pdfData.projectOverview?.processName || 'Automation';
+                const fileName = `${clientName}_${processName}_SOW.pdf`.replace(/[^a-zA-Z0-9]/g, '_');
+                
+                addMessage('assistant', `✅ PDF window opened! Please use the browser's print function (Ctrl+P/Cmd+P) to save as PDF: ${fileName}`);
+                window.lastGeneratedPDF = { data: pdfData, fileName: fileName };
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                addMessage('assistant', `❌ Error opening PDF: ${error.message}. Try using the 'Print to PDF' button above instead.`);
+            }
+        }
+        
+        window.generatePDFDownload = function(fileName) {
+            if (window.lastGeneratedPDF) {
+                generateAndDownloadPDF(window.lastGeneratedPDF.data);
+            } else {
+                alert('PDF data not found. Please regenerate the PDF.');
+            }
+        };
+        
+        // Start Over Chat function - wipes the slate clean for chat only
+        function startOverChat() {
+            if (confirm('This will clear all chat history and start fresh. Your ROI analysis data will remain unchanged. Continue?')) {
+                // Clear chat history array
+                chatHistory = [];
+                
+                // Reset chat interface to initial state
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = `
+                    <div class="message system">
+                        <div class="message-content">👋 Welcome! I'm your ROI Assistant. I'll help you analyze your automation project by asking targeted questions about your current process, costs, and automation goals.</div>
+                    </div>
+                `;
+                
+                // Reset quick actions to defaults
+                const quickActions = document.getElementById('quickActions');
+                quickActions.innerHTML = `
+                    <div class="quick-action" onclick="sendQuickMessage('Start ROI analysis')">🚀 Start Analysis</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Help me define roles')">👥 Define Roles</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Map current process')">📋 Map Process</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Calculate costs')">💰 Calculate Costs</div>
+                `;
+                
+                // Clear any typing indicators
+                hideTypingIndicator();
+                
+                // Clear input field
+                const chatInput = document.getElementById('chatInput');
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+                document.getElementById('sendBtn').disabled = true;
+                
+                // Send initial greeting again after a short delay
+                setTimeout(() => {
+                    addMessage('assistant', "Hello! I'm your ROI Assistant. I can help you analyze your automation project by asking targeted questions. What type of business process are you looking to automate?");
+                }, 1000);
+                
+                console.log('Chat history cleared - starting fresh');
+            }
         }
         
         // Initialize everything when page loads

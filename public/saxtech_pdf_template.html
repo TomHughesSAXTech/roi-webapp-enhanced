@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #2c3e50;
+            line-height: 1.5;
+            font-size: 13px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Cover Page */
+        .cover-page {
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #404040 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            page-break-after: always;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.3);
+        }
+        
+        .cover-header {
+            padding: 45px 50px 25px 50px;
+            font-size: 11px;
+            line-height: 1.7;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        
+        .sax-logo {
+            position: absolute;
+            top: 280px;
+            right: 60px;
+            text-align: center;
+            filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
+        }
+        
+        .sax-logo .main-logo {
+            font-size: 120px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -8px;
+            line-height: 0.8;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        .sax-logo .yellow {
+            color: #F1C40F;
+            filter: drop-shadow(2px 2px 4px rgba(241,196,15,0.3));
+        }
+        
+        .sax-logo .tagline {
+            color: #F1C40F;
+            font-size: 24px;
+            margin-top: 15px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .client-name {
+            font-size: 64px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 180px 0 0 50px;
+            line-height: 0.85;
+            letter-spacing: -2px;
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.7);
+            background: linear-gradient(45deg, #ffffff 0%, #e8e8e8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cover-footer {
+            padding: 45px 50px;
+            margin-top: auto;
+            margin-bottom: 120px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px 0 0 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .cover-footer h3 {
+            color: #F1C40F;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        
+        .cover-footer div {
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+        
+        .wave-decoration {
+            display: none;
+        }
+        
+        /* Executive Summary Page */
+        .exec-summary-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            page-break-after: always;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #404040 100%);
+            color: white;
+            padding: 45px 50px;
+            position: relative;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .page-header h1 {
+            font-size: 48px;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+        }
+        
+        .yellow-arrow {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            background: linear-gradient(45deg, #F1C40F 0%, #F39C12 100%);
+            clip-path: polygon(0 0, 70% 0, 100% 50%, 70% 100%, 0 100%, 30% 50%);
+            box-shadow: -3px 0 10px rgba(241,196,15,0.3);
+        }
+        
+        .page-content {
+            padding: 45px 50px;
+            flex: 1;
+            font-size: 13px;
+            line-height: 1.7;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .client-info {
+            margin-bottom: 35px;
+            line-height: 1.5;
+            color: #34495e;
+            font-weight: 400;
+        }
+        
+        .date-right {
+            float: right;
+            margin-top: -85px;
+            font-weight: 500;
+            color: #7f8c8d;
+        }
+        
+        .letter-content {
+            text-align: justify;
+            line-height: 1.7;
+            color: #2c3e50;
+        }
+        
+        .letter-content p {
+            margin-bottom: 18px;
+        }
+        
+        .signature {
+            margin-top: 50px;
+            line-height: 1.5;
+            font-weight: 500;
+            color: #34495e;
+        }
+        
+        /* SAX Added Value Page */
+        .sax-value-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            page-break-after: always;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        
+        .value-content {
+            padding: 45px 50px;
+            flex: 1;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .value-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+            margin-top: 35px;
+        }
+        
+        .value-item {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 12px;
+            border-left: 4px solid #F1C40F;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .value-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+        
+        .value-item h3 {
+            color: #2c3e50;
+            font-size: 15px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        
+        .value-item p {
+            line-height: 1.6;
+            font-size: 12px;
+            text-align: justify;
+            color: #34495e;
+            margin: 0;
+        }
+        
+        /* SOW Pages */
+        .sow-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            page-break-before: always;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        
+        .section-content {
+            padding: 45px 50px;
+            flex: 1;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-content h2 {
+            color: #2c3e50;
+            font-size: 19px;
+            margin-bottom: 18px;
+            font-weight: 700;
+            border-bottom: 2px solid #F1C40F;
+            padding-bottom: 8px;
+        }
+        
+        .section-content h3 {
+            color: #34495e;
+            font-size: 15px;
+            margin: 25px 0 12px 0;
+            font-weight: 600;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .section-content h3:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(45deg, #F1C40F 0%, #F39C12 100%);
+            border-radius: 2px;
+        }
+        
+        .section-content p {
+            margin: 12px 0;
+            line-height: 1.7;
+            text-align: justify;
+            color: #2c3e50;
+        }
+        
+        .section-content ul {
+            margin: 12px 0;
+            padding-left: 25px;
+        }
+        
+        .section-content li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #34495e;
+            position: relative;
+        }
+        
+        .section-content li:before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            background: #F1C40F;
+            border-radius: 50%;
+        }
+        
+        .commercials-section {
+            margin-top: 35px;
+        }
+        
+        .commercials-section h2 {
+            color: #2c3e50;
+            font-size: 19px;
+            margin-bottom: 18px;
+            font-weight: 700;
+            border-bottom: 2px solid #F1C40F;
+            padding-bottom: 8px;
+        }
+        
+        .commercials-section h3 {
+            color: #34495e;
+            font-size: 15px;
+            margin: 25px 0 12px 0;
+            font-weight: 600;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .commercials-section h3:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(45deg, #F1C40F 0%, #F39C12 100%);
+            border-radius: 2px;
+        }
+        
+        .pricing-box {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: none;
+        }
+        
+        .pricing-box ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .pricing-box li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            color: #2c3e50;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .pricing-box li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            background: #F1C40F;
+            border-radius: 50%;
+        }
+        
+        /* Investment Summary Page */
+        .investment-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            page-break-before: always;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        
+        .investment-content {
+            padding: 45px 50px;
+            flex: 1;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .transition-section {
+            margin-bottom: 35px;
+        }
+        
+        .transition-section h2 {
+            color: #2c3e50;
+            font-size: 19px;
+            margin-bottom: 18px;
+            font-weight: 700;
+            border-bottom: 2px solid #F1C40F;
+            padding-bottom: 8px;
+        }
+        
+        .transition-section p {
+            line-height: 1.7;
+            margin-bottom: 18px;
+            color: #2c3e50;
+            text-align: justify;
+        }
+        
+        .transition-section ul {
+            padding-left: 25px;
+        }
+        
+        .transition-section li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #34495e;
+            position: relative;
+        }
+        
+        .transition-section li:before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            background: #F1C40F;
+            border-radius: 50%;
+        }
+        
+        .pricing-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 25px 0;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(52,152,219,0.2);
+        }
+        
+        .pricing-table th {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 18px 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .pricing-table td {
+            padding: 15px 12px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 12px;
+            color: #2c3e50;
+            font-weight: 500;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .acceptance-section {
+            margin-top: 35px;
+            padding: 25px;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+            border-radius: 15px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .acceptance-section h3 {
+            color: #27ae60;
+            font-size: 15px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .acceptance-section p {
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .acceptance-section ul {
+            padding-left: 25px;
+        }
+        
+        .acceptance-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            color: #34495e;
+        }
+        
+        /* ROI Summary Page */
+        .roi-page {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            color: white;
+            min-height: 100vh;
+            page-break-before: always;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .roi-page:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .roi-content {
+            padding: 45px 50px;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .roi-content h1 {
+            font-size: 48px;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            font-weight: 900;
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+            letter-spacing: -1px;
+        }
+        
+        .roi-content > p {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 35px;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 35px 0;
+        }
+        
+        .metric-box {
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+        }
+        
+        .metric-value {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+            background: linear-gradient(45deg, #ffffff 0%, #f1c40f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.95;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .roi-summary {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 35px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .roi-summary h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .roi-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+            margin: 25px 0;
+        }
+        
+        .roi-breakdown ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .roi-breakdown li {
+            margin-bottom: 10px;
+            font-weight: 600;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .roi-breakdown li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background: #F1C40F;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(241,196,15,0.5);
+        }
+        
+        .final-recommendation {
+            text-align: center;
+            margin-top: 35px;
+            padding: 25px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .final-recommendation h3 {
+            margin-bottom: 18px;
+            font-size: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .final-recommendation p {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        
+        @media print {
+            body { -webkit-print-color-adjust: exact; }
+            .page-break { page-break-before: always; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <div class="sax-logo">
+            <div class="main-logo">SA<span class="yellow">X</span></div>
+            <div class="tagline">Technology Advisors</div>
+        </div>
+        
+        <div class="client-name" id="coverClientName">
+            FCS GROUP, LLC
+        </div>
+        
+        <div class="cover-footer">
+            <h3>CREATED BY:</h3>
+            <div>
+                Leon Grassi, Partner, CRO<br>
+                Sax Technology Advisors
+            </div>
+            
+            <h3>PREPARED FOR:</h3>
+            <div>
+                <span id="footerClientContact">Neil Singh, President</span><br>
+                <span id="footerClientCompany">FCS Group, LLC</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Executive Summary Page -->
+    <div class="exec-summary-page">
+        <div class="page-header">
+            <h1>Executive Summary</h1>
+            <div class="yellow-arrow"></div>
+        </div>
+        
+        <div class="page-content">
+            <div class="client-info">
+                <span id="execClientContact">Neil Singh</span><br>
+                <span id="execClientCompany">FCS Group, LLC</span><br>
+                <span id="execClientAddress">60 Fadem Road<br>Springfield, NJ 07081</span>
+                <div class="date-right" id="proposalDate">2025-01-15</div>
+            </div>
+            
+            <div class="letter-content">
+                <p>Dear <span id="execClientFirstName">Neil</span>,</p>
+                
+                <p>Sax appreciates the opportunity to provide you with our engagement details for the development of an automation solution for <span id="processNameLower">project estimating</span>. We are committed to being our clients' number one advisor by understanding their vision and providing solutions that exceed expectations to assure their success. We are dedicated to continually building a great firm that attracts, develops, excites and retains exceptional people.</p>
+                
+                <p>Our differentiation is in our approach - we are business people with expertise in technology, <em>not the other way around</em>, which is why we strive to bring new ideas to the table that help you exceed your goals. The better we understand your business, your marketplace, and your people - the better we can be in helping you to achieve your business initiatives. The Sax team strives to be both consultative and proactive which is why we meet with clients quarterly so there is always a scheduled touch point. We encourage our clients to include their engagement team in these meetings so that we can focus on the most important issues at hand and drive success together.</p>
+                
+                <p>We look forward to working with you, and welcome any questions or comments that you have regarding this proposal.</p>
+                
+                <div class="signature">
+                    Sincerely,<br>
+                    Sax Technology Services<br>
+                    Leon Grassi
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SAX Added Value Page -->
+    <div class="sax-value-page">
+        <div class="page-header">
+            <h1>SAX Added Value</h1>
+            <div class="yellow-arrow"></div>
+        </div>
+        
+        <div class="value-content">
+            <div class="value-grid">
+                <div class="value-item">
+                    <h3>Transaction Advisory & Transformation</h3>
+                    <p>We are an M&A leader who works on our clients' behalf to ensure they are strategically positioned, identifying and realizing value during the due diligence process and throughout the entirety of the transaction.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h3>Fractional Finance</h3>
+                    <p>Whether it's a temporary engagement or a CFO level resource part time – SAX Fractional Finance is here to support a business' needs. We can step in at any time and provide strategic thinking to maximize opportunities within a wide range of industries.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h3>Investment Banking</h3>
+                    <p>Our team has a wealth of expertise needed to assist in finding the perfect partner when selling or acquiring a business, preparing your business for sale, raising capital, and/or restructuring your company, and more.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h3>Strategic Business Transformation</h3>
+                    <p>SAX takes its advisory services one step further by providing 360 consulting via a full range of comprehensive and project-based services. Paired with our already robust services, our team will focus on creating strategic and innovative solutions to propel you forward.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h3>Private Client</h3>
+                    <p>Our dedicated Private Client Services team offers tailored solutions, ensuring the utmost confidentiality while taking a comprehensive approach to wealth management. We assist in managing wealth, preserving legacy, and ensuring financial security.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h3>Valuation, Forensic & Litigation</h3>
+                    <p>Whether it is litigation, investigating potential fraud, Alternative Dispute Resolution or just trying to find a solution to a complex financial situation, we can help navigate through the intricacies of any matter.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h3>HR Consulting</h3>
+                    <p>We provide companies with a level of HR support to help make strategic long-term and day-to-day business decisions, and keep up with the changing regulatory and industry standards.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h3>Wealth Management</h3>
+                    <p>SAX Wealth Advisors delivers wealth management solutions like financial planning, investment management, individual and employer retirement plans and more.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SOW Page 1 -->
+    <div class="sow-page">
+        <div class="page-header">
+            <h1>SOW</h1>
+            <div class="yellow-arrow"></div>
+        </div>
+        
+        <div class="section-content">
+            <h2>Project Overview:</h2>
+            <p>SAX Technology Advisors will design and deploy an AI-powered automation solution using Azure cloud services and n8n workflow orchestration to enhance <span id="processNameSOW">project estimating</span> accessibility and efficiency. The solution will be hosted exclusively in the SAX Tech Azure tenant, fully managed by SAX Tech, with no client administrative control.</p>
+            
+            <p>The implementation will validate the solution's business value and provide a foundation for a scalable managed service with predictable monthly recurring revenue (MRR) post-pilot.</p>
+            
+            <h2>Scope of Work</h2>
+            
+            <h3>Activities and Deliverables</h3>
+            
+            <h3>Discovery & Planning</h3>
+            <ul>
+                <li>Conduct stakeholder workshops to define business objectives, success metrics, and use cases.</li>
+                <li>Identify sample documents for ingestion and mapping of data flow.</li>
+            </ul>
+            
+            <h3>AI & Automation Infrastructure</h3>
+            <ul>
+                <li>Provision and configure Azure Function Apps for serverless workflow orchestration.</li>
+                <li>Deploy n8n workflow engine on Azure Container Apps for visual automation design.</li>
+                <li>Deploy a vector-enabled search index for contextual document retrieval.</li>
+                <li>Establish an OCR pipeline to process and extract content from sample PDFs.</li>
+            </ul>
+            
+            <h3>Orchestration & Automation</h3>
+            <ul>
+                <li>Implement serverless workflows to orchestrate queries, search retrieval, and AI-generated responses.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- SOW Page 2 -->
+    <div class="sow-page">
+        <div class="page-header">
+            <h1>SOW</h1>
+            <div class="yellow-arrow"></div>
+        </div>
+        
+        <div class="section-content">
+            <h3>AI Integration</h3>
+            <ul>
+                <li>Build automated workflow interface accessible via Microsoft Teams and/or a web widget.</li>
+                <li>Configure initial prompt logic to support natural, context-aware conversations.</li>
+                <li>Enable multi-turn queries and grounded responses from indexed documents.</li>
+            </ul>
+            
+            <h3>Security & Access Controls</h3>
+            <ul>
+                <li>The environment is hosted and managed by SAX Tech under strict access controls.</li>
+                <li>Single Sign-On (SSO) integration is available for client access.</li>
+                <li>Multi-Factor Authentication (MFA) is highly suggest for user access and required for Sax Tech Administrative access</li>
+                <li>The solution inherits Microsoft Azure's compliance posture, which includes adherence to SOC 2 Type II, ISO 27001, and other published security certifications.</li>
+            </ul>
+            
+            <h3>Knowledge Transfer & Demo</h3>
+            <ul>
+                <li>Provide a live demonstration of the functionality.</li>
+                <li>Deliver a findings report with recommendations for scaling to production.</li>
+                <li>Conduct a knowledge transfer session with stakeholders.</li>
+            </ul>
+            
+            <h3>Out of Scope</h3>
+            <ul>
+                <li>Large-scale document ingestion beyond the defined dataset.</li>
+                <li>Enterprise compliance beyond Microsoft's baseline (relies on Microsoft's publicly stated compliance frameworks).</li>
+                <li>Client administrative control of the AI or search environment.</li>
+                <li>Long-term support, SLAs, or monitoring beyond the implementation phase.</li>
+                <li>Extensive UI/UX customization outside of the prototype.</li>
+            </ul>
+            
+            <h3>Implementation Pricing</h3>
+            <div class="pricing-box">
+                <ul>
+                    <li><strong>Fixed Fee:</strong> $<span id="implementationCost">46,500</span></li>
+                    <li><strong>Payment Terms:</strong> 50% upfront, 50% upon completion</li>
+                    <li><strong>Duration:</strong> Approximately <span id="implementationTimeline">8–10 weeks</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Investment Summary Page -->
+    <div class="investment-page">
+        <div class="page-header">
+            <h1>Investment Summary</h1>
+            <div class="yellow-arrow"></div>
+        </div>
+        
+        <div class="investment-content">
+            <div class="transition-section">
+                <h2>Transition to Managed Service</h2>
+                <p>Upon implementation completion, the solution will transition into a fully managed service operated by SAX Tech. This service includes:</p>
+                <ul>
+                    <li>Complete hosting and management within the SAX Tech environment</li>
+                    <li>Ongoing updates, monitoring, and optimization</li>
+                    <li>Scaling of users, document volume, and workflows as business needs grow</li>
+                </ul>
+                
+                <h2>Managed Services Pricing (Post Implementation):</h2>
+                
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th>Monthly Fee</th>
+                            <th>Per User</th>
+                            <th>OCR Overage</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$<span id="monthlyServiceCost">2,000</span></td>
+                            <td>$100/User</td>
+                            <td>$0.20 per page</td>
+                            <td>Minimum covers first 20 users or $2k MRR</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <ul>
+                    <li>OCR overages apply only for high-volume document processing (>1,000 pages).</li>
+                    <li>Azure and AI processing costs are wrapped into the managed service pricing.</li>
+                </ul>
+            </div>
+            
+            <div class="acceptance-section">
+                <h3>Acceptance Criteria</h3>
+                <p>The implementation is considered successful when:</p>
+                <ul>
+                    <li>Users can retrieve accurate and contextual responses from indexed sample documents.</li>
+                    <li>OCR and search pipelines function as intended.</li>
+                </ul>
+                
+                <h3>Assumptions</h3>
+                <ul>
+                    <li>Client provides sample documents and access as required.</li>
+                    <li>All infrastructure is hosted and controlled by SAX Tech.</li>
+                    <li>AI technologies used during implementation may evolve; SAX Tech reserves the right to adjust models and services to ensure optimal performance and cost-effectiveness.</li>
+                    <li>Azure and SaaS consumption during implementation is included in the fixed fee (within agreed limits).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ROI Summary Page -->
+    <div class="roi-page">
+        <div class="roi-content">
+            <h1>Executive Recommendation</h1>
+            
+            <p style="font-size: 18px; line-height: 1.6; margin-bottom: 30px;">
+                Based on the comprehensive ROI analysis, SAX Technology Advisors recommends immediate implementation of the automation solution for <span id="roiClientName">FCS Group, LLC</span>'s <span id="roiProcessName">project estimating</span> process.
+            </p>
+            
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-value">$<span id="totalAnnualSavings">156,000</span></div>
+                    <div class="metric-label">Annual Labor Cost Savings</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value"><span id="totalTimeReduction">91.7</span>%</div>
+                    <div class="metric-label">Time Reduction</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value"><span id="totalPaybackPeriod">2.8</span> Months</div>
+                    <div class="metric-label">Payback Period</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value"><span id="totalFirstYearROI">292</span>%</div>
+                    <div class="metric-label">First Year ROI</div>
+                </div>
+            </div>
+            
+            <div class="roi-summary">
+                <div class="roi-breakdown">
+                    <div>
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Investment Summary:</h3>
+                        <ul>
+                            <li>✓ Total Year 1 Investment: $<span id="year1TotalInvestment">71,700</span></li>
+                            <li>✓ Net Year 1 Savings: $<span id="year1NetSavings">84,300</span></li>
+                            <li>✓ Payback Period: <span id="finalPaybackPeriod">2.8</span> months</li>
+                            <li>✓ 3-Year ROI: <span id="threeYearROI">265</span>%</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Strategic Benefits:</h3>
+                        <ul>
+                            <li>✓ <span id="strategicTimeReduction">91.7</span>% reduction in processing time</li>
+                            <li>✓ Frees <span id="partnerHoursFreed">240</span> partner hours annually</li>
+                            <li>✓ AI-powered risk management</li>
+                            <li>✓ Scalable for growth</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="final-recommendation">
+                    <h3 style="margin-bottom: 15px;">Next Steps:</h3>
+                    <p style="font-size: 16px; font-weight: 600;">
+                        Sign <span id="contractLengthFinal">24</span>-month service agreement and begin <span id="implementationTimelineFinal">8-week</span> implementation immediately to capture Q1 2025 benefits.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to populate PDF with data
+        function populatePDFData(data) {
+            console.log('Populating PDF with data:', data);
+            
+            // Client information
+            const clientName = data.clientInfo?.companyName || 'Company Name';
+            const contactName = data.clientInfo?.contactName || 'Contact Name';
+            const processName = data.projectOverview?.processName || 'process automation';
+            
+            // Update all client name references
+            document.getElementById('coverClientName').textContent = clientName.toUpperCase();
+            document.getElementById('footerClientContact').textContent = contactName;
+            document.getElementById('footerClientCompany').textContent = clientName;
+            
+            // Executive summary page
+            document.getElementById('execClientContact').textContent = contactName.split(' ')[0] || 'Contact';
+            document.getElementById('execClientCompany').textContent = clientName;
+            document.getElementById('execClientAddress').textContent = data.clientInfo?.address || 'Address';
+            document.getElementById('execClientFirstName').textContent = contactName.split(' ')[0] || 'Contact';
+            document.getElementById('proposalDate').textContent = data.clientInfo?.date || new Date().toISOString().split('T')[0];
+            
+            // Process name references
+            document.getElementById('processNameLower').textContent = processName.toLowerCase();
+            document.getElementById('processNameSOW').textContent = processName.toLowerCase();
+            
+            // **COMMERCIALS DATA - Pull from ROI analysis**
+            // Implementation cost from the ROI implementation components total
+            const implementationCost = data.commercials?.implementationFee?.replace(/[$,]/g, '') || 
+                                     data.investmentSummary?.implementationCost?.replace(/[$,]/g, '') || '46500';
+            
+            // Monthly service cost from ROI monthly service calculation
+            const monthlyServiceCost = data.commercials?.monthlyServiceFee?.replace(/[$,]/g, '') || 
+                                     data.investmentSummary?.monthlyManagedService?.replace(/[$,]/g, '') || '2100';
+            
+            // Implementation timeline from ROI analysis
+            const implementationTimeline = data.commercials?.duration || '8–10 weeks';
+            
+            // Contract length from ROI settings
+            const contractLength = data.commercials?.contractLength?.replace('-month minimum', '') || '24';
+            
+            document.getElementById('implementationCost').textContent = parseInt(implementationCost).toLocaleString();
+            document.getElementById('monthlyServiceCost').textContent = parseInt(monthlyServiceCost).toLocaleString();
+            document.getElementById('implementationTimeline').textContent = implementationTimeline;
+            document.getElementById('contractLength').textContent = contractLength;
+            
+            // ROI metrics from the analysis
+            const annualSavings = data.investmentSummary?.annualLaborSavings?.replace(/[$,]/g, '') || '156000';
+            const timeReduction = data.investmentSummary?.timeReduction?.replace('%', '') || '91.7';
+            const paybackPeriod = data.investmentSummary?.paybackPeriod || '2.8';
+            const firstYearROI = data.investmentSummary?.firstYearROI?.replace('%', '') || '292';
+            
+            document.getElementById('totalAnnualSavings').textContent = parseInt(annualSavings).toLocaleString();
+            document.getElementById('totalTimeReduction').textContent = timeReduction;
+            document.getElementById('totalPaybackPeriod').textContent = paybackPeriod;
+            document.getElementById('totalFirstYearROI').textContent = firstYearROI;
+            
+            // ROI page
+            document.getElementById('roiClientName').textContent = clientName;
+            document.getElementById('roiProcessName').textContent = processName.toLowerCase();
+            document.getElementById('strategicTimeReduction').textContent = timeReduction;
+            document.getElementById('finalPaybackPeriod').textContent = paybackPeriod;
+            
+            // Calculate investment summary from ROI data
+            const year1Implementation = parseInt(implementationCost);
+            const year1Service = parseInt(monthlyServiceCost) * 12;
+            const year1Total = year1Implementation + year1Service;
+            const year1Benefits = parseInt(annualSavings);
+            const year1Net = year1Benefits - year1Total;
+            
+            document.getElementById('year1TotalInvestment').textContent = year1Total.toLocaleString();
+            document.getElementById('year1NetSavings').textContent = year1Net.toLocaleString();
+            document.getElementById('partnerHoursFreed').textContent = data.investmentSummary?.partnerHoursFreed || '240';
+            document.getElementById('threeYearROI').textContent = data.investmentSummary?.threeYearNetBenefit || '265';
+            document.getElementById('contractLengthFinal').textContent = contractLength;
+            document.getElementById('implementationTimelineFinal').textContent = implementationTimeline.replace('Approximately ', '').replace(' weeks', '-week');
+        }
+        
+        // Make function available globally
+        window.populatePDFData = populatePDFData;
+    </script>
+</body>
+</html>
