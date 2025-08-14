@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {
+      "route": "/*",
+      "allowedRoles": ["anonymous"]
+    }
+  ],
+  "globalHeaders": {
+    "X-Robots-Tag": "noindex, nofollow, nosnippet, noarchive, noimageindex"
+  }
+}
