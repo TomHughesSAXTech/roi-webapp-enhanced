@@ -1639,73 +1639,73 @@
                         <strong>Next Steps:</strong> Sign <span id="execContractLength">24</span>-month service agreement and begin 8-week implementation immediately to capture Q2 2025 benefits.
                     </p>
                 </div>
-            </div>
-        </div>
-        
-        <!-- AI SOP Generator Section -->
-        <div class="section" id="sopGeneratorSection">
-            <h2 class="section-title">9. AI-Powered SOP Generator</h2>
-            
-            <div class="config-panel">
-                <h3>📋 Standard Operating Procedures Generator</h3>
-                <p style="margin-bottom: 15px; color: #666;">Generate comprehensive SOPs based on your defined manual and automated processes.</p>
                 
-                <div style="margin-bottom: 20px;">
-                    <button class="btn-update" onclick="generateSOPContent()" style="margin: 5px;">🤖 Generate SOPs</button>
-                    <button class="btn-update" onclick="downloadSOPs()" style="margin: 5px;">📥 Download SOPs</button>
-                    <button class="btn-update" onclick="emailSOPs()" style="margin: 5px; background: #17a2b8;">📧 Email SOPs</button>
-                </div>
-                
-                <div class="sop-content">
-                    <div class="sop-tabs" id="sopTabs">
-                        <button class="sop-tab active" onclick="showSOPTab('current')" id="currentTab">Current Process SOP</button>
-                        <button class="sop-tab" onclick="showSOPTab('automated')" id="automatedTab">Automated Process SOP</button>
-                        <button class="sop-tab" onclick="showSOPTab('transition')" id="transitionTab">Transition Guide</button>
-                    </div>
+                <!-- AI SOP Generator Section -->
+                <div class="section" id="sopGeneratorSection">
+                    <h2 class="section-title">9. AI-Powered SOP Generator</h2>
                     
-                    <div class="sop-content-area">
-                        <div id="currentSOPContent" class="sop-tab-content active">
-                            <h4>Current Manual Process SOP</h4>
-                            <textarea id="currentSOPText" class="workflow-textarea" placeholder="Current process SOP will be generated here..."></textarea>
+                    <div class="config-panel">
+                        <h3>📋 Standard Operating Procedures Generator</h3>
+                        <p style="margin-bottom: 15px; color: #666;">Generate comprehensive SOPs based on your defined manual and automated processes.</p>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <button class="btn-update" onclick="generateSOPContent()" style="margin: 5px;">🤖 Generate SOPs</button>
+                            <button class="btn-update" onclick="downloadSOPs()" style="margin: 5px;">📥 Download SOPs</button>
+                            <button class="btn-update" onclick="emailSOPs()" style="margin: 5px; background: #17a2b8;">📧 Email SOPs</button>
                         </div>
                         
-                        <div id="automatedSOPContent" class="sop-tab-content" style="display: none;">
-                            <h4>Automated Process SOP</h4>
-                            <textarea id="automatedSOPText" class="workflow-textarea" placeholder="Automated process SOP will be generated here..."></textarea>
+                        <div class="sop-content">
+                            <div class="sop-tabs" id="sopTabs">
+                                <button class="sop-tab active" onclick="showSOPTab('current')" id="currentTab">Current Process SOP</button>
+                                <button class="sop-tab" onclick="showSOPTab('automated')" id="automatedTab">Automated Process SOP</button>
+                                <button class="sop-tab" onclick="showSOPTab('transition')" id="transitionTab">Transition Guide</button>
+                            </div>
+                            
+                            <div class="sop-content-area">
+                                <div id="currentSOPContent" class="sop-tab-content active">
+                                    <h4>Current Manual Process SOP</h4>
+                                    <textarea id="currentSOPText" class="workflow-textarea" placeholder="Current process SOP will be generated here..."></textarea>
+                                </div>
+                                
+                                <div id="automatedSOPContent" class="sop-tab-content" style="display: none;">
+                                    <h4>Automated Process SOP</h4>
+                                    <textarea id="automatedSOPText" class="workflow-textarea" placeholder="Automated process SOP will be generated here..."></textarea>
+                                </div>
+                                
+                                <div id="transitionSOPContent" class="sop-tab-content" style="display: none;">
+                                    <h4>Process Transition Guide</h4>
+                                    <textarea id="transitionSOPText" class="workflow-textarea" placeholder="Transition guide will be generated here..."></textarea>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div id="transitionSOPContent" class="sop-tab-content" style="display: none;">
-                            <h4>Process Transition Guide</h4>
-                            <textarea id="transitionSOPText" class="workflow-textarea" placeholder="Transition guide will be generated here..."></textarea>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="ai-sop-options" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                    <h4>🎯 SOP Customization Options</h4>
-                    <div class="config-grid">
-                        <div class="config-item">
-                            <label>Detail Level:</label>
-                            <select id="sopDetailLevel" onchange="updateSOPSettings()">
-                                <option value="high">High Detail (Step-by-step)</option>
-                                <option value="medium" selected>Medium Detail (Key points)</option>
-                                <option value="low">Low Detail (Overview)</option>
-                            </select>
-                        </div>
-                        <div class="config-item">
-                            <label>Include Screenshots:</label>
-                            <select id="sopScreenshots" onchange="updateSOPSettings()">
-                                <option value="yes">Yes (with placeholders)</option>
-                                <option value="no" selected>No</option>
-                            </select>
-                        </div>
-                        <div class="config-item">
-                            <label>Format:</label>
-                            <select id="sopFormat" onchange="updateSOPSettings()">
-                                <option value="procedure" selected>Standard Procedure</option>
-                                <option value="checklist">Checklist Format</option>
-                                <option value="flowchart">Flowchart Description</option>
-                            </select>
+                        <div class="ai-sop-options" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <h4>🎯 SOP Customization Options</h4>
+                            <div class="config-grid">
+                                <div class="config-item">
+                                    <label>Detail Level:</label>
+                                    <select id="sopDetailLevel" onchange="updateSOPSettings()">
+                                        <option value="high">High Detail (Step-by-step)</option>
+                                        <option value="medium" selected>Medium Detail (Key points)</option>
+                                        <option value="low">Low Detail (Overview)</option>
+                                    </select>
+                                </div>
+                                <div class="config-item">
+                                    <label>Include Screenshots:</label>
+                                    <select id="sopScreenshots" onchange="updateSOPSettings()">
+                                        <option value="yes">Yes (with placeholders)</option>
+                                        <option value="no" selected>No</option>
+                                    </select>
+                                </div>
+                                <div class="config-item">
+                                    <label>Format:</label>
+                                    <select id="sopFormat" onchange="updateSOPSettings()">
+                                        <option value="procedure" selected>Standard Procedure</option>
+                                        <option value="checklist">Checklist Format</option>
+                                        <option value="flowchart">Flowchart Description</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
