@@ -1640,60 +1640,88 @@
                     </p>
                 </div>
                 
-                <!-- AI SOP Generator Section -->
+                <!-- AI SOW Generator Section -->
                 <div class="section">
-                    <h2 class="section-title">9. AI-Powered SOP Generator</h2>
+                    <h2 class="section-title">9. AI-Powered SOW Generator</h2>
                     
                     <div class="workflow-section">
-                        <h3>📋 Generate Standard Operating Procedures</h3>
-                        <p style="margin-bottom: 15px; color: #666;">Create comprehensive SOPs for your current manual process and proposed automated solution.</p>
+                        <h3>📋 Generate Statement of Work</h3>
+                        <p style="margin-bottom: 15px; color: #666;">Create a professional Statement of Work based on your ROI analysis and automation requirements.</p>
                         
                         <div style="margin-bottom: 20px;">
-                            <button class="btn-update" onclick="generateAllSOPs()" style="margin: 5px;">🤖 Generate All SOPs</button>
-                            <button class="btn-update" onclick="downloadAllSOPs()" style="margin: 5px;">📥 Download SOPs</button>
-                            <button class="btn-print" onclick="printSOPs()" style="margin: 5px;">🖨️ Print SOPs</button>
+                            <button class="btn-update" onclick="generateSOW()" style="margin: 5px;">🤖 Generate SOW</button>
+                            <button class="btn-update" onclick="downloadSOW()" style="margin: 5px;">📥 Download SOW</button>
+                            <button class="btn-print" onclick="printSOW()" style="margin: 5px;">🖨️ Print SOW</button>
+                            <button class="btn-update" onclick="openSOWChat()" style="margin: 5px; background: #28a745;">💬 SOW Assistant</button>
                         </div>
                         
                         <div class="config-grid" style="margin-bottom: 20px;">
                             <div class="config-item">
-                                <label>SOP Detail Level:</label>
-                                <select id="sopDetailLevel">
-                                    <option value="high">High Detail (Step-by-step)</option>
-                                    <option value="medium" selected>Medium Detail (Key points)</option>
-                                    <option value="low">Low Detail (Overview)</option>
+                                <label>SOW Template:</label>
+                                <select id="sowTemplate">
+                                    <option value="saxtechnology" selected>SAX Technology Professional</option>
+                                    <option value="generic">Generic Business</option>
+                                    <option value="consulting">Consulting Services</option>
                                 </select>
                             </div>
                             <div class="config-item">
-                                <label>Include Screenshots:</label>
-                                <select id="sopScreenshots">
-                                    <option value="yes">Yes (with placeholders)</option>
-                                    <option value="no" selected>No</option>
+                                <label>Detail Level:</label>
+                                <select id="sowDetailLevel">
+                                    <option value="executive">Executive Summary</option>
+                                    <option value="detailed" selected>Detailed Technical</option>
+                                    <option value="comprehensive">Comprehensive</option>
                                 </select>
                             </div>
                             <div class="config-item">
-                                <label>SOP Format:</label>
-                                <select id="sopFormat">
-                                    <option value="procedure" selected>Standard Procedure</option>
-                                    <option value="checklist">Checklist Format</option>
-                                    <option value="flowchart">Flowchart Description</option>
+                                <label>Include ROI Metrics:</label>
+                                <select id="sowIncludeROI">
+                                    <option value="yes" selected>Yes (Recommended)</option>
+                                    <option value="no">No</option>
                                 </select>
                             </div>
                         </div>
                         
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                <h4>Current Manual Process SOP</h4>
-                                <textarea id="currentProcessSOP" class="workflow-textarea" placeholder="Click 'Generate All SOPs' to create current process documentation..."></textarea>
+                        <!-- SOW Chat Interface -->
+                        <div id="sowChatPanel" class="sow-chat-panel" style="display: none; margin-bottom: 20px; background: #e7f3ff; border: 2px solid #3498db; border-radius: 10px; padding: 20px;">
+                            <h4>🤖 SOW Assistant Chat</h4>
+                            <p style="color: #666; margin-bottom: 10px;">Ask me to modify the SOW, add specific requirements, or adjust pricing and timelines.</p>
+                            
+                            <div id="sowChatMessages" class="sow-chat-messages" style="height: 200px; overflow-y: auto; background: white; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px;">
+                                <div class="sow-chat-message assistant">Hello! I'm your SOW Assistant. I can help you customize your Statement of Work. Try saying things like:
+                                <ul style="margin: 10px 0; padding-left: 20px;">
+                                    <li>"Add a 30-day warranty clause"</li>
+                                    <li>"Change the timeline to 12 weeks"</li>
+                                    <li>"Include data migration services"</li>
+                                    <li>"Adjust the pricing structure"</li>
+                                </ul>
+                                </div>
                             </div>
-                            <div>
-                                <h4>Automated Process SOP</h4>
-                                <textarea id="automatedProcessSOP" class="workflow-textarea" placeholder="Click 'Generate All SOPs' to create automated process documentation..."></textarea>
+                            
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="sowChatInput" placeholder="Ask me to modify the SOW..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <button onclick="sendSOWChatMessage()" class="btn-update" style="margin: 0;">Send</button>
+                                <button onclick="closeSOWChat()" class="btn-remove" style="margin: 0;">Close</button>
                             </div>
                         </div>
                         
-                        <div style="margin-top: 20px;">
-                            <h4>Process Transition Guide</h4>
-                            <textarea id="transitionGuide" class="workflow-textarea" placeholder="Click 'Generate All SOPs' to create transition documentation..."></textarea>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                            <div>
+                                <h4>Statement of Work Preview</h4>
+                                <textarea id="sowContent" class="workflow-textarea" style="min-height: 400px;" placeholder="Click 'Generate SOW' to create your Statement of Work based on the ROI analysis..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <h4>📊 SOW Data Source</h4>
+                            <div style="font-size: 0.9em; color: #666;">
+                                <strong>Auto-populated from your analysis:</strong><br>
+                                • Client: <span id="sowClientPreview">Your Company</span><br>
+                                • Process: <span id="sowProcessPreview">Process Name</span><br>
+                                • Implementation Cost: $<span id="sowImplementationPreview">0</span><br>
+                                • Monthly Service: $<span id="sowMonthlyPreview">0</span><br>
+                                • Timeline: <span id="sowTimelinePreview">8 weeks</span><br>
+                                • ROI: <span id="sowROIPreview">0%</span> first year
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -4595,31 +4623,393 @@
             });
         }
         
-        // New functions for simplified SOP format
-        function generateAllSOPs() {
+        // SOW Generation Functions
+        function generateSOW() {
             const currentState = getCurrentROIState();
             
             if (manualSteps.length === 0) {
-                alert('Please define manual process steps first before generating SOPs.');
+                alert('Please define manual process steps first before generating the SOW.');
                 return;
             }
             
             const clientName = currentState.clientName || 'Your Company';
             const processName = currentState.processName || 'Process Name';
+            const templateType = document.getElementById('sowTemplate').value || 'saxtechnology';
+            const detailLevel = document.getElementById('sowDetailLevel').value || 'detailed';
+            const includeROI = document.getElementById('sowIncludeROI').value === 'yes';
             
-            // Generate Current Process SOP
-            const currentSOP = generateCurrentProcessSOP(clientName, processName);
-            document.getElementById('currentProcessSOP').value = currentSOP;
+            // Generate SOW content
+            const sowContent = generateSOWContent(currentState, templateType, detailLevel, includeROI);
+            document.getElementById('sowContent').value = sowContent;
             
-            // Generate Automated Process SOP
-            const automatedSOP = generateAutomatedProcessSOP(clientName, processName);
-            document.getElementById('automatedProcessSOP').value = automatedSOP;
+            // Update preview data
+            updateSOWPreview(currentState);
             
-            // Generate Transition Guide
-            const transitionGuide = generateTransitionGuide(clientName, processName);
-            document.getElementById('transitionGuide').value = transitionGuide;
+            addMessage('assistant', '✅ Statement of Work generated successfully! You can review and customize it in the textarea below, or use the SOW Assistant to make specific changes.');
+        }
+        
+        function generateSOWContent(currentState, templateType, detailLevel, includeROI) {
+            const clientName = currentState.clientName || 'Your Company';
+            const processName = currentState.processName || 'Process Automation';
+            const date = new Date().toLocaleDateString();
+            const implementationCost = calculateImplementationCost();
+            const monthlyServiceCost = calculateMonthlyServiceFee();
+            const contractLength = parseFloat(document.getElementById('contractLength').value) || 24;
+            const totalDuration = timelinePhases.reduce((sum, phase) => sum + phase.duration, 0);
             
-            addMessage('assistant', '✅ All SOPs generated successfully! Check the textareas in section 9 to review and customize them.');
+            let sow = `STATEMENT OF WORK\n`;
+            sow += `${clientName.toUpperCase()} - ${processName.toUpperCase()}\n`;
+            sow += `SAX Technology Advisors\n`;
+            sow += `Date: ${date}\n`;
+            sow += `${'='.repeat(80)}\n\n`;
+            
+            // Executive Summary
+            sow += `EXECUTIVE SUMMARY\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            sow += `SAX Technology Advisors proposes to design and implement an AI-powered automation\n`;
+            sow += `solution for ${clientName}'s ${processName.toLowerCase()} process. This solution will\n`;
+            sow += `reduce processing time by ${getCurrentTimeReduction()}%, eliminate manual errors, and provide\n`;
+            sow += `significant cost savings through intelligent workflow automation.\n\n`;
+            
+            if (includeROI) {
+                const annualSavings = document.getElementById('annualSavings').textContent;
+                const paybackPeriod = document.getElementById('paybackPeriod').textContent;
+                const firstYearROI = document.getElementById('firstYearROI').textContent;
+                
+                sow += `KEY BENEFITS:\n`;
+                sow += `• Annual Labor Cost Savings: $${annualSavings}\n`;
+                sow += `• Processing Time Reduction: ${getCurrentTimeReduction()}%\n`;
+                sow += `• Payback Period: ${paybackPeriod} months\n`;
+                sow += `• First Year ROI: ${firstYearROI}%\n\n`;
+            }
+            
+            // Project Overview
+            sow += `PROJECT OVERVIEW\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            sow += `Client: ${clientName}\n`;
+            sow += `Process: ${processName}\n`;
+            sow += `Implementation Duration: ${totalDuration} weeks\n`;
+            sow += `Service Contract: ${contractLength} months\n\n`;
+            
+            sow += `SCOPE OF WORK\n`;
+            sow += `${'─'.repeat(40)}\n\n`;
+            
+            // Phase 1: Discovery & Planning
+            sow += `Phase 1: Discovery & Planning (2 weeks)\n`;
+            sow += `• Current state analysis and process documentation\n`;
+            sow += `• Stakeholder interviews and requirements gathering\n`;
+            sow += `• Technical architecture design\n`;
+            sow += `• Integration planning with existing systems\n`;
+            sow += `• Project plan finalization\n\n`;
+            
+            // Phase 2: AI & Automation Infrastructure
+            sow += `Phase 2: AI & Automation Infrastructure (1 week)\n`;
+            sow += `• Azure cloud environment setup\n`;
+            sow += `• OpenAI API integration and configuration\n`;
+            sow += `• Security framework implementation\n`;
+            sow += `• Database and storage configuration\n\n`;
+            
+            // Phase 3: Orchestration & Automation
+            sow += `Phase 3: Orchestration & Automation (3 weeks)\n`;
+            sow += `• n8n workflow development and testing\n`;
+            sow += `• Business logic implementation\n`;
+            sow += `• Error handling and exception management\n`;
+            sow += `• Performance optimization\n\n`;
+            
+            // Phase 4: AI Integration
+            sow += `Phase 4: AI Integration (1 week)\n`;
+            sow += `• AI agent configuration for process validation\n`;
+            sow += `• Prompt engineering and optimization\n`;
+            sow += `• AI decision logic implementation\n`;
+            sow += `• Quality assurance testing\n\n`;
+            
+            // Phase 5: Security & Access Controls
+            sow += `Phase 5: Security & Access Controls (0.5 weeks)\n`;
+            sow += `• User authentication and authorization\n`;
+            sow += `• Data encryption and security protocols\n`;
+            sow += `• Compliance framework implementation\n`;
+            sow += `• Security testing and validation\n\n`;
+            
+            // Phase 6: Knowledge Transfer & Demo
+            sow += `Phase 6: Knowledge Transfer & Demo (0.5 weeks)\n`;
+            sow += `• User training sessions\n`;
+            sow += `• System demonstration\n`;
+            sow += `• Documentation delivery\n`;
+            sow += `• Go-live support\n\n`;
+            
+            // Out of Scope
+            sow += `OUT OF SCOPE:\n`;
+            sow += `• Modifications to existing business systems\n`;
+            sow += `• Data migration from legacy systems\n`;
+            sow += `• Custom integrations beyond those specified\n`;
+            sow += `• Training beyond initial knowledge transfer\n\n`;
+            
+            // Pricing
+            sow += `PRICING STRUCTURE\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            sow += `Implementation Fee: $${implementationCost.toLocaleString()}\n`;
+            sow += `  (One-time fee covering all development, setup, and go-live support)\n\n`;
+            
+            sow += `Monthly Managed Service: $${monthlyServiceCost.toLocaleString()}/month\n`;
+            sow += `  Includes:\n`;
+            sow += `  • Complete hosting and infrastructure management\n`;
+            sow += `  • AI token costs and usage\n`;
+            sow += `  • 24/7 monitoring and support\n`;
+            sow += `  • Monthly optimization and updates\n`;
+            sow += `  • Technical support and maintenance\n`;
+            sow += `  • 99.5% uptime SLA\n\n`;
+            
+            // Payment Terms
+            sow += `PAYMENT TERMS\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            sow += `Implementation Fee: 50% upon contract signing, 50% upon go-live\n`;
+            sow += `Monthly Service Fee: Billed monthly in advance\n`;
+            sow += `Contract Term: ${contractLength} months (minimum)\n\n`;
+            
+            // Implementation Duration
+            sow += `IMPLEMENTATION DURATION\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            sow += `Total Duration: ${totalDuration} weeks from project kickoff\n`;
+            sow += `Go-Live Target: Week ${totalDuration}\n`;
+            sow += `Hypercare Period: 30 days post go-live (included)\n\n`;
+            
+            if (includeROI) {
+                // ROI Summary
+                sow += `RETURN ON INVESTMENT\n`;
+                sow += `${'─'.repeat(40)}\n`;
+                const annualSavings = document.getElementById('annualSavings').textContent;
+                const paybackPeriod = document.getElementById('paybackPeriod').textContent;
+                const totalY1Investment = implementationCost + (monthlyServiceCost * 12);
+                
+                sow += `Year 1 Investment: $${totalY1Investment.toLocaleString()}\n`;
+                sow += `Annual Labor Savings: $${annualSavings}\n`;
+                sow += `Payback Period: ${paybackPeriod} months\n`;
+                sow += `3-Year Net Benefit: $${(parseInt(annualSavings.replace(/,/g, '')) * 3 - totalY1Investment * 3).toLocaleString()}\n\n`;
+            }
+            
+            // Next Steps
+            sow += `NEXT STEPS\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            sow += `1. Review and approve this Statement of Work\n`;
+            sow += `2. Execute service agreement\n`;
+            sow += `3. Schedule project kickoff meeting\n`;
+            sow += `4. Begin discovery and planning phase\n\n`;
+            
+            // Footer
+            sow += `${'─'.repeat(80)}\n`;
+            sow += `SAX Technology Advisors\n`;
+            sow += `Contact: [Project Manager to be assigned]\n`;
+            sow += `Email: info@saxtechnology.com\n`;
+            sow += `This SOW is valid for 30 days from the date above.\n`;
+            
+            return sow;
+        }
+        
+        function updateSOWPreview(currentState) {
+            const implementationCost = calculateImplementationCost();
+            const monthlyServiceCost = calculateMonthlyServiceFee();
+            const totalDuration = timelinePhases.reduce((sum, phase) => sum + phase.duration, 0);
+            const firstYearROI = document.getElementById('firstYearROI').textContent;
+            
+            document.getElementById('sowClientPreview').textContent = currentState.clientName || 'Your Company';
+            document.getElementById('sowProcessPreview').textContent = currentState.processName || 'Process Name';
+            document.getElementById('sowImplementationPreview').textContent = implementationCost.toLocaleString();
+            document.getElementById('sowMonthlyPreview').textContent = monthlyServiceCost.toLocaleString();
+            document.getElementById('sowTimelinePreview').textContent = totalDuration + ' weeks';
+            document.getElementById('sowROIPreview').textContent = firstYearROI;
+        }
+        
+        function downloadSOW() {
+            const clientName = document.getElementById('inputClientName').value || 'Your Company';
+            const processName = document.getElementById('inputProcessName').value || 'Process';
+            const date = new Date().toISOString().split('T')[0];
+            
+            const sowContent = document.getElementById('sowContent').value || 'SOW not generated yet. Please click Generate SOW first.';
+            
+            const blob = new Blob([sowContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${clientName}_${processName}_SOW_${date}.txt`.replace(/\s+/g, '_');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            addMessage('assistant', '📥 Statement of Work downloaded successfully!');
+        }
+        
+        function printSOW() {
+            const clientName = document.getElementById('inputClientName').value || 'Your Company';
+            const processName = document.getElementById('inputProcessName').value || 'Process';
+            const sowContent = document.getElementById('sowContent').value || 'SOW not generated yet.';
+            
+            const printContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${clientName} - ${processName} Statement of Work</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+                        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+                        pre { white-space: pre-wrap; font-family: inherit; }
+                        @page { margin: 1in; }
+                    </style>
+                </head>
+                <body>
+                    <h1>${clientName} - ${processName} Statement of Work</h1>
+                    <pre>${sowContent}</pre>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.focus();
+            
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+            
+            addMessage('assistant', '🖨️ SOW print window opened!');
+        }
+        
+        // SOW Assistant Chat Functions
+        function openSOWChat() {
+            const sowPanel = document.getElementById('sowChatPanel');
+            sowPanel.style.display = 'block';
+            
+            // Initialize SOW chat if first time
+            const messagesDiv = document.getElementById('sowChatMessages');
+            if (messagesDiv.children.length === 1) {
+                addSOWChatMessage('assistant', "Hello! I'm your SOW Assistant. I can help you customize your Statement of Work. Try asking me to:\n• Add specific clauses or terms\n• Modify pricing or timeline\n• Include additional services\n• Adjust technical requirements\n\nWhat would you like to change?");
+            }
+            
+            // Focus on input
+            document.getElementById('sowChatInput').focus();
+            
+            addMessage('assistant', '💬 SOW Assistant opened! You can now chat about customizing your Statement of Work.');
+        }
+        
+        function closeSOWChat() {
+            document.getElementById('sowChatPanel').style.display = 'none';
+        }
+        
+        function sendSOWChatMessage() {
+            const input = document.getElementById('sowChatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addSOWChatMessage('user', message);
+            input.value = '';
+            
+            // Process SOW-specific message
+            setTimeout(() => {
+                const response = processSOWMessage(message);
+                addSOWChatMessage('assistant', response);
+            }, 1000);
+        }
+        
+        function addSOWChatMessage(sender, message) {
+            const messagesDiv = document.getElementById('sowChatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `sow-chat-message ${sender}`;
+            messageDiv.style.cssText = `
+                margin-bottom: 10px;
+                padding: 8px 12px;
+                border-radius: 8px;
+                max-width: 85%;
+                ${sender === 'user' ? 
+                    'background: #e3f2fd; margin-left: auto; text-align: right;' : 
+                    'background: #f1f8e9; margin-right: auto;'}
+            `;
+            messageDiv.innerHTML = message.replace(/\n/g, '<br>');
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function processSOWMessage(message) {
+            const msg = message.toLowerCase();
+            
+            // Handle common SOW requests
+            if (msg.includes('warranty') || msg.includes('guarantee')) {
+                // Add warranty clause to SOW
+                updateSOWContent('warranty', 'SAXTech provides a 30-day warranty on all deliverables from go-live date.');
+                return "✅ I've added a 30-day warranty clause to your SOW. The updated content is now in the SOW text area.";
+            }
+            
+            if (msg.includes('timeline') || msg.includes('duration') || msg.includes('week')) {
+                const weekMatch = msg.match(/(\d+)\s*week/);
+                if (weekMatch) {
+                    const weeks = weekMatch[1];
+                    updateSOWContent('timeline', `Implementation duration updated to ${weeks} weeks.`);
+                    return `✅ I've updated the timeline to ${weeks} weeks. Please review the updated SOW content.`;
+                }
+                return "I can help you adjust the timeline. Please specify the number of weeks you'd like, for example: 'Change the timeline to 12 weeks'";
+            }
+            
+            if (msg.includes('price') || msg.includes('pricing') || msg.includes('cost')) {
+                return "I can help you adjust pricing structure. What specific pricing changes would you like? For example:\n• 'Change payment terms to monthly'\n• 'Add a discount for early payment'\n• 'Adjust the implementation fee'";
+            }
+            
+            if (msg.includes('data migration') || msg.includes('migration')) {
+                updateSOWContent('scope', 'Data migration services added to project scope.');
+                return "✅ I've added data migration services to the project scope. This may affect pricing and timeline - would you like me to adjust those as well?";
+            }
+            
+            if (msg.includes('training') || msg.includes('support')) {
+                updateSOWContent('training', 'Extended training and support package included.');
+                return "✅ I've added extended training and support to your SOW. This includes additional user training sessions and extended support period.";
+            }
+            
+            if (msg.includes('integration') || msg.includes('api')) {
+                updateSOWContent('integration', 'Additional system integrations included in project scope.');
+                return "✅ I've added additional system integrations to the project scope. Which specific systems do you need to integrate with?";
+            }
+            
+            if (msg.includes('security') || msg.includes('compliance')) {
+                updateSOWContent('security', 'Enhanced security and compliance framework included.');
+                return "✅ I've enhanced the security and compliance section of your SOW. This includes additional security measures and compliance documentation.";
+            }
+            
+            // Default response
+            return `I understand you want to modify: "${message}". I can help you customize the SOW by:\n\n• Adding specific clauses or requirements\n• Modifying timeline and pricing\n• Including additional services\n• Adjusting technical specifications\n\nCould you be more specific about what changes you'd like me to make?`;
+        }
+        
+        function updateSOWContent(type, addition) {
+            const sowTextArea = document.getElementById('sowContent');
+            let currentContent = sowTextArea.value;
+            
+            // Add the modification to the SOW content
+            const modificationSection = `\n\n[SOW MODIFICATION - ${type.toUpperCase()}]\n${addition}\n${'─'.repeat(40)}`;
+            
+            sowTextArea.value = currentContent + modificationSection;
+            
+            // Scroll to show the new content
+            sowTextArea.scrollTop = sowTextArea.scrollHeight;
+        }
+        
+        // SOW chat input handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const sowChatInput = document.getElementById('sowChatInput');
+            if (sowChatInput) {
+                sowChatInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendSOWChatMessage();
+                    }
+                });
+            }
+        });
+        
+        // Legacy SOP functions (keeping for compatibility)
+        function generateAllSOPs() {
+            // Redirect to SOW generation for now
+            generateSOW();
+            addMessage('assistant', '📋 Note: SOPs have been replaced with SOW (Statement of Work) generation. Your SOW has been generated based on your ROI analysis.');
         }
         
         function downloadAllSOPs() {
