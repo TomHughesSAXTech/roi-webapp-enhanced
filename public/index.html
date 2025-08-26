@@ -1641,71 +1641,59 @@
                 </div>
                 
                 <!-- AI SOP Generator Section -->
-                <div class="section" id="sopGeneratorSection">
+                <div class="section">
                     <h2 class="section-title">9. AI-Powered SOP Generator</h2>
                     
-                    <div class="config-panel">
-                        <h3>📋 Standard Operating Procedures Generator</h3>
-                        <p style="margin-bottom: 15px; color: #666;">Generate comprehensive SOPs based on your defined manual and automated processes.</p>
+                    <div class="workflow-section">
+                        <h3>📋 Generate Standard Operating Procedures</h3>
+                        <p style="margin-bottom: 15px; color: #666;">Create comprehensive SOPs for your current manual process and proposed automated solution.</p>
                         
                         <div style="margin-bottom: 20px;">
-                            <button class="btn-update" onclick="generateSOPContent()" style="margin: 5px;">🤖 Generate SOPs</button>
-                            <button class="btn-update" onclick="downloadSOPs()" style="margin: 5px;">📥 Download SOPs</button>
-                            <button class="btn-update" onclick="emailSOPs()" style="margin: 5px; background: #17a2b8;">📧 Email SOPs</button>
+                            <button class="btn-update" onclick="generateAllSOPs()" style="margin: 5px;">🤖 Generate All SOPs</button>
+                            <button class="btn-update" onclick="downloadAllSOPs()" style="margin: 5px;">📥 Download SOPs</button>
+                            <button class="btn-print" onclick="printSOPs()" style="margin: 5px;">🖨️ Print SOPs</button>
                         </div>
                         
-                        <div class="sop-content">
-                            <div class="sop-tabs" id="sopTabs">
-                                <button class="sop-tab active" onclick="showSOPTab('current')" id="currentTab">Current Process SOP</button>
-                                <button class="sop-tab" onclick="showSOPTab('automated')" id="automatedTab">Automated Process SOP</button>
-                                <button class="sop-tab" onclick="showSOPTab('transition')" id="transitionTab">Transition Guide</button>
+                        <div class="config-grid" style="margin-bottom: 20px;">
+                            <div class="config-item">
+                                <label>SOP Detail Level:</label>
+                                <select id="sopDetailLevel">
+                                    <option value="high">High Detail (Step-by-step)</option>
+                                    <option value="medium" selected>Medium Detail (Key points)</option>
+                                    <option value="low">Low Detail (Overview)</option>
+                                </select>
                             </div>
-                            
-                            <div class="sop-content-area">
-                                <div id="currentSOPContent" class="sop-tab-content active">
-                                    <h4>Current Manual Process SOP</h4>
-                                    <textarea id="currentSOPText" class="workflow-textarea" placeholder="Current process SOP will be generated here..."></textarea>
-                                </div>
-                                
-                                <div id="automatedSOPContent" class="sop-tab-content" style="display: none;">
-                                    <h4>Automated Process SOP</h4>
-                                    <textarea id="automatedSOPText" class="workflow-textarea" placeholder="Automated process SOP will be generated here..."></textarea>
-                                </div>
-                                
-                                <div id="transitionSOPContent" class="sop-tab-content" style="display: none;">
-                                    <h4>Process Transition Guide</h4>
-                                    <textarea id="transitionSOPText" class="workflow-textarea" placeholder="Transition guide will be generated here..."></textarea>
-                                </div>
+                            <div class="config-item">
+                                <label>Include Screenshots:</label>
+                                <select id="sopScreenshots">
+                                    <option value="yes">Yes (with placeholders)</option>
+                                    <option value="no" selected>No</option>
+                                </select>
+                            </div>
+                            <div class="config-item">
+                                <label>SOP Format:</label>
+                                <select id="sopFormat">
+                                    <option value="procedure" selected>Standard Procedure</option>
+                                    <option value="checklist">Checklist Format</option>
+                                    <option value="flowchart">Flowchart Description</option>
+                                </select>
                             </div>
                         </div>
                         
-                        <div class="ai-sop-options" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                            <h4>🎯 SOP Customization Options</h4>
-                            <div class="config-grid">
-                                <div class="config-item">
-                                    <label>Detail Level:</label>
-                                    <select id="sopDetailLevel" onchange="updateSOPSettings()">
-                                        <option value="high">High Detail (Step-by-step)</option>
-                                        <option value="medium" selected>Medium Detail (Key points)</option>
-                                        <option value="low">Low Detail (Overview)</option>
-                                    </select>
-                                </div>
-                                <div class="config-item">
-                                    <label>Include Screenshots:</label>
-                                    <select id="sopScreenshots" onchange="updateSOPSettings()">
-                                        <option value="yes">Yes (with placeholders)</option>
-                                        <option value="no" selected>No</option>
-                                    </select>
-                                </div>
-                                <div class="config-item">
-                                    <label>Format:</label>
-                                    <select id="sopFormat" onchange="updateSOPSettings()">
-                                        <option value="procedure" selected>Standard Procedure</option>
-                                        <option value="checklist">Checklist Format</option>
-                                        <option value="flowchart">Flowchart Description</option>
-                                    </select>
-                                </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h4>Current Manual Process SOP</h4>
+                                <textarea id="currentProcessSOP" class="workflow-textarea" placeholder="Click 'Generate All SOPs' to create current process documentation..."></textarea>
                             </div>
+                            <div>
+                                <h4>Automated Process SOP</h4>
+                                <textarea id="automatedProcessSOP" class="workflow-textarea" placeholder="Click 'Generate All SOPs' to create automated process documentation..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <h4>Process Transition Guide</h4>
+                            <textarea id="transitionGuide" class="workflow-textarea" placeholder="Click 'Generate All SOPs' to create transition documentation..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -4133,7 +4121,7 @@
             }
         }
         
-        // Generate SOP function
+        // Generate SOP function - simplified for new format
         function generateSOP() {
             const currentState = getCurrentROIState();
             
@@ -4142,20 +4130,14 @@
                 return;
             }
             
-            // Show SOP generator panel if it exists, or create it
-            let sopSection = document.getElementById('sopGeneratorSection');
-            if (!sopSection) {
-                createSOPGeneratorSection();
-            }
-            
             // Scroll to SOP section
-            sopSection = document.getElementById('sopGeneratorSection');
+            const sopSection = document.querySelector('.section');
             sopSection.scrollIntoView({ behavior: 'smooth' });
             
             // Generate SOPs based on current process
-            generateSOPContent();
+            generateAllSOPs();
             
-            addMessage('system', '📋 SOP Generator opened! I\'ve analyzed your current process and generated standard operating procedures.');
+            addMessage('system', '📋 SOPs generated! Check section 9 for the Standard Operating Procedures.');
         }
         
         // Create SOP Generator Section
@@ -4611,6 +4593,110 @@
             }).catch(() => {
                 alert('Email feature coming soon! For now, please use the Download SOPs button.');
             });
+        }
+        
+        // New functions for simplified SOP format
+        function generateAllSOPs() {
+            const currentState = getCurrentROIState();
+            
+            if (manualSteps.length === 0) {
+                alert('Please define manual process steps first before generating SOPs.');
+                return;
+            }
+            
+            const clientName = currentState.clientName || 'Your Company';
+            const processName = currentState.processName || 'Process Name';
+            
+            // Generate Current Process SOP
+            const currentSOP = generateCurrentProcessSOP(clientName, processName);
+            document.getElementById('currentProcessSOP').value = currentSOP;
+            
+            // Generate Automated Process SOP
+            const automatedSOP = generateAutomatedProcessSOP(clientName, processName);
+            document.getElementById('automatedProcessSOP').value = automatedSOP;
+            
+            // Generate Transition Guide
+            const transitionGuide = generateTransitionGuide(clientName, processName);
+            document.getElementById('transitionGuide').value = transitionGuide;
+            
+            addMessage('assistant', '✅ All SOPs generated successfully! Check the textareas in section 9 to review and customize them.');
+        }
+        
+        function downloadAllSOPs() {
+            const clientName = document.getElementById('inputClientName').value || 'Your Company';
+            const processName = document.getElementById('inputProcessName').value || 'Process';
+            const date = new Date().toISOString().split('T')[0];
+            
+            const currentSOP = document.getElementById('currentProcessSOP').value || 'SOPs not generated yet. Please click Generate All SOPs first.';
+            const automatedSOP = document.getElementById('automatedProcessSOP').value || 'SOPs not generated yet. Please click Generate All SOPs first.';
+            const transitionGuide = document.getElementById('transitionGuide').value || 'SOPs not generated yet. Please click Generate All SOPs first.';
+            
+            const combined = `${currentSOP}\n\n${'='.repeat(80)}\n\n${automatedSOP}\n\n${'='.repeat(80)}\n\n${transitionGuide}`;
+            
+            const blob = new Blob([combined], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${clientName}_${processName}_SOPs_${date}.txt`.replace(/\s+/g, '_');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            addMessage('assistant', '📥 All SOPs downloaded successfully! The file includes all three SOP documents.');
+        }
+        
+        function printSOPs() {
+            // Create a new window with just the SOP content for printing
+            const clientName = document.getElementById('inputClientName').value || 'Your Company';
+            const processName = document.getElementById('inputProcessName').value || 'Process';
+            
+            const currentSOP = document.getElementById('currentProcessSOP').value || 'SOPs not generated yet.';
+            const automatedSOP = document.getElementById('automatedProcessSOP').value || 'SOPs not generated yet.';
+            const transitionGuide = document.getElementById('transitionGuide').value || 'SOPs not generated yet.';
+            
+            const printContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${clientName} - ${processName} SOPs</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+                        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+                        h2 { color: #34495e; margin-top: 40px; }
+                        pre { white-space: pre-wrap; background: #f8f9fa; padding: 20px; border-left: 4px solid #3498db; }
+                        .page-break { page-break-before: always; }
+                        @media print { .page-break { page-break-before: always; } }
+                    </style>
+                </head>
+                <body>
+                    <h1>${clientName} - ${processName} Standard Operating Procedures</h1>
+                    
+                    <h2>Current Manual Process SOP</h2>
+                    <pre>${currentSOP}</pre>
+                    
+                    <div class="page-break"></div>
+                    <h2>Automated Process SOP</h2>
+                    <pre>${automatedSOP}</pre>
+                    
+                    <div class="page-break"></div>
+                    <h2>Process Transition Guide</h2>
+                    <pre>${transitionGuide}</pre>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.focus();
+            
+            // Auto-trigger print dialog after content loads
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+            
+            addMessage('assistant', '🖨️ Print window opened! The browser print dialog should appear automatically.');
         }
         
         // Initialize everything when page loads
