@@ -1662,10 +1662,10 @@
         let automatedSteps = [];
         
         let operatingCosts = [
-            { name: "Azure Kubernetes Service", monthly: 510, notes: "$17/day × 30 days" },
-            { name: "Azure Storage & Bandwidth", monthly: 75, notes: "File storage and data transfer" },
-            { name: "Monitoring & Alerts", monthly: 35, notes: "Azure Monitor + Application Insights" },
-            { name: "Backup & Disaster Recovery", monthly: 25, notes: "Azure Backup services" }
+            { name: "SAXTech Automation Engine", monthly: 15, notes: "Usage Fee" },
+            { name: "Bandwidth", monthly: 5, notes: "Internet Usage" },
+            { name: "Backups", monthly: 5, notes: "Workflow and Site config backups" },
+            { name: "Website Artifact Hosting", monthly: 50, notes: "Three website front-ends" }
         ];
         
         // SAXTech Resource Library - predefined resources with rates and capabilities
@@ -1881,35 +1881,37 @@
         let chatHistory = [];
         let isWebhookConnected = false;
         
-        // Sample company data (GreerWalker)
+        // Sample company data (GreerWalker) - Updated with new JSON structure
         const sampleCompanyData = {
-            clientName: "GreerWalker",
+            clientName: "Greer Walker",
             processName: "Client Onboarding",
             monthlyVolume: 20,
+            burdenPercent: 25,
+            contractLength: 24,
             roles: [
-                { title: "Partner/Requester", salary: 222222, burdened: 300000, hourly: 144.23 },
-                { title: "Manager", salary: 111111, burdened: 150000, hourly: 72.12 },
-                { title: "Staff", salary: 66667, burdened: 90000, hourly: 43.27 },
-                { title: "Admin", salary: 44444, burdened: 60000, hourly: 28.85 }
+                { title: "Partner/Requester", salary: 300000, burdened: 375000, hourly: 180.29 },
+                { title: "Manager", salary: 120000, burdened: 150000, hourly: 72.12 },
+                { title: "Marketing Admin", salary: 75000, burdened: 93750, hourly: 45.07 },
+                { title: "Admin", salary: 50000, burdened: 62500, hourly: 30.05 }
             ],
             manualSteps: [
-                { step: "1. Opportunity Received", role: 0, time: 10 },
-                { step: "2. Determine Proposal Type", role: 0, time: 5 },
-                { step: "3. Fill Proposal Request Form", role: 0, time: 20 },
-                { step: "4. BenchmarkOne Setup", role: 2, time: 15 },
-                { step: "5. Conflict/Background Checks", role: 0, time: 45 },
-                { step: "6. Fill New Client Form", role: 0, time: 60 },
+                { step: "1. Opportunity Received", role: 1, time: 5 },
+                { step: "2. Determine Proposal Type", role: 1, time: 5 },
+                { step: "3. Fill Proposal Request Form", role: 0, time: 15 },
+                { step: "4. BenchmarkOne Setup", role: 2, time: 10 },
+                { step: "5. Conflict/Background Checks", role: 2, time: 30 },
+                { step: "6. Fill New Client Form", role: 0, time: 45 },
                 { step: "7. Route to Natasia", role: 3, time: 5 },
-                { step: "8. Natasia Review", role: 1, time: 30 },
+                { step: "8. Natasia Review", role: 1, time: 20 },
                 { step: "9. STAR Data Entry", role: 1, time: 45 },
-                { step: "10. Engagement Setup", role: 1, time: 30 },
-                { step: "11. XCM Task Creation", role: 1, time: 30 },
-                { step: "12. Network Folders Setup", role: 1, time: 20 },
+                { step: "10. Engagement Setup", role: 1, time: 20 },
+                { step: "11. XCM Task Creation", role: 1, time: 20 },
+                { step: "12. Network Folders Setup", role: 1, time: 10 },
                 { step: "13. Route to Baylee", role: 1, time: 5 },
-                { step: "14. Email Client Biller", role: 2, time: 10 },
+                { step: "14. Email Client Biller", role: 2, time: 5 },
                 { step: "15. Client Biller Forwards", role: 3, time: 5 },
-                { step: "16. Process Consent Return", role: 3, time: 10 },
-                { step: "17. Update BD/Mailing Data", role: 2, time: 20 },
+                { step: "16. Process Consent Return", role: 2, time: 15 },
+                { step: "17. Update BD/Mailing Data", role: 2, time: 10 },
                 { step: "18. Update BenchmarkOne", role: 2, time: 10 },
                 { step: "19. File in Perm Binder", role: 2, time: 15 },
                 { step: "20. Follow-up Lost Proposals", role: 2, time: 20 }
@@ -1919,7 +1921,7 @@
                 { step: "AI Form Validation", role: -1, time: 0, feature: "GPT-4 validation", isAI: true },
                 { step: "Automatic BenchmarkOne", role: -1, time: 0, feature: "API Integration", isAI: false },
                 { step: "AI Risk Assessment", role: -1, time: 0, feature: "GPT-4 analysis", isAI: true },
-                { step: "Manager Quick Review", role: 1, time: 5, feature: "AI pre-screened", isAI: false },
+                { step: "Manager Quick Review", role: 1, time: 10, feature: "AI pre-screened", isAI: false },
                 { step: "Auto STAR Creation", role: -1, time: 0, feature: "API Integration", isAI: false },
                 { step: "Auto Engagement Setup", role: -1, time: 0, feature: "API Integration", isAI: false },
                 { step: "Auto XCM Tasks", role: -1, time: 0, feature: "API Integration", isAI: false },
@@ -1928,8 +1930,39 @@
                 { step: "Digital Consent Process", role: 3, time: 2, feature: "Web portal", isAI: false },
                 { step: "Auto BD/Mailing Update", role: -1, time: 0, feature: "API Integration", isAI: false },
                 { step: "Auto Filing", role: -1, time: 0, feature: "Document automation", isAI: false },
-                { step: "Weekly Proposal Check", role: 2, time: 5, feature: "Scheduled automation", isAI: false }
-            ]
+                { step: "Weekly Proposal Check", role: 2, time: 15, feature: "Scheduled automation", isAI: false }
+            ],
+            operatingCosts: [
+                { name: "SAXTech Automation Engine", monthly: 15, notes: "Usage Fee" },
+                { name: "Bandwidth", monthly: 5, notes: "Internet Usage" },
+                { name: "Backups", monthly: 5, notes: "Workflow and Site config backups" },
+                { name: "Website Artifact Hosting", monthly: 50, notes: "Three website front-ends" }
+            ],
+            implementationComponents: [
+                { name: "Discovery & Business Analysis", hours: 8, rate: 175, resourceType: "Solution Architect" },
+                { name: "Solution Architecture & Design", hours: 16, rate: 175, resourceType: "Solution Architect" },
+                { name: "Core Automation Development", hours: 16, rate: 150, resourceType: "Senior Developer" },
+                { name: "API Integration Development", hours: 16, rate: 150, resourceType: "Senior Developer" },
+                { name: "AI Agent Configuration", hours: 4, rate: 175, resourceType: "AI Specialist" },
+                { name: "Web Forms & Portal Development", hours: 12, rate: 150, resourceType: "Senior Developer" },
+                { name: "Azure Environment Setup", hours: 2, rate: 140, resourceType: "DevOps Engineer" },
+                { name: "Testing & Quality Assurance", hours: 12, rate: 125, resourceType: "QA Engineer" },
+                { name: "User Training & Documentation", hours: 4, rate: 125, resourceType: "Technical Writer" },
+                { name: "Deployment & Go-Live Support", hours: 16, rate: 225, resourceType: "Senior Solution Architect" }
+            ],
+            monthlyServiceComponents: [
+                { name: "System Monitoring & Maintenance", hours: 1, rate: 125, fixedCost: null },
+                { name: "Monthly Performance Optimization", hours: 1.5, rate: 150, fixedCost: null },
+                { name: "Technical Support (8hrs/month)", hours: 8, rate: 125 },
+                { name: "Workflow Updates & Enhancements", hours: 7, rate: 150, fixedCost: null }
+            ],
+            customAddons: [
+                { name: "Additional Integration", frequency: "one-time", amount: 2500, unit: "per API integration" }
+            ],
+            selectedAIModel: "gpt41-mini",
+            inputTokens: "3000",
+            outputTokens: "3000",
+            aiCalls: "8"
         };
         
         const aiPricing = {
@@ -2275,22 +2308,40 @@
                 document.getElementById('inputClientName').value = sampleCompanyData.clientName;
                 document.getElementById('inputProcessName').value = sampleCompanyData.processName;
                 document.getElementById('monthlyVolume').value = sampleCompanyData.monthlyVolume;
+                document.getElementById('burdenPercent').value = sampleCompanyData.burdenPercent;
+                document.getElementById('contractLength').value = sampleCompanyData.contractLength;
                 
                 // Load sample data
                 roles = JSON.parse(JSON.stringify(sampleCompanyData.roles)); // Deep copy
                 manualSteps = JSON.parse(JSON.stringify(sampleCompanyData.manualSteps)); // Deep copy
                 automatedSteps = JSON.parse(JSON.stringify(sampleCompanyData.automatedSteps)); // Deep copy
+                operatingCosts = JSON.parse(JSON.stringify(sampleCompanyData.operatingCosts)); // Deep copy
+                implementationComponents = JSON.parse(JSON.stringify(sampleCompanyData.implementationComponents)); // Deep copy
+                monthlyServiceComponents = JSON.parse(JSON.stringify(sampleCompanyData.monthlyServiceComponents)); // Deep copy
+                customAddons = JSON.parse(JSON.stringify(sampleCompanyData.customAddons)); // Deep copy
                 
-                console.log('Sample data loaded:', { roles, manualSteps, automatedSteps });
+                // Load AI settings
+                if (sampleCompanyData.selectedAIModel) {
+                    selectedAIModel = sampleCompanyData.selectedAIModel;
+                    document.querySelectorAll('.ai-model-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    document.querySelector(`[onclick*="${selectedAIModel}"]`)?.classList.add('selected');
+                }
+                if (sampleCompanyData.inputTokens) document.getElementById('inputTokens').value = sampleCompanyData.inputTokens;
+                if (sampleCompanyData.outputTokens) document.getElementById('outputTokens').value = sampleCompanyData.outputTokens;
+                if (sampleCompanyData.aiCalls) document.getElementById('aiCalls').value = sampleCompanyData.aiCalls;
+                
+                console.log('Sample data loaded:', { roles, manualSteps, automatedSteps, operatingCosts, implementationComponents });
                 
                 // Re-render everything
                 renderAll();
                 updateCalculations();
                 
                 // Add chat message
-                addMessage('system', 'GreerWalker sample data loaded! This shows a complete client onboarding automation analysis.');
+                addMessage('system', 'Greer Walker sample data loaded! This shows a complete client onboarding automation analysis.');
                 
-                alert('GreerWalker sample company data loaded successfully!');
+                alert('Greer Walker sample company data loaded successfully!');
             }
         }
         
@@ -3256,27 +3307,18 @@
             document.getElementById('annualCostAuto').textContent = annualAutoCost.toFixed(0);
             document.getElementById('annualCostSaved').textContent = annualCostSaved.toFixed(0);
             
-            // Calculate costs
-            let totalOperatingCosts = 0;
-            operatingCosts.forEach(cost => {
-                totalOperatingCosts += cost.monthly * 12;
-            });
-            totalOperatingCosts += aiCostPerProcess * annualVolume;
-            
+            // Calculate implementation cost
             let implementationCost = 0;
             implementationComponents.forEach(comp => {
                 implementationCost += comp.hours * comp.rate;
             });
             implementationCost = implementationCost * 1.15; // Add 15% PM
             
-            let monthlyServiceFee = 0;
-            monthlyServiceComponents.forEach(comp => {
-                if (comp.fixedCost) {
-                    monthlyServiceFee += comp.fixedCost;
-                } else {
-                    monthlyServiceFee += comp.hours * comp.rate;
-                }
-            });
+            // Calculate monthly service fee (including infrastructure costs)
+            const monthlyServiceFee = calculateMonthlyServiceFee();
+            
+            // Calculate annual operating costs (separate from monthly service fee)
+            const totalOperatingCosts = 0; // Operating costs are now included in monthly service fee
             
             const contractLength = parseFloat(document.getElementById('contractLength').value) || 24;
             const annualServiceCost = monthlyServiceFee * 12;
@@ -3286,11 +3328,11 @@
             document.getElementById('displayMonthlyFee').textContent = monthlyServiceFee.toLocaleString();
             document.getElementById('displayImplementationCost').textContent = implementationCost.toLocaleString();
             document.getElementById('formulaLaborSavings').textContent = annualCostSaved.toLocaleString();
-            document.getElementById('formulaOperatingCosts').textContent = totalOperatingCosts.toFixed(0);
+            document.getElementById('formulaOperatingCosts').textContent = '0'; // Infrastructure costs now included in monthly service fee
             document.getElementById('formulaMonthlyService').textContent = monthlyServiceFee.toLocaleString();
             document.getElementById('formulaAnnualService').textContent = annualServiceCost.toLocaleString();
             
-            const netAnnualSavings = annualCostSaved - totalOperatingCosts - annualServiceCost;
+            const netAnnualSavings = annualCostSaved - annualServiceCost; // No separate operating costs
             document.getElementById('netAnnualSavings').textContent = netAnnualSavings.toLocaleString();
             
             // Update executive summary
@@ -3308,7 +3350,7 @@
             document.getElementById('partnerHoursFreed').textContent = partnerHoursFreed;
             
             // Calculate payback and ROI
-            const totalY1Investment = implementationCost + annualServiceCost + totalOperatingCosts;
+            const totalY1Investment = implementationCost + annualServiceCost; // Operating costs included in monthly service fee
             const totalBenefitsY1 = annualCostSaved + 15000 + 20000; // Add qualitative benefits
             const monthlyBenefit = totalBenefitsY1 / 12;
             const paybackMonths = monthlyBenefit > 0 ? totalY1Investment / monthlyBenefit : 0;
@@ -3321,7 +3363,7 @@
             // Update ROI table
             document.getElementById('roiImplementationY1').textContent = implementationCost.toLocaleString();
             document.getElementById('roiServiceY1').textContent = annualServiceCost.toLocaleString();
-            document.getElementById('roiOperatingY1').textContent = totalOperatingCosts.toFixed(0);
+            document.getElementById('roiOperatingY1').textContent = '0'; // Operating costs included in monthly service fee
             document.getElementById('roiTotalInvestY1').textContent = totalY1Investment.toLocaleString();
             
             document.getElementById('roiLaborY1').textContent = annualCostSaved.toLocaleString();
@@ -3330,9 +3372,9 @@
             document.getElementById('roiPercentY1').textContent = roiPercentY1;
             
             // Year 2
-            const totalY2Investment = annualServiceCost + totalOperatingCosts;
+            const totalY2Investment = annualServiceCost; // Operating costs included in monthly service fee
             document.getElementById('roiServiceY2').textContent = annualServiceCost.toLocaleString();
-            document.getElementById('roiOperatingY2').textContent = totalOperatingCosts.toFixed(0);
+            document.getElementById('roiOperatingY2').textContent = '0'; // Operating costs included in monthly service fee
             document.getElementById('roiTotalInvestY2').textContent = totalY2Investment.toLocaleString();
             document.getElementById('roiLaborY2').textContent = annualCostSaved.toLocaleString();
             document.getElementById('roiTotalBenefitsY2').textContent = totalBenefitsY1.toLocaleString();
@@ -3342,9 +3384,9 @@
             // 3 Year totals
             document.getElementById('roiImplementation3Y').textContent = implementationCost.toLocaleString();
             document.getElementById('roiService3Y').textContent = (annualServiceCost * 3).toLocaleString();
-            document.getElementById('roiOperating3Y').textContent = (totalOperatingCosts * 3).toFixed(0);
+            document.getElementById('roiOperating3Y').textContent = '0'; // Operating costs included in monthly service fee
             
-            const total3YInvest = implementationCost + annualServiceCost * 3 + totalOperatingCosts * 3;
+            const total3YInvest = implementationCost + annualServiceCost * 3; // Operating costs included in monthly service fee
             const total3YBenefits = totalBenefitsY1 * 3;
             document.getElementById('roiTotalInvest3Y').textContent = total3YInvest.toLocaleString();
             document.getElementById('roiLabor3Y').textContent = (annualCostSaved * 3).toLocaleString();
@@ -3610,15 +3652,8 @@
         }
         
         function calculateAnnualOperatingCosts() {
-            let total = 0;
-            operatingCosts.forEach(cost => {
-                total += cost.monthly * 12;
-            });
-            // Add AI costs
-            const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
-            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
-            total += aiCostPerProcess * monthlyVolume * 12;
-            return total;
+            // Operating costs are now included in monthly service fee
+            return 0;
         }
         
         // Render all components function
