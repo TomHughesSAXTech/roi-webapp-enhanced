@@ -928,6 +928,8 @@
                     <div style="margin-top: 20px;">
                         <button class="btn-update" onclick="updateCalculations()">🔄 Update All Calculations</button>
                         <button class="btn-print" onclick="printToPDF()">🖨️ Print to PDF</button>
+                        <button class="btn-update" onclick="validateROIAnalysis()" style="margin: 5px; background: #28a745;">✓ Validate Analysis</button>
+                        <button class="btn-update" onclick="generateSOP()" style="margin: 5px; background: #17a2b8;">📋 Generate SOP</button>
                         <button class="btn-update" onclick="startOverChat()" style="margin: 5px; background: #e74c3c;">🔄 Start Over Chat</button>
                     </div>
                 </div>
@@ -3981,6 +3983,536 @@
                 
                 console.log('Chat history cleared - starting fresh');
             }
+        }
+        
+        // Validate ROI Analysis function
+        function validateROIAnalysis() {
+            const issues = [];
+            
+            // Check basic configuration
+            const clientName = document.getElementById('inputClientName').value.trim();
+            const processName = document.getElementById('inputProcessName').value.trim();
+            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
+            
+            if (clientName === '' || clientName === 'Your Company') {
+                issues.push('Client name needs to be specified');
+            }
+            if (processName === '' || processName === 'Process Name') {
+                issues.push('Process name needs to be specified');
+            }
+            if (monthlyVolume <= 0) {
+                issues.push('Monthly volume must be greater than 0');
+            }
+            
+            // Check roles
+            if (roles.length === 0) {
+                issues.push('At least one role must be defined');
+            }
+            
+            // Check manual steps
+            if (manualSteps.length === 0) {
+                issues.push('At least one manual process step must be defined');
+            }
+            
+            // Check automated steps
+            if (automatedSteps.length === 0) {
+                issues.push('At least one automated process step should be defined');
+            }
+            
+            // Check implementation components
+            if (implementationComponents.length === 0) {
+                issues.push('Implementation components should be defined');
+            }
+            
+            // Show validation results
+            if (issues.length === 0) {
+                addMessage('system', '✅ Validation passed! Your ROI analysis looks complete and ready to present.');
+                alert('✅ Validation Successful!\n\nYour ROI analysis is complete and ready to present. All required fields are properly configured.');
+            } else {
+                const issuesList = issues.map(issue => '• ' + issue).join('\n');
+                addMessage('system', `⚠️ Validation found ${issues.length} issue(s):\n${issuesList}`);
+                alert(`⚠️ Validation Issues Found:\n\n${issuesList}\n\nPlease address these issues before finalizing your analysis.`);
+            }
+        }
+        
+        // Generate SOP function
+        function generateSOP() {
+            const currentState = getCurrentROIState();
+            
+            if (manualSteps.length === 0) {
+                alert('Please define manual process steps first before generating SOPs.');
+                return;
+            }
+            
+            // Show SOP generator panel if it exists, or create it
+            let sopSection = document.getElementById('sopGeneratorSection');
+            if (!sopSection) {
+                createSOPGeneratorSection();
+            }
+            
+            // Scroll to SOP section
+            sopSection = document.getElementById('sopGeneratorSection');
+            sopSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Generate SOPs based on current process
+            generateSOPContent();
+            
+            addMessage('system', '📋 SOP Generator opened! I\'ve analyzed your current process and generated standard operating procedures.');
+        }
+        
+        // Create SOP Generator Section
+        function createSOPGeneratorSection() {
+            const container = document.querySelector('.container .content');
+            
+            const sopSection = document.createElement('div');
+            sopSection.id = 'sopGeneratorSection';
+            sopSection.className = 'section';
+            sopSection.innerHTML = `
+                <h2 class="section-title">9. AI-Powered SOP Generator</h2>
+                
+                <div class="config-panel">
+                    <h3>📋 Standard Operating Procedures Generator</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Generate comprehensive SOPs based on your defined manual and automated processes.</p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn-update" onclick="generateSOPContent()" style="margin: 5px;">🤖 Generate SOPs</button>
+                        <button class="btn-update" onclick="downloadSOPs()" style="margin: 5px;">📥 Download SOPs</button>
+                        <button class="btn-update" onclick="emailSOPs()" style="margin: 5px; background: #17a2b8;">📧 Email SOPs</button>
+                    </div>
+                    
+                    <div class="sop-content">
+                        <div class="sop-tabs" id="sopTabs">
+                            <button class="sop-tab active" onclick="showSOPTab('current')" id="currentTab">Current Process SOP</button>
+                            <button class="sop-tab" onclick="showSOPTab('automated')" id="automatedTab">Automated Process SOP</button>
+                            <button class="sop-tab" onclick="showSOPTab('transition')" id="transitionTab">Transition Guide</button>
+                        </div>
+                        
+                        <div class="sop-content-area">
+                            <div id="currentSOPContent" class="sop-tab-content active">
+                                <h4>Current Manual Process SOP</h4>
+                                <textarea id="currentSOPText" class="workflow-textarea" placeholder="Current process SOP will be generated here..."></textarea>
+                            </div>
+                            
+                            <div id="automatedSOPContent" class="sop-tab-content" style="display: none;">
+                                <h4>Automated Process SOP</h4>
+                                <textarea id="automatedSOPText" class="workflow-textarea" placeholder="Automated process SOP will be generated here..."></textarea>
+                            </div>
+                            
+                            <div id="transitionSOPContent" class="sop-tab-content" style="display: none;">
+                                <h4>Process Transition Guide</h4>
+                                <textarea id="transitionSOPText" class="workflow-textarea" placeholder="Transition guide will be generated here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ai-sop-options" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <h4>🎯 SOP Customization Options</h4>
+                        <div class="config-grid">
+                            <div class="config-item">
+                                <label>Detail Level:</label>
+                                <select id="sopDetailLevel" onchange="updateSOPSettings()">
+                                    <option value="high">High Detail (Step-by-step)</option>
+                                    <option value="medium" selected>Medium Detail (Key points)</option>
+                                    <option value="low">Low Detail (Overview)</option>
+                                </select>
+                            </div>
+                            <div class="config-item">
+                                <label>Include Screenshots:</label>
+                                <select id="sopScreenshots" onchange="updateSOPSettings()">
+                                    <option value="yes">Yes (with placeholders)</option>
+                                    <option value="no" selected>No</option>
+                                </select>
+                            </div>
+                            <div class="config-item">
+                                <label>Format:</label>
+                                <select id="sopFormat" onchange="updateSOPSettings()">
+                                    <option value="procedure" selected>Standard Procedure</option>
+                                    <option value="checklist">Checklist Format</option>
+                                    <option value="flowchart">Flowchart Description</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add SOP-specific CSS
+            const sopStyles = document.createElement('style');
+            sopStyles.innerHTML = `
+                .sop-tabs {
+                    display: flex;
+                    border-bottom: 2px solid #dee2e6;
+                    margin-bottom: 20px;
+                }
+                
+                .sop-tab {
+                    padding: 10px 20px;
+                    background: #f8f9fa;
+                    border: 1px solid #dee2e6;
+                    border-bottom: none;
+                    cursor: pointer;
+                    margin-right: 5px;
+                    border-radius: 5px 5px 0 0;
+                }
+                
+                .sop-tab.active {
+                    background: #fff;
+                    border-color: #3498db;
+                    color: #3498db;
+                    font-weight: 600;
+                }
+                
+                .sop-tab-content {
+                    min-height: 400px;
+                }
+                
+                .workflow-textarea {
+                    width: 100%;
+                    min-height: 400px;
+                    padding: 15px;
+                    border: 1px solid #dee2e6;
+                    border-radius: 5px;
+                    font-family: 'Courier New', monospace;
+                    font-size: 0.9em;
+                    background: #fff;
+                }
+            `;
+            document.head.appendChild(sopStyles);
+            
+            container.appendChild(sopSection);
+        }
+        
+        // Generate SOP Content
+        function generateSOPContent() {
+            const clientName = document.getElementById('inputClientName').value || 'Your Company';
+            const processName = document.getElementById('inputProcessName').value || 'Process Name';
+            
+            // Generate Current Process SOP
+            let currentSOP = generateCurrentProcessSOP(clientName, processName);
+            document.getElementById('currentSOPText').value = currentSOP;
+            
+            // Generate Automated Process SOP
+            let automatedSOP = generateAutomatedProcessSOP(clientName, processName);
+            document.getElementById('automatedSOPText').value = automatedSOP;
+            
+            // Generate Transition Guide
+            let transitionSOP = generateTransitionGuide(clientName, processName);
+            document.getElementById('transitionSOPText').value = transitionSOP;
+            
+            addMessage('assistant', '✅ SOPs generated successfully! You can review and customize them in the tabs above, then download or email them.');
+        }
+        
+        // Generate Current Process SOP
+        function generateCurrentProcessSOP(clientName, processName) {
+            const date = new Date().toLocaleDateString();
+            
+            let sop = `STANDARD OPERATING PROCEDURE\n`;
+            sop += `${clientName.toUpperCase()} - ${processName.toUpperCase()}\n`;
+            sop += `Current Manual Process\n`;
+            sop += `Generated: ${date}\n`;
+            sop += `${'='.repeat(60)}\n\n`;
+            
+            sop += `PURPOSE:\n`;
+            sop += `This SOP documents the current manual ${processName.toLowerCase()} process at ${clientName}.\n\n`;
+            
+            sop += `SCOPE:\n`;
+            sop += `This procedure applies to all staff involved in ${processName.toLowerCase()} activities.\n\n`;
+            
+            sop += `ROLES & RESPONSIBILITIES:\n`;
+            roles.forEach((role, index) => {
+                sop += `${index + 1}. ${role.title} - $${role.hourly.toFixed(2)}/hour\n`;
+            });
+            sop += `\n`;
+            
+            sop += `PROCEDURE STEPS:\n`;
+            manualSteps.forEach((step, index) => {
+                const role = roles[step.role] || { title: 'Unknown Role' };
+                sop += `${index + 1}. ${step.step}\n`;
+                sop += `   Responsible Role: ${role.title}\n`;
+                sop += `   Estimated Time: ${step.time} minutes\n`;
+                sop += `   Cost per Instance: $${(role.hourly * step.time / 60).toFixed(2)}\n`;
+                sop += `\n`;
+            });
+            
+            // Add summary
+            let totalTime = manualSteps.reduce((sum, step) => sum + step.time, 0);
+            let totalCost = 0;
+            manualSteps.forEach(step => {
+                const role = roles[step.role];
+                if (role) totalCost += (role.hourly * step.time / 60);
+            });
+            
+            sop += `PROCESS SUMMARY:\n`;
+            sop += `• Total Steps: ${manualSteps.length}\n`;
+            sop += `• Total Time: ${totalTime} minutes (${(totalTime/60).toFixed(2)} hours)\n`;
+            sop += `• Total Cost per Instance: $${totalCost.toFixed(2)}\n`;
+            sop += `• Monthly Volume: ${document.getElementById('monthlyVolume').value} instances\n`;
+            sop += `• Monthly Cost: $${(totalCost * parseFloat(document.getElementById('monthlyVolume').value)).toFixed(2)}\n\n`;
+            
+            sop += `QUALITY CHECKPOINTS:\n`;
+            sop += `• Review all data entry for accuracy\n`;
+            sop += `• Verify required approvals are obtained\n`;
+            sop += `• Ensure proper documentation is maintained\n`;
+            sop += `• Confirm completion notifications are sent\n\n`;
+            
+            sop += `REVISION HISTORY:\n`;
+            sop += `Version 1.0 - ${date} - Initial SOP creation\n`;
+            
+            return sop;
+        }
+        
+        // Generate Automated Process SOP
+        function generateAutomatedProcessSOP(clientName, processName) {
+            const date = new Date().toLocaleDateString();
+            
+            let sop = `STANDARD OPERATING PROCEDURE\n`;
+            sop += `${clientName.toUpperCase()} - ${processName.toUpperCase()}\n`;
+            sop += `Automated Process with SAXTech Solution\n`;
+            sop += `Generated: ${date}\n`;
+            sop += `${'='.repeat(60)}\n\n`;
+            
+            sop += `PURPOSE:\n`;
+            sop += `This SOP documents the automated ${processName.toLowerCase()} process using SAXTech's AI-powered automation solution.\n\n`;
+            
+            sop += `SCOPE:\n`;
+            sop += `This procedure applies to all staff interfacing with the automated ${processName.toLowerCase()} system.\n\n`;
+            
+            sop += `SYSTEM ACCESS:\n`;
+            sop += `• Process Portal: [To be provided by SAXTech]\n`;
+            sop += `• User Authentication: Microsoft 365 SSO\n`;
+            sop += `• Support Contact: SAXTech Support Portal\n\n`;
+            
+            sop += `ROLES & RESPONSIBILITIES:\n`;
+            const involvedRoles = new Set();
+            automatedSteps.forEach(step => {
+                if (step.role >= 0) involvedRoles.add(step.role);
+            });
+            Array.from(involvedRoles).forEach(roleIndex => {
+                const role = roles[roleIndex];
+                if (role) {
+                    sop += `• ${role.title} - System oversight and exception handling\n`;
+                }
+            });
+            sop += `\n`;
+            
+            sop += `AUTOMATED PROCESS FLOW:\n`;
+            automatedSteps.forEach((step, index) => {
+                sop += `${index + 1}. ${step.step}\n`;
+                if (step.role >= 0) {
+                    const role = roles[step.role];
+                    sop += `   Human Role: ${role ? role.title : 'Unknown'}\n`;
+                    sop += `   Time Required: ${step.time} minutes\n`;
+                } else {
+                    sop += `   Automation: ${step.feature}\n`;
+                    sop += `   Processing Time: ${step.isAI ? 'AI Processing' : 'Automated'} (~${step.time || 1} minute)\n`;
+                }
+                sop += `\n`;
+            });
+            
+            // Add monitoring and exception handling
+            sop += `SYSTEM MONITORING:\n`;
+            sop += `• Real-time dashboard available in process portal\n`;
+            sop += `• Automated alerts for failed processes\n`;
+            sop += `• Daily summary reports sent to management\n`;
+            sop += `• 24/7 monitoring by SAXTech operations team\n\n`;
+            
+            sop += `EXCEPTION HANDLING:\n`;
+            sop += `• System will flag exceptions requiring human review\n`;
+            sop += `• Notifications sent to designated staff immediately\n`;
+            sop += `• Manual override capabilities for authorized users\n`;
+            sop += `• All exceptions logged for continuous improvement\n\n`;
+            
+            // Add performance metrics
+            let totalTime = automatedSteps.reduce((sum, step) => sum + step.time, 0);
+            let manualTime = manualSteps.reduce((sum, step) => sum + step.time, 0);
+            
+            sop += `PERFORMANCE METRICS:\n`;
+            sop += `• Processing Time: ${totalTime} minutes (vs ${manualTime} manual)\n`;
+            sop += `• Time Savings: ${manualTime - totalTime} minutes per instance\n`;
+            sop += `• Accuracy Rate: 99.5%+ (AI validation)\n`;
+            sop += `• Availability: 99.5% uptime SLA\n\n`;
+            
+            sop += `ESCALATION PROCEDURES:\n`;
+            sop += `1. System Issues: Contact SAXTech Support (24/7)\n`;
+            sop += `2. Process Exceptions: Review with designated manager\n`;
+            sop += `3. Business Rules Changes: Submit change request to SAXTech\n\n`;
+            
+            sop += `REVISION HISTORY:\n`;
+            sop += `Version 1.0 - ${date} - Initial automated process SOP\n`;
+            
+            return sop;
+        }
+        
+        // Generate Transition Guide
+        function generateTransitionGuide(clientName, processName) {
+            const date = new Date().toLocaleDateString();
+            
+            let guide = `PROCESS TRANSITION GUIDE\n`;
+            guide += `${clientName.toUpperCase()} - ${processName.toUpperCase()}\n`;
+            guide += `Manual to Automated Process Transition\n`;
+            guide += `Generated: ${date}\n`;
+            guide += `${'='.repeat(60)}\n\n`;
+            
+            guide += `OVERVIEW:\n`;
+            guide += `This guide outlines the transition from the current manual ${processName.toLowerCase()} process to the new automated system powered by SAXTech.\n\n`;
+            
+            guide += `TRANSITION TIMELINE:\n`;
+            timelinePhases.forEach((phase, index) => {
+                guide += `Phase ${index + 1}: ${phase.phase} (${phase.duration} weeks)\n`;
+                guide += `   Activities: ${phase.activities}\n`;
+                guide += `   Deliverables: ${phase.deliverables}\n\n`;
+            });
+            
+            guide += `CHANGE IMPACT ANALYSIS:\n`;
+            
+            // Staff impact
+            guide += `STAFF IMPACT:\n`;
+            const roleImpact = new Map();
+            
+            // Calculate current workload by role
+            manualSteps.forEach(step => {
+                const roleName = roles[step.role]?.title || 'Unknown';
+                if (!roleImpact.has(roleName)) {
+                    roleImpact.set(roleName, { current: 0, future: 0 });
+                }
+                roleImpact.get(roleName).current += step.time;
+            });
+            
+            // Calculate future workload by role
+            automatedSteps.forEach(step => {
+                if (step.role >= 0) {
+                    const roleName = roles[step.role]?.title || 'Unknown';
+                    if (!roleImpact.has(roleName)) {
+                        roleImpact.set(roleName, { current: 0, future: 0 });
+                    }
+                    roleImpact.get(roleName).future += step.time;
+                }
+            });
+            
+            roleImpact.forEach((impact, roleName) => {
+                const timeSaved = impact.current - impact.future;
+                const percentSaved = impact.current > 0 ? (timeSaved / impact.current * 100).toFixed(1) : 0;
+                guide += `• ${roleName}: ${impact.current} min → ${impact.future} min (${timeSaved} min saved, ${percentSaved}% reduction)\n`;
+            });
+            guide += `\n`;
+            
+            guide += `TRAINING REQUIREMENTS:\n`;
+            guide += `• All users: 2-hour system overview session\n`;
+            guide += `• Process owners: 4-hour detailed training\n`;
+            guide += `• IT contacts: 2-hour technical briefing\n`;
+            guide += `• Training materials provided by SAXTech\n`;
+            guide += `• Hands-on practice environment available\n\n`;
+            
+            guide += `RISK MITIGATION:\n`;
+            riskFactors.forEach((risk, index) => {
+                guide += `Risk ${index + 1}: ${risk.risk}\n`;
+                guide += `   Mitigation: ${risk.mitigation}\n\n`;
+            });
+            
+            guide += `SUCCESS METRICS:\n`;
+            guide += `• Process completion time reduction\n`;
+            guide += `• Error rate improvement\n`;
+            guide += `• User satisfaction scores\n`;
+            guide += `• Cost savings realization\n`;
+            guide += `• System availability metrics\n\n`;
+            
+            guide += `COMMUNICATION PLAN:\n`;
+            guide += `• Week -4: Announce upcoming changes to all staff\n`;
+            guide += `• Week -2: Detailed briefings for affected departments\n`;
+            guide += `• Week -1: Final preparation and user access setup\n`;
+            guide += `• Go-Live: Full support available, parallel processing if needed\n`;
+            guide += `• Week +1,2,4: Follow-up sessions and optimization\n\n`;
+            
+            guide += `POST-IMPLEMENTATION SUPPORT:\n`;
+            guide += `• 30-day hypercare period with extended support hours\n`;
+            guide += `• Weekly check-ins for first month\n`;
+            guide += `• Monthly optimization reviews\n`;
+            guide += `• Ongoing SAXTech managed service support\n\n`;
+            
+            guide += `CONTACT INFORMATION:\n`;
+            guide += `• SAXTech Project Manager: [To be assigned]\n`;
+            guide += `• Technical Support: support@saxtechnology.com\n`;
+            guide += `• Emergency Escalation: [To be provided]\n\n`;
+            
+            guide += `REVISION HISTORY:\n`;
+            guide += `Version 1.0 - ${date} - Initial transition guide\n`;
+            
+            return guide;
+        }
+        
+        // SOP Tab Management
+        function showSOPTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.sop-tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.querySelectorAll('.sop-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'SOPContent').style.display = 'block';
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+        
+        // Update SOP Settings
+        function updateSOPSettings() {
+            // Regenerate SOPs with new settings
+            generateSOPContent();
+        }
+        
+        // Download SOPs
+        function downloadSOPs() {
+            const clientName = document.getElementById('inputClientName').value || 'Your Company';
+            const processName = document.getElementById('inputProcessName').value || 'Process';
+            const date = new Date().toISOString().split('T')[0];
+            
+            const currentSOP = document.getElementById('currentSOPText').value;
+            const automatedSOP = document.getElementById('automatedSOPText').value;
+            const transitionSOP = document.getElementById('transitionSOPText').value;
+            
+            const combined = `${currentSOP}\n\n${'='.repeat(80)}\n\n${automatedSOP}\n\n${'='.repeat(80)}\n\n${transitionSOP}`;
+            
+            const blob = new Blob([combined], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${clientName}_${processName}_SOPs_${date}.txt`.replace(/\s+/g, '_');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            addMessage('assistant', '📥 SOPs downloaded successfully! The file includes all three SOP documents.');
+        }
+        
+        // Email SOPs (placeholder - would integrate with email service)
+        function emailSOPs() {
+            const currentState = getCurrentROIState();
+            
+            // In a real implementation, this would send via n8n webhook or email service
+            // For now, we'll show a dialog with email content
+            
+            const clientName = currentState.clientName || 'Your Company';
+            const processName = currentState.processName || 'Process';
+            
+            const emailContent = `Subject: ${clientName} - ${processName} Standard Operating Procedures\n\n` +
+                `Dear Team,\n\n` +
+                `Please find attached the Standard Operating Procedures for the ${processName} process:\n\n` +
+                `• Current Manual Process SOP\n` +
+                `• Automated Process SOP (with SAXTech solution)\n` +
+                `• Process Transition Guide\n\n` +
+                `These documents outline the complete process transformation and should be reviewed by all stakeholders.\n\n` +
+                `Best regards,\n` +
+                `SAX Technology Advisors`;
+            
+            // Copy to clipboard and show instructions
+            navigator.clipboard.writeText(emailContent).then(() => {
+                alert('📧 Email content copied to clipboard!\n\nYou can now paste this into your email client. In a future version, this will integrate with your email system for direct sending.');
+                addMessage('assistant', '📧 Email content prepared and copied to clipboard. You can now paste it into your email client.');
+            }).catch(() => {
+                alert('Email feature coming soon! For now, please use the Download SOPs button.');
+            });
         }
         
         // Initialize everything when page loads
