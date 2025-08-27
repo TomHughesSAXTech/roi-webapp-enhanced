@@ -3830,38 +3830,28 @@
             const contractLength = parseFloat(document.getElementById('contractLength').value) || 24;
             const totalDuration = timelinePhases.reduce((sum, phase) => sum + phase.duration, 0);
             
-            // Calculate ROI metrics
-            let manualTotalCost = 0;
-            let autoTotalCost = 0;
-            let manualTotalTime = 0;
-            let autoTotalTime = 0;
-            const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
-            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
+            // Use the actual calculated values from the ROI UI instead of recalculating
+            // This ensures the PDF matches exactly what the user sees in the calculator
+            const timeSavingsPercent = document.getElementById('timeSavingsPercent')?.textContent || '0';
+            const annualLaborSavingsText = document.getElementById('annualLaborCostSavings')?.textContent || '$0';
+            const annualLaborSavings = parseFloat(annualLaborSavingsText.replace(/[$,]/g, '')) || 0;
+            const paybackMonthsText = document.getElementById('paybackPeriod')?.textContent || '0 months';
+            const paybackMonths = parseFloat(paybackMonthsText.replace(' months', '').replace(' Months', '')) || 0;
+            const firstYearROIText = document.getElementById('firstYearROI')?.textContent || '0%';
+            const firstYearROI = parseFloat(firstYearROIText.replace('%', '')) || 0;
             
-            // Calculate from current steps
-            currentState.manualSteps.forEach(step => {
-                if (currentState.roles[step.role]) {
-                    const role = currentState.roles[step.role];
-                    manualTotalCost += (role.hourly * step.time / 60);
-                    manualTotalTime += step.time;
+            console.log('Using displayed ROI values:', {
+                timeSavingsPercent,
+                annualLaborSavings,
+                paybackMonths,
+                firstYearROI,
+                sources: {
+                    timeSavingsElement: document.getElementById('timeSavingsPercent')?.textContent,
+                    annualSavingsElement: document.getElementById('annualLaborCostSavings')?.textContent,
+                    paybackElement: document.getElementById('paybackPeriod')?.textContent,
+                    roiElement: document.getElementById('firstYearROI')?.textContent
                 }
             });
-            
-            currentState.automatedSteps.forEach(step => {
-                if (step.role >= 0 && currentState.roles[step.role]) {
-                    const role = currentState.roles[step.role];
-                    autoTotalCost += (role.hourly * step.time / 60);
-                    autoTotalTime += step.time;
-                } else if (step.isAI) {
-                    autoTotalCost += aiCostPerProcess;
-                }
-            });
-            
-            const timeSavingsPercent = manualTotalTime > 0 ? ((manualTotalTime - autoTotalTime) / manualTotalTime * 100).toFixed(1) : 0;
-            const annualLaborSavings = (manualTotalCost - autoTotalCost) * monthlyVolume * 12;
-            const totalY1Investment = implementationCost + monthlyServiceCost * 12 + calculateAnnualOperatingCosts();
-            const paybackMonths = totalY1Investment > 0 ? (totalY1Investment / (annualLaborSavings / 12)) : 0;
-            const firstYearROI = totalY1Investment > 0 ? ((annualLaborSavings - totalY1Investment) / totalY1Investment * 100) : 0;
             
             // Calculate partner hours freed (assuming first role is Partner)
             let partnerMinutes = 0;
