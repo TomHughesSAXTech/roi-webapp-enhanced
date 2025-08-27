@@ -4206,10 +4206,18 @@
             try {
                 addMessage('system', '🔄 Generating your professional SOW PDF...');
                 
-                // Store the data globally for the PDF window to pick up BEFORE opening
+                // Method 1: Store in sessionStorage (works across same-origin pages)
+                try {
+                    sessionStorage.setItem('pdfTemplateData', JSON.stringify(pdfData));
+                    console.log('Stored PDF data in sessionStorage');
+                } catch (e) {
+                    console.error('Could not store in sessionStorage:', e);
+                }
+                
+                // Method 2: Store the data globally for the PDF window to pick up
                 window.pdfDataForTemplate = pdfData;
                 
-                // Also encode data as URL parameter as fallback for cross-origin issues
+                // Method 3: Try URL parameter if data is small enough
                 const encodedData = encodeURIComponent(JSON.stringify(pdfData));
                 const maxUrlLength = 2000; // Keep URL under browser limits
                 
@@ -4217,9 +4225,11 @@
                 if (encodedData.length < maxUrlLength) {
                     // If data is small enough, pass it via URL
                     pdfUrl = `saxtech_pdf_template.html?data=${encodedData}`;
-                    console.log('Passing PDF data via URL parameter');
+                    console.log('Passing PDF data via URL parameter (size: ' + encodedData.length + ')');
                 } else {
-                    console.log('PDF data too large for URL, relying on window.opener method');
+                    // Pass a flag to indicate data is in sessionStorage
+                    pdfUrl = 'saxtech_pdf_template.html?useSession=true';
+                    console.log('PDF data too large for URL (' + encodedData.length + ' chars), using sessionStorage');
                 }
                 
                 // Open the template directly in a new window/tab

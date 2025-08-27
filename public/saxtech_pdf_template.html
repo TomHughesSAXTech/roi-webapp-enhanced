@@ -1777,6 +1777,27 @@
                 }
             }
             
+            // Check if useSession flag is set (data is in sessionStorage)
+            const useSession = urlParams.get('useSession');
+            if (useSession === 'true') {
+                console.log('useSession flag detected, checking sessionStorage...');
+                try {
+                    const sessionData = sessionStorage.getItem('pdfTemplateData');
+                    if (sessionData) {
+                        const data = JSON.parse(sessionData);
+                        console.log('Found PDF data in sessionStorage:', data);
+                        populatePDFData(data);
+                        // Clear sessionStorage after use
+                        sessionStorage.removeItem('pdfTemplateData');
+                        return true;
+                    } else {
+                        console.log('No data found in sessionStorage');
+                    }
+                } catch (e) {
+                    console.error('Error reading from sessionStorage:', e);
+                }
+            }
+            
             // Try to get data from the opener window (parent window)
             if (window.opener) {
                 console.log('Parent window detected');
