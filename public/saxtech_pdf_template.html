@@ -818,25 +818,9 @@
             <h2>Scope of Work</h2>
             
             <h3>Activities and Deliverables</h3>
-            
-            <h3>Discovery & Planning</h3>
-            <ul>
-                <li>Conduct stakeholder workshops to define business objectives, success metrics, and use cases.</li>
-                <li>Identify sample documents for ingestion and mapping of data flow.</li>
-            </ul>
-            
-            <h3>AI & Automation Infrastructure</h3>
-            <ul>
-                <li>Provision and configure Azure Function Apps for serverless workflow orchestration.</li>
-                <li>Deploy SAXTech Automation Engine on Azure Container Apps for visual automation design.</li>
-                <li>Deploy a vector-enabled search index for contextual document retrieval.</li>
-                <li>Establish an OCR pipeline to process and extract content from sample PDFs.</li>
-            </ul>
-            
-            <h3>Orchestration & Automation</h3>
-            <ul>
-                <li>Implement serverless workflows to orchestrate queries, search retrieval, and AI-generated responses.</li>
-            </ul>
+            <div id="activitiesAndDeliverables">
+                <!-- Dynamic activities and deliverables will be inserted here -->
+            </div>
         </div>
     </div>
     
@@ -848,12 +832,6 @@
         </div>
         
         <div class="section-content">
-            <h3>AI Integration</h3>
-            <ul>
-                <li>Build automated workflow interface accessible via Microsoft Teams and/or a web widget.</li>
-                <li>Configure initial prompt logic to support natural, context-aware conversations.</li>
-                <li>Enable multi-turn queries and grounded responses from indexed documents.</li>
-            </ul>
             
             <h3>Security & Access Controls</h3>
             <ul>
@@ -871,13 +849,9 @@
             </ul>
             
             <h3>Out of Scope</h3>
-            <ul>
-                <li>Large-scale document ingestion beyond the defined dataset.</li>
-                <li>Enterprise compliance beyond Microsoft's baseline (relies on Microsoft's publicly stated compliance frameworks).</li>
-                <li>Client administrative control of the AI or search environment.</li>
-                <li>Long-term support, SLAs, or monitoring beyond the implementation phase.</li>
-                <li>Extensive UI/UX customization outside of the prototype.</li>
-            </ul>
+            <div id="outOfScopeItems">
+                <!-- Dynamic out of scope items will be inserted here -->
+            </div>
             
             <h3>Current State Analysis</h3>
             <div id="currentStateAnalysis">
@@ -914,12 +888,6 @@
         </div>
         
         <div class="investment-content">
-            <div class="transition-section">
-                <h2>Risk Mitigation Strategy</h2>
-                <div id="riskMitigationSection">
-                    <!-- Dynamic risk factors and mitigations will be inserted here -->
-                </div>
-            </div>
             
             <div class="transition-section">
                 <h2>Added Value & Benefits</h2>
@@ -939,46 +907,21 @@
                 
                 <h2>Managed Services Pricing (Post Implementation):</h2>
                 
-                <table class="pricing-table">
-                    <thead>
-                        <tr>
-                            <th>Monthly Fee</th>
-                            <th>Per User</th>
-                            <th>OCR Overage</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>$<span id="monthlyServiceCost">2,000</span></td>
-                            <td>$100/User</td>
-                            <td>$0.20 per page</td>
-                            <td>Minimum covers first 20 users or $2k MRR</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <ul>
-                    <li>OCR overages apply only for high-volume document processing (>1,000 pages).</li>
-                    <li>Azure and AI processing costs are wrapped into the managed service pricing.</li>
-                </ul>
+                <div id="managedServicesPricingBreakdown" class="pricing-box">
+                    <!-- Dynamic monthly managed services breakdown will be inserted here -->
+                </div>
             </div>
             
             <div class="acceptance-section">
                 <h3>Acceptance Criteria</h3>
-                <p>The implementation is considered successful when:</p>
-                <ul>
-                    <li>Users can retrieve accurate and contextual responses from indexed sample documents.</li>
-                    <li>OCR and search pipelines function as intended.</li>
-                </ul>
+                <div id="acceptanceCriteria">
+                    <!-- Dynamic acceptance criteria will be inserted here -->
+                </div>
                 
                 <h3>Assumptions</h3>
-                <ul>
-                    <li>Client provides sample documents and access as required.</li>
-                    <li>All infrastructure is hosted and controlled by SAX Tech.</li>
-                    <li>AI technologies used during implementation may evolve; SAX Tech reserves the right to adjust models and services to ensure optimal performance and cost-effectiveness.</li>
-                    <li>Azure and SaaS consumption during implementation is included in the fixed fee (within agreed limits).</li>
-                </ul>
+                <div id="projectAssumptions">
+                    <!-- Dynamic project assumptions will be inserted here -->
+                </div>
             </div>
         </div>
     </div>
@@ -1090,7 +1033,11 @@
             populateImplementationBreakdown(data);
             populateMonthlyServiceBreakdown(data);
             populateProjectTimeline(data);
-            populateRiskMitigation(data);
+            populateActivitiesAndDeliverables(data);
+            populateOutOfScope(data);
+            populateAcceptanceCriteria(data);
+            populateProjectAssumptions(data);
+            populateManagedServicesPricing(data);
             populateAddedValue(data);
             
             // ROI metrics from the analysis
@@ -1136,13 +1083,16 @@
             const manualCost = analysis.costPerProcess?.manual || 0;
             
             container.innerHTML = `
-                <p>Current ${data.projectOverview?.processName || 'process'} involves ${manualSteps} manual steps requiring approximately ${Math.round(manualTime)} minutes per instance at a cost of $${manualCost.toFixed(2)} per process.</p>
-                <p>The manual approach involves multiple stakeholders, creates opportunities for errors, and limits scalability as volume increases.</p>
-                ${data.processAnalysis?.manualSteps ? '<h4>Manual Process Steps:</h4>' : ''}
+                <p>The current ${data.projectOverview?.processName || 'process'} involves ${manualSteps} manual steps requiring approximately ${Math.round(manualTime)} minutes per instance at a cost of $${manualCost.toFixed(2)} per process.</p>
+                <p>This manual approach involves multiple stakeholders, creates opportunities for errors, and limits scalability as volume increases.</p>
+                ${data.processAnalysis?.manualSteps && data.processAnalysis.manualSteps.length > 0 ? '<h4>Key Manual Process Steps:</h4>' : ''}
                 <ul>
-                    ${(data.processAnalysis?.manualSteps || []).map((step, index) => 
-                        `<li>${step.description || `Step ${index + 1}: ${step.task || 'Manual task'} (${step.time || 'N/A'} minutes)`}</li>`
-                    ).join('')}
+                    ${(data.processAnalysis?.manualSteps || []).map((step, index) => {
+                        const stepName = step.task || `Step ${index + 1}`;
+                        const roleName = step.role || 'Staff Member';
+                        const timeText = step.time ? `${step.time} minutes` : 'Variable time';
+                        return `<li>${stepName} - ${roleName} (${timeText})</li>`;
+                    }).join('')}
                 </ul>
             `;
         }
@@ -1236,17 +1186,20 @@
             
             const phases = data.timelinePhases || [
                 { name: 'Discovery & Planning', duration: '2 weeks', deliverables: ['Requirements analysis', 'Architecture design', 'Project plan'] },
-                { name: 'Development & Integration', duration: '4 weeks', deliverables: ['AI model development', 'System integrations', 'Workflow implementation'] },
-                { name: 'Testing & Deployment', duration: '2 weeks', deliverables: ['Quality assurance', 'User acceptance testing', 'Production deployment'] },
-                { name: 'Training & Handover', duration: '1 week', deliverables: ['User training', 'Documentation', 'Knowledge transfer'] }
+                { name: 'Development & Integration', duration: '4 weeks', deliverables: ['Core automation development', 'System integrations', 'Testing & validation'] },
+                { name: 'Training & Deployment', duration: '2 weeks', deliverables: ['User training', 'Production deployment', 'Go-live support'] }
             ];
             
             let timelineHTML = '';
             phases.forEach((phase, index) => {
+                const phaseName = phase.name || `Phase ${index + 1}`;
+                const duration = phase.duration || 'TBD';
+                const deliverables = phase.deliverables || [];
+                
                 timelineHTML += `
-                    <h4>Phase ${index + 1}: ${phase.name} (${phase.duration})</h4>
+                    <h4>Phase ${index + 1}: ${phaseName} (${duration})</h4>
                     <ul>
-                        ${(phase.deliverables || []).map(deliverable => `<li>${deliverable}</li>`).join('')}
+                        ${deliverables.map(deliverable => `<li>${deliverable}</li>`).join('')}
                     </ul>
                 `;
             });
@@ -1300,6 +1253,164 @@
             benefitsHTML += '</ul>';
             
             container.innerHTML = benefitsHTML;
+        }
+        
+        // Helper function to populate activities and deliverables
+        function populateActivitiesAndDeliverables(data) {
+            const container = document.getElementById('activitiesAndDeliverables');
+            if (!container) return;
+            
+            const processName = data.projectOverview?.processName || 'process automation';
+            const hasAI = data.processAnalysis?.automatedSteps > 0;
+            const hasIntegrations = data.implementationComponents?.some(comp => comp.name.toLowerCase().includes('integration'));
+            
+            let activitiesHTML = `
+                <h4>Discovery & Planning</h4>
+                <ul>
+                    <li>Conduct stakeholder workshops to define business objectives and success metrics</li>
+                    <li>Map current ${processName.toLowerCase()} process and identify automation opportunities</li>
+                    <li>Design technical architecture and system integration points</li>
+                </ul>
+                
+                <h4>Automation Development</h4>
+                <ul>
+                    <li>Configure SAXTech Automation Engine workflows</li>
+                    <li>Develop automated ${processName.toLowerCase()} processing logic</li>`;
+            
+            if (hasAI) {
+                activitiesHTML += '<li>Implement AI-powered validation and decision-making capabilities</li>';
+            }
+            
+            if (hasIntegrations) {
+                activitiesHTML += '<li>Build API integrations with existing business systems</li>';
+            }
+            
+            activitiesHTML += `
+                    <li>Create user-friendly web interfaces for process initiation</li>
+                </ul>
+                
+                <h4>Testing & Deployment</h4>
+                <ul>
+                    <li>Comprehensive system testing and quality assurance</li>
+                    <li>User acceptance testing with key stakeholders</li>
+                    <li>Production deployment and go-live support</li>
+                    <li>Staff training and documentation</li>
+                </ul>
+            `;
+            
+            container.innerHTML = activitiesHTML;
+        }
+        
+        // Helper function to populate out of scope items
+        function populateOutOfScope(data) {
+            const container = document.getElementById('outOfScopeItems');
+            if (!container) return;
+            
+            const outOfScope = [
+                'Legacy system modifications or upgrades',
+                'Data migration from systems not included in scope',
+                'Custom integrations beyond those specified',
+                'Extensive UI/UX customization outside of standard templates',
+                'Third-party software licensing costs'
+            ];
+            
+            let scopeHTML = '<ul>';
+            outOfScope.forEach(item => {
+                scopeHTML += `<li>${item}</li>`;
+            });
+            scopeHTML += '</ul>';
+            
+            container.innerHTML = scopeHTML;
+        }
+        
+        // Helper function to populate acceptance criteria
+        function populateAcceptanceCriteria(data) {
+            const container = document.getElementById('acceptanceCriteria');
+            if (!container) return;
+            
+            const processName = data.projectOverview?.processName || 'process';
+            const timeSavings = data.investmentSummary?.timeReduction || '80%';
+            
+            const criteria = [
+                `Automated ${processName.toLowerCase()} workflow processes instances successfully`,
+                `System achieves target ${timeSavings} time reduction in processing`,
+                'All specified integrations function correctly',
+                'User training completed and staff can operate the system independently',
+                'System monitoring and alerting mechanisms are operational'
+            ];
+            
+            let criteriaHTML = '<p>The implementation is considered successful when:</p><ul>';
+            criteria.forEach(criterion => {
+                criteriaHTML += `<li>${criterion}</li>`;
+            });
+            criteriaHTML += '</ul>';
+            
+            container.innerHTML = criteriaHTML;
+        }
+        
+        // Helper function to populate project assumptions
+        function populateProjectAssumptions(data) {
+            const container = document.getElementById('projectAssumptions');
+            if (!container) return;
+            
+            const assumptions = [
+                'Client provides timely access to systems and stakeholders as required',
+                'All infrastructure is hosted and managed by SAX Technology Advisors',
+                'Current business processes and requirements remain stable during implementation',
+                'Client staff are available for training and user acceptance testing',
+                'Azure and automation platform costs are included in the managed service fee'
+            ];
+            
+            let assumptionsHTML = '<ul>';
+            assumptions.forEach(assumption => {
+                assumptionsHTML += `<li>${assumption}</li>`;
+            });
+            assumptionsHTML += '</ul>';
+            
+            container.innerHTML = assumptionsHTML;
+        }
+        
+        // Helper function to populate managed services pricing breakdown
+        function populateManagedServicesPricing(data) {
+            const container = document.getElementById('managedServicesPricingBreakdown');
+            if (!container) return;
+            
+            const monthlyFee = data.commercials?.monthlyServiceFee?.replace(/[$,]/g, '') || '2100';
+            const monthlyTotal = parseInt(monthlyFee);
+            
+            // Use the same breakdown logic as the main monthly service breakdown
+            const breakdown = [
+                { name: 'Infrastructure & Hosting', cost: Math.round(monthlyTotal * 0.3) },
+                { name: 'AI Processing & Platform Costs', cost: Math.round(monthlyTotal * 0.25) },
+                { name: 'System Monitoring & Support', cost: Math.round(monthlyTotal * 0.25) },
+                { name: 'Platform Management & Updates', cost: Math.round(monthlyTotal * 0.2) }
+            ];
+            
+            let pricingHTML = `
+                <div style="text-align: center; margin: 20px 0;">
+                    <div style="font-size: 32px; font-weight: bold; color: #3498db; margin-bottom: 10px;">
+                        $${monthlyTotal.toLocaleString()}/month
+                    </div>
+                    <div style="font-size: 16px; color: #666;">Complete Managed Service</div>
+                </div>
+                
+                <h4>Service Includes:</h4>
+                <ul>
+            `;
+            
+            breakdown.forEach(item => {
+                pricingHTML += `<li><strong>${item.name}:</strong> $${item.cost.toLocaleString()}/month</li>`;
+            });
+            
+            pricingHTML += `
+                    <li><strong>24/7 System Monitoring</strong> with proactive alerts</li>
+                    <li><strong>Monthly Optimization Reviews</strong> and performance tuning</li>
+                    <li><strong>Technical Support</strong> during business hours</li>
+                    <li><strong>Platform Updates & Enhancements</strong> included</li>
+                </ul>
+            `;
+            
+            container.innerHTML = pricingHTML;
         }
         
         // Make function available globally
