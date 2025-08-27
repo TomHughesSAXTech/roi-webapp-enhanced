@@ -1654,31 +1654,6 @@
                             <button class="btn-update" onclick="openSOWChat()" style="margin: 5px; background: #28a745;">💬 SOW Assistant</button>
                         </div>
                         
-                        <div class="config-grid" style="margin-bottom: 20px;">
-                            <div class="config-item">
-                                <label>SOW Template:</label>
-                                <select id="sowTemplate" onchange="updateSOWSettings()">
-                                    <option value="saxtechnology" selected>SAX Technology Professional</option>
-                                    <option value="generic">Generic Business</option>
-                                    <option value="consulting">Consulting Services</option>
-                                </select>
-                            </div>
-                            <div class="config-item">
-                                <label>Detail Level:</label>
-                                <select id="sowDetailLevel" onchange="updateSOWSettings()">
-                                    <option value="executive">Executive Summary</option>
-                                    <option value="detailed" selected>Detailed Technical</option>
-                                    <option value="comprehensive">Comprehensive</option>
-                                </select>
-                            </div>
-                            <div class="config-item">
-                                <label>Include ROI Metrics:</label>
-                                <select id="sowIncludeROI" onchange="updateSOWSettings()">
-                                    <option value="yes" selected>Yes (Recommended)</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-                        </div>
                         
                         <!-- Client/Company Information Editor -->
                         <div class="config-panel" style="margin-bottom: 20px; background: #f0f8ff;">
@@ -3903,17 +3878,31 @@
             const deliverables = generateDeliverables(currentState, processName);
             const technicalApproach = generateTechnicalApproach(currentState, processName);
             
+            // Get client information from SOW fields
+            const sowClientCompany = document.getElementById('sowClientCompany')?.value || clientName;
+            const sowClientContact = document.getElementById('sowClientContact')?.value || extractContactName(clientName);
+            const sowClientAddress = document.getElementById('sowClientAddress')?.value || 'Client Address\nTo be provided';
+            const sowProposalDate = document.getElementById('sowProposalDate')?.value;
+            const sowSaxRep = document.getElementById('sowSaxRep')?.value || 'Leon Grassi, Partner, CRO';
+            const sowSaxEmail = document.getElementById('sowSaxEmail')?.value || 'leon.grassi@saxtechnology.com';
+            
             // Return data structure matching saxtech_pdf_template.html expectations
             return {
                 clientInfo: {
-                    companyName: clientName,
-                    contactName: extractContactName(clientName),
-                    address: 'Client Address\nTo be provided',
-                    date: new Date().toLocaleDateString('en-US', { 
+                    companyName: sowClientCompany,
+                    contactName: sowClientContact,
+                    address: sowClientAddress,
+                    date: sowProposalDate ? new Date(sowProposalDate).toLocaleDateString('en-US', { 
                         year: 'numeric', 
                         month: 'long', 
                         day: 'numeric' 
-                    })
+                    }) : new Date().toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    }),
+                    saxRepresentative: sowSaxRep,
+                    saxEmail: sowSaxEmail
                 },
                 projectOverview: {
                     processName: processName,
