@@ -949,11 +949,6 @@
             <div id="monthlyServiceBreakdown" class="pricing-box">
                 <!-- Dynamic monthly service breakdown will be inserted here -->
             </div>
-            
-            <h3>Project Timeline</h3>
-            <div id="projectTimeline">
-                <!-- Dynamic timeline content will be inserted here -->
-            </div>
         </div>
     </div>
     
@@ -1006,46 +1001,50 @@
     <!-- ROI Summary Page -->
     <div class="roi-page">
         <div class="roi-content">
+            <!-- Executive Summary Section (matching ROI calculator) -->
+            <div style="background: rgba(255,255,255,0.15); border-radius: 15px; padding: 25px; margin-bottom: 30px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">
+                <h2 style="color: white; text-align: center; margin-bottom: 25px; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Executive Summary</h2>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.2); border-radius: 10px; padding: 20px; text-align: center; backdrop-filter: blur(5px);">
+                        <div style="font-size: 24px; font-weight: bold; color: white; margin-bottom: 5px;">$<span id="execSummaryAnnualSavings">86,040</span></div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 600;">Annual Labor Cost Savings</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); border-radius: 10px; padding: 20px; text-align: center; backdrop-filter: blur(5px);">
+                        <div style="font-size: 24px; font-weight: bold; color: white; margin-bottom: 5px;"><span id="execSummaryTimeReduction">86.7</span>%</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 600;">Time Reduction</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); border-radius: 10px; padding: 20px; text-align: center; backdrop-filter: blur(5px);">
+                        <div style="font-size: 24px; font-weight: bold; color: white; margin-bottom: 5px;"><span id="execSummaryPaybackPeriod">4.9</span> Months</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 600;">Payback Period</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); border-radius: 10px; padding: 20px; text-align: center; backdrop-filter: blur(5px);">
+                        <div style="font-size: 24px; font-weight: bold; color: white; margin-bottom: 5px;"><span id="execSummaryFirstYearROI">143</span>%</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 600;">First Year ROI</div>
+                    </div>
+                </div>
+            </div>
+
             <h1>Executive Recommendation</h1>
             
             <p style="font-size: 18px; line-height: 1.6; margin-bottom: 30px;">
-                Based on the comprehensive ROI analysis, SAX Technology Advisors recommends immediate implementation of the automation solution for <span id="roiClientName">FCS Group, LLC</span>'s <span id="roiProcessName">project estimating</span> process.
+                Based on the comprehensive ROI analysis, SAXTech recommends immediate implementation of the automation solution for <span id="roiClientName">Greer Walker</span>'s <span id="roiProcessName">client onboarding process</span>.
             </p>
-            
-            <div class="metrics-grid">
-                <div class="metric-box">
-                    <div class="metric-value">$<span id="totalAnnualSavings">156,000</span></div>
-                    <div class="metric-label">Annual Labor Cost Savings</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-value"><span id="totalTimeReduction">91.7</span>%</div>
-                    <div class="metric-label">Time Reduction</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-value"><span id="totalPaybackPeriod">2.8</span> Months</div>
-                    <div class="metric-label">Payback Period</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-value"><span id="totalFirstYearROI">292</span>%</div>
-                    <div class="metric-label">First Year ROI</div>
-                </div>
-            </div>
             
             <div class="roi-summary">
                 <div class="roi-breakdown">
                     <div>
                         <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Investment Summary:</h3>
                         <ul>
-                            <li>✓ Total Year 1 Investment: $<span id="year1TotalInvestment">71,700</span></li>
-                            <li>✓ Net Year 1 Savings: $<span id="year1NetSavings">84,300</span></li>
-                            <li>✓ Payback Period: <span id="finalPaybackPeriod">2.8</span> months</li>
-                            <li>✓ 3-Year ROI: <span id="threeYearROI">265</span>%</li>
+                            <li>✓ Total Year 1 Investment: $<span id="year1TotalInvestment">49,879</span></li>
+                            <li>✓ Net Year 1 Savings: $<span id="year1NetSavings">71,161.2</span></li>
+                            <li>✓ Payback Period: <span id="finalPaybackPeriod">4.9</span> months</li>
+                            <li>✓ 3-Year ROI: <span id="threeYearROI">231%</span></li>
                         </ul>
                     </div>
                     <div>
                         <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Strategic Benefits:</h3>
                         <ul>
-                            <li>✓ <span id="strategicTimeReduction">91.7</span>% reduction in processing time</li>
+                            <li>✓ <span id="strategicTimeReduction">86.7</span>% reduction in processing time</li>
                             <li>✓ Frees <span id="partnerHoursFreed">240</span> partner hours annually</li>
                             <li>✓ AI-powered risk management</li>
                             <li>✓ Scalable for growth</li>
@@ -1056,7 +1055,7 @@
                 <div class="final-recommendation">
                     <h3 style="margin-bottom: 15px;">Next Steps:</h3>
                     <p style="font-size: 16px; font-weight: 600;">
-                        Sign <span id="contractLengthFinal">24</span>-month service agreement and begin <span id="implementationTimelineFinal">8-week</span> implementation immediately to capture Q1 2025 benefits.
+                        Sign <span id="contractLengthFinal">24</span>-month service agreement and begin <span id="implementationTimelineFinal">8-week</span> implementation immediately to capture Q2 2025 benefits.
                     </p>
                 </div>
             </div>
@@ -1167,15 +1166,25 @@
             populateAddedValue(data);
             
             // ROI metrics from the analysis
-            const annualSavings = data.investmentSummary?.annualLaborSavings?.replace(/[$,]/g, '') || '156000';
-            const timeReduction = data.investmentSummary?.timeReduction?.replace('%', '') || '91.7';
-            const paybackPeriod = data.investmentSummary?.paybackPeriod || '2.8';
-            const firstYearROI = data.investmentSummary?.firstYearROI?.replace('%', '') || '292';
+            const annualSavings = data.investmentSummary?.annualLaborSavings?.replace(/[$,]/g, '') || data.analysis?.annualSavings?.replace(/[$,]/g, '') || '86040';
+            const timeReduction = data.investmentSummary?.timeReduction?.replace('%', '') || data.analysis?.timeReduction?.replace('%', '') || '86.7';
+            const paybackPeriod = data.investmentSummary?.paybackPeriod || data.analysis?.paybackMonths || '4.9';
+            const firstYearROI = data.investmentSummary?.firstYearROI?.replace('%', '') || data.analysis?.firstYearROI?.replace('%', '') || '143';
             
-            document.getElementById('totalAnnualSavings').textContent = parseInt(annualSavings).toLocaleString();
-            document.getElementById('totalTimeReduction').textContent = timeReduction;
-            document.getElementById('totalPaybackPeriod').textContent = paybackPeriod;
-            document.getElementById('totalFirstYearROI').textContent = firstYearROI;
+            // Populate Executive Summary metrics (top of ROI page)
+            document.getElementById('execSummaryAnnualSavings').textContent = parseInt(annualSavings).toLocaleString();
+            document.getElementById('execSummaryTimeReduction').textContent = timeReduction;
+            document.getElementById('execSummaryPaybackPeriod').textContent = paybackPeriod;
+            document.getElementById('execSummaryFirstYearROI').textContent = firstYearROI;
+            
+            // Old total metrics elements (keep for backward compatibility if they exist)
+            const totalAnnualSavingsEl = document.getElementById('totalAnnualSavings');
+            if (totalAnnualSavingsEl) {
+                totalAnnualSavingsEl.textContent = parseInt(annualSavings).toLocaleString();
+                document.getElementById('totalTimeReduction').textContent = timeReduction;
+                document.getElementById('totalPaybackPeriod').textContent = paybackPeriod;
+                document.getElementById('totalFirstYearROI').textContent = firstYearROI;
+            }
             
             // ROI page
             document.getElementById('roiClientName').textContent = clientName;
