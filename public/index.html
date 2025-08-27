@@ -1706,8 +1706,21 @@
                         
                         <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
                             <div>
-                                <h4>Statement of Work Preview</h4>
-                                <textarea id="sowContent" class="workflow-textarea" style="min-height: 400px;" placeholder="Click 'Generate SOW' to create your Statement of Work based on the ROI analysis..."></textarea>
+                                <h4>SOW Text Summary (Professional PDF Template Available)</h4>
+                                <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px solid #3498db;">
+                                    <strong>📄 Your Professional SOW Template:</strong><br>
+                                    <span style="color: #666; font-size: 0.95em;">The "Generate SOW" button creates a beautiful multi-page PDF using your existing <code>saxtech_pdf_template.html</code> with:</span>
+                                    <ul style="margin: 8px 0; padding-left: 20px; font-size: 0.9em; color: #555;">
+                                        <li>Professional cover page with SAX branding</li>
+                                        <li>Executive summary and client letter</li>
+                                        <li>SAX Added Value showcase</li>
+                                        <li>Detailed SOW with scope, pricing, and terms</li>
+                                        <li>Investment summary with managed services</li>
+                                        <li>ROI analysis with executive recommendation</li>
+                                    </ul>
+                                    <span style="color: #666; font-size: 0.9em;">The text area below shows a summary - the real SOW is the professional PDF template.</span>
+                                </div>
+                                <textarea id="sowContent" class="workflow-textarea" style="min-height: 300px;" placeholder="Click 'Generate SOW' to create your professional multi-page SOW using the existing template..."></textarea>
                             </div>
                         </div>
                         
@@ -3793,7 +3806,7 @@
             console.log('All components rendered');
         }
         
-        // Generate PDF data from current ROI state
+        // Generate PDF data in format expected by saxtech_pdf_template.html
         function generatePDFData(currentState) {
             const clientName = currentState.clientName || 'Your Company';
             const processName = currentState.processName || 'process automation';
@@ -3850,58 +3863,105 @@
             const deliverables = generateDeliverables(currentState, processName);
             const technicalApproach = generateTechnicalApproach(currentState, processName);
             
+            // Return data structure matching saxtech_pdf_template.html expectations
             return {
-                clientInfo: {
-                    companyName: clientName,
-                    contactName: extractContactName(clientName), // Try to extract from company name or use default
-                    address: 'Client Address\nTo be provided', // Could be extracted from other fields if available
-                    date: new Date().toISOString().split('T')[0]
+                client: {
+                    name: clientName,
+                    contact: extractContactName(clientName),
+                    address: 'Client Address\nTo be provided',
+                    date: new Date().toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    })
                 },
-                projectOverview: {
-                    processName: processName,
+                project: {
+                    name: `${processName} Automation`,
                     description: `SAX Technology Advisors will design and deploy an AI-powered automation solution using Azure cloud services and n8n workflow orchestration to enhance ${processName.toLowerCase()} accessibility and efficiency.`,
-                    businessObjective: projectScope.businessObjective,
+                    objective: projectScope.businessObjective,
                     scope: projectScope.scope,
                     deliverables: deliverables,
-                    technicalApproach: technicalApproach
+                    approach: technicalApproach
                 },
-                implementationPlan: implementationPlan,
-                commercials: {
-                    implementationFee: `$${implementationCost.toLocaleString()}`,
-                    monthlyServiceFee: `$${monthlyServiceCost.toLocaleString()}`,
+                implementation: {
+                    timeline: implementationPlan,
                     duration: `${totalDuration} weeks`,
-                    contractLength: `${contractLength}`,
-                    paymentTerms: '50% upfront, 50% upon completion'
+                    phases: implementationPlan.length
                 },
-                managedServices: {
+                investment: {
+                    implementationFee: implementationCost,
+                    monthlyServiceFee: monthlyServiceCost,
+                    contractLength: contractLength,
+                    paymentTerms: '50% upfront, 50% upon completion',
+                    totalY1Investment: implementationCost + (monthlyServiceCost * 12)
+                },
+                services: {
                     monthlyFee: monthlyServiceCost,
                     includes: [
                         'Complete hosting and management within the SAX Tech environment',
-                        'Ongoing updates, monitoring, and optimization', 
-                        'AI token costs included',
-                        'System monitoring 24/7',
+                        'AI token costs and usage included',
+                        'System monitoring 24/7 with alerts',
                         'Monthly performance optimization',
-                        'Technical support included',
+                        'Technical support and maintenance',
                         'Workflow adjustments and enhancements',
                         'Quarterly business reviews',
-                        '99.5% uptime SLA'
-                    ]
+                        '99.5% uptime SLA with redundancy'
+                    ],
+                    sla: '99.5% uptime guarantee',
+                    support: '24/7 monitoring with business hours direct support'
                 },
-                investmentSummary: {
-                    implementationCost: `$${implementationCost.toLocaleString()}`,
-                    monthlyManagedService: `$${monthlyServiceCost.toLocaleString()}`,
-                    annualLaborSavings: `$${Math.round(annualLaborSavings).toLocaleString()}`,
-                    timeReduction: timeSavingsPercent,
-                    paybackPeriod: paybackMonths.toFixed(1),
-                    firstYearROI: `${Math.round(firstYearROI)}%`,
-                    partnerHoursFreed: partnerHoursFreed.toString(),
-                    threeYearNetBenefit: Math.round((annualLaborSavings * 3 - totalY1Investment * 3) / (totalY1Investment * 3) * 100).toString()
+                roi: {
+                    implementationCost: implementationCost,
+                    monthlyService: monthlyServiceCost,
+                    annualService: monthlyServiceCost * 12,
+                    laborSavings: Math.round(annualLaborSavings),
+                    timeReduction: parseFloat(timeSavingsPercent),
+                    paybackMonths: paybackMonths,
+                    firstYearROI: Math.round(firstYearROI),
+                    partnerHoursFreed: partnerHoursFreed,
+                    threeYearBenefit: Math.round((annualLaborSavings * 3 - totalY1Investment * 3)),
+                    netAnnualSavings: Math.round(annualLaborSavings - (monthlyServiceCost * 12))
                 },
-                riskMitigation: currentState.riskFactors?.map(risk => ({
-                    risk: risk.risk,
+                risks: currentState.riskFactors?.map(risk => ({
+                    factor: risk.risk,
+                    probability: risk.probability || 'Medium',
+                    impact: risk.impact || 'Medium', 
                     mitigation: risk.mitigation
-                })) || [],
-                timeline: currentState.timelinePhases || timelinePhases
+                })) || [
+                    {
+                        factor: 'Implementation Delays',
+                        probability: 'Low',
+                        impact: 'Medium',
+                        mitigation: 'Experienced project management and phased approach with built-in buffer time'
+                    },
+                    {
+                        factor: 'User Adoption',
+                        probability: 'Medium', 
+                        impact: 'Medium',
+                        mitigation: 'Comprehensive training program and change management support'
+                    }
+                ],
+                // Additional data for comprehensive PDF
+                processAnalysis: {
+                    currentSteps: currentState.manualSteps?.length || 0,
+                    automatedSteps: currentState.automatedSteps?.length || 0,
+                    manualTime: manualTotalTime,
+                    automatedTime: autoTotalTime,
+                    timeSaved: manualTotalTime - autoTotalTime,
+                    costPerProcess: {
+                        manual: manualTotalCost,
+                        automated: autoTotalCost,
+                        savings: manualTotalCost - autoTotalCost
+                    }
+                },
+                addedValue: [
+                    'AI-powered intelligent decision making',
+                    'Real-time process monitoring and alerts',
+                    'Seamless integration with existing systems',
+                    'Enterprise-grade security and compliance',
+                    'Scalable cloud-based architecture',
+                    'Continuous optimization and improvement'
+                ]
             };
         }
         
@@ -4632,20 +4692,28 @@
                 return;
             }
             
+            // Generate professional SOW using the existing template
+            const pdfData = generatePDFData(currentState);
+            
+            // Open the professional SOW template and populate it
+            setTimeout(() => {
+                generateAndDownloadPDF(pdfData);
+            }, 500);
+            
+            // Also generate text preview for the textarea
             const clientName = currentState.clientName || 'Your Company';
             const processName = currentState.processName || 'Process Name';
             const templateType = document.getElementById('sowTemplate').value || 'saxtechnology';
             const detailLevel = document.getElementById('sowDetailLevel').value || 'detailed';
             const includeROI = document.getElementById('sowIncludeROI').value === 'yes';
             
-            // Generate SOW content
             const sowContent = generateSOWContent(currentState, templateType, detailLevel, includeROI);
             document.getElementById('sowContent').value = sowContent;
             
             // Update preview data
             updateSOWPreview(currentState);
             
-            addMessage('assistant', '✅ Statement of Work generated successfully! You can review and customize it in the textarea below, or use the SOW Assistant to make specific changes.');
+            addMessage('assistant', '✅ Professional SOW generated using your existing template! The comprehensive PDF has been opened in a new window. You can also review the text summary in the textarea below.');
         }
         
         function generateSOWContent(currentState, templateType, detailLevel, includeROI) {
@@ -4820,59 +4888,43 @@
         }
         
         function downloadSOW() {
-            const clientName = document.getElementById('inputClientName').value || 'Your Company';
-            const processName = document.getElementById('inputProcessName').value || 'Process';
-            const date = new Date().toISOString().split('T')[0];
+            const currentState = getCurrentROIState();
+            const clientName = currentState.clientName || 'Your Company';
+            const processName = currentState.processName || 'Process';
             
+            // Generate and download the professional PDF SOW
+            const pdfData = generatePDFData(currentState);
+            generateAndDownloadPDF(pdfData);
+            
+            // Also provide text version if needed
+            const date = new Date().toISOString().split('T')[0];
             const sowContent = document.getElementById('sowContent').value || 'SOW not generated yet. Please click Generate SOW first.';
             
-            const blob = new Blob([sowContent], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${clientName}_${processName}_SOW_${date}.txt`.replace(/\s+/g, '_');
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            if (sowContent && sowContent !== 'SOW not generated yet. Please click Generate SOW first.') {
+                const blob = new Blob([sowContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${clientName}_${processName}_SOW_Text_${date}.txt`.replace(/\s+/g, '_');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
             
-            addMessage('assistant', '📥 Statement of Work downloaded successfully!');
+            addMessage('assistant', '📥 Professional SOW PDF generated using your existing template! Use Ctrl+P or Cmd+P in the new window to save as PDF.');
         }
         
         function printSOW() {
-            const clientName = document.getElementById('inputClientName').value || 'Your Company';
-            const processName = document.getElementById('inputProcessName').value || 'Process';
-            const sowContent = document.getElementById('sowContent').value || 'SOW not generated yet.';
+            const currentState = getCurrentROIState();
+            const clientName = currentState.clientName || 'Your Company';
+            const processName = currentState.processName || 'Process';
             
-            const printContent = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>${clientName} - ${processName} Statement of Work</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
-                        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-                        pre { white-space: pre-wrap; font-family: inherit; }
-                        @page { margin: 1in; }
-                    </style>
-                </head>
-                <body>
-                    <h1>${clientName} - ${processName} Statement of Work</h1>
-                    <pre>${sowContent}</pre>
-                </body>
-                </html>
-            `;
+            // Generate and print the professional PDF SOW
+            const pdfData = generatePDFData(currentState);
+            generateAndDownloadPDF(pdfData);
             
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            printWindow.focus();
-            
-            setTimeout(() => {
-                printWindow.print();
-            }, 500);
-            
-            addMessage('assistant', '🖨️ SOW print window opened!');
+            addMessage('assistant', '🖨️ Professional SOW opened in new window! Use Ctrl+P or Cmd+P to print the beautifully formatted multi-page document.');
         }
         
         // SOW Assistant Chat Functions
@@ -4910,6 +4962,13 @@
             setTimeout(() => {
                 const response = processSOWMessage(message);
                 addSOWChatMessage('assistant', response);
+                
+                // If user requests generation, trigger it
+                if (message.toLowerCase().includes('generate') || message.toLowerCase().includes('create')) {
+                    setTimeout(() => {
+                        generateSOW();
+                    }, 500);
+                }
             }, 1000);
         }
         
