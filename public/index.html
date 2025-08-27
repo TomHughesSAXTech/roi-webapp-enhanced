@@ -957,7 +957,6 @@
                         <button class="btn-update" onclick="updateCalculations()">🔄 Update All Calculations</button>
                         <button class="btn-print" onclick="printToPDF()">🖨️ Print to PDF</button>
                         <button class="btn-update" onclick="validateROIAnalysis()" style="margin: 5px; background: #28a745;">✓ Validate Analysis</button>
-                        <button class="btn-update" onclick="generateSOP()" style="margin: 5px; background: #17a2b8;">📋 Generate SOP</button>
                         <button class="btn-update" onclick="startOverChat()" style="margin: 5px; background: #e74c3c;">🔄 Start Over Chat</button>
                     </div>
                 </div>
@@ -1658,7 +1657,7 @@
                         <div class="config-grid" style="margin-bottom: 20px;">
                             <div class="config-item">
                                 <label>SOW Template:</label>
-                                <select id="sowTemplate">
+                                <select id="sowTemplate" onchange="updateSOWSettings()">
                                     <option value="saxtechnology" selected>SAX Technology Professional</option>
                                     <option value="generic">Generic Business</option>
                                     <option value="consulting">Consulting Services</option>
@@ -1666,7 +1665,7 @@
                             </div>
                             <div class="config-item">
                                 <label>Detail Level:</label>
-                                <select id="sowDetailLevel">
+                                <select id="sowDetailLevel" onchange="updateSOWSettings()">
                                     <option value="executive">Executive Summary</option>
                                     <option value="detailed" selected>Detailed Technical</option>
                                     <option value="comprehensive">Comprehensive</option>
@@ -1674,10 +1673,51 @@
                             </div>
                             <div class="config-item">
                                 <label>Include ROI Metrics:</label>
-                                <select id="sowIncludeROI">
+                                <select id="sowIncludeROI" onchange="updateSOWSettings()">
                                     <option value="yes" selected>Yes (Recommended)</option>
                                     <option value="no">No</option>
                                 </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Client/Company Information Editor -->
+                        <div class="config-panel" style="margin-bottom: 20px; background: #f0f8ff;">
+                            <h4>👤 Client & Company Information for SOW</h4>
+                            <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">This information will populate the cover page and executive summary of your professional SOW template.</p>
+                            
+                            <div class="config-grid">
+                                <div class="config-item">
+                                    <label>Client Company Name:</label>
+                                    <input type="text" id="sowClientCompany" placeholder="e.g., Acme Corporation" onchange="updateSOWClientInfo()">
+                                </div>
+                                <div class="config-item">
+                                    <label>Client Contact Name:</label>
+                                    <input type="text" id="sowClientContact" placeholder="e.g., John Smith, CEO" onchange="updateSOWClientInfo()">
+                                </div>
+                                <div class="config-item">
+                                    <label>Client Address:</label>
+                                    <textarea id="sowClientAddress" placeholder="123 Business St&#10;City, State 12345" rows="2" style="resize: vertical;" onchange="updateSOWClientInfo()"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="config-grid" style="margin-top: 15px;">
+                                <div class="config-item">
+                                    <label>SAX Representative:</label>
+                                    <input type="text" id="sowSaxRep" value="Leon Grassi, Partner, CRO" onchange="updateSOWClientInfo()">
+                                </div>
+                                <div class="config-item">
+                                    <label>SAX Contact Email:</label>
+                                    <input type="email" id="sowSaxEmail" value="leon.grassi@saxtechnology.com" onchange="updateSOWClientInfo()">
+                                </div>
+                                <div class="config-item">
+                                    <label>Proposal Date:</label>
+                                    <input type="date" id="sowProposalDate" onchange="updateSOWClientInfo()">
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 15px;">
+                                <button class="btn-update" onclick="loadClientInfoFromROI()" style="margin: 2px;">📋 Use ROI Client Info</button>
+                                <button class="btn-update" onclick="clearClientInfo()" style="margin: 2px;">🗑️ Clear All</button>
                             </div>
                         </div>
                         
@@ -1818,7 +1858,7 @@
                 role: "Senior", 
                 rate: 150, 
                 tasks: "Core development, API integrations, automation workflows",
-                expertise: "Full-stack development, Azure, automation platforms"
+                expertise: "Full-stack development, Azure, SAXTech Automation Engine"
             },
             { 
                 type: "AI Specialist", 
@@ -4036,7 +4076,7 @@
             const hasWebForms = currentState.automatedSteps?.some(step => step.feature?.toLowerCase().includes('web') || step.feature?.toLowerCase().includes('form')) || false;
             
             const approach = [
-                'Azure-hosted n8n workflow orchestration platform',
+                'Azure-hosted SAXTech Automation Engine workflow orchestration platform',
                 'Serverless architecture using Azure Functions',
                 'Enterprise-grade security with Azure Active Directory integration',
                 'Comprehensive monitoring and alerting system'
