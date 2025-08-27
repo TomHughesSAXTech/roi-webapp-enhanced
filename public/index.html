@@ -3833,11 +3833,11 @@
             // Use the actual calculated values from the ROI UI instead of recalculating
             // This ensures the PDF matches exactly what the user sees in the calculator
             const timeSavingsPercent = document.getElementById('timeSavingsPercent')?.textContent || '0';
-            const annualLaborSavingsText = document.getElementById('annualSavings')?.textContent || '$0';
+            const annualLaborSavingsText = document.getElementById('annualSavings')?.textContent || '0';
             const annualLaborSavings = parseFloat(annualLaborSavingsText.replace(/[$,]/g, '')) || 0;
-            const paybackMonthsText = document.getElementById('paybackPeriod')?.textContent || '0 months';
-            const paybackMonths = parseFloat(paybackMonthsText.replace(' months', '').replace(' Months', '')) || 0;
-            const firstYearROIText = document.getElementById('firstYearROI')?.textContent || '0%';
+            const paybackMonthsText = document.getElementById('paybackPeriod')?.textContent || '0';
+            const paybackMonths = parseFloat(paybackMonthsText.replace(' months', '').replace(' Months', '').replace(' month', '')) || 0;
+            const firstYearROIText = document.getElementById('firstYearROI')?.textContent || '0';
             const firstYearROI = parseFloat(firstYearROIText.replace('%', '')) || 0;
             
             console.log('Using displayed ROI values:', {
@@ -3953,6 +3953,31 @@
                         mitigation: 'Comprehensive training program and change management support'
                     }
                 ],
+                // Calculate actual manual and automated totals based on current state
+                let manualTotalTime = 0;
+                let manualTotalCost = 0;
+                let autoTotalTime = 0;
+                let autoTotalCost = 0;
+                const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
+                
+                currentState.manualSteps.forEach(step => {
+                    if (currentState.roles[step.role]) {
+                        const role = currentState.roles[step.role];
+                        manualTotalTime += step.time;
+                        manualTotalCost += (role.hourly * step.time / 60);
+                    }
+                });
+                
+                currentState.automatedSteps.forEach(step => {
+                    if (step.role >= 0 && currentState.roles[step.role]) {
+                        const role = currentState.roles[step.role];
+                        autoTotalTime += step.time;
+                        autoTotalCost += (role.hourly * step.time / 60);
+                    } else if (step.isAI) {
+                        autoTotalCost += aiCostPerProcess;
+                    }
+                });
+                
                 // Additional data for comprehensive PDF
                 processAnalysis: {
                     currentSteps: currentState.manualSteps?.length || 0,
