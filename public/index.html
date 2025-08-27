@@ -4206,6 +4206,9 @@
             try {
                 addMessage('system', '🔄 Generating your professional SOW PDF...');
                 
+                // Store the data globally for the PDF window to pick up BEFORE opening
+                window.pdfDataForTemplate = pdfData;
+                
                 // Open the template directly in a new window/tab
                 const pdfWindow = window.open('/saxtech_pdf_template.html', '_blank');
                 
@@ -4213,16 +4216,19 @@
                     throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
                 }
                 
-                // Wait for the window to load
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                // Wait for the window to load and try alternative methods
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                // Check if the populatePDFData function exists and call it
-                if (pdfWindow.populatePDFData) {
+                // Try to call the function directly if available
+                if (pdfWindow && pdfWindow.populatePDFData) {
+                    console.log('Calling populatePDFData directly on PDF window');
                     pdfWindow.populatePDFData(pdfData);
-                    await new Promise(resolve => setTimeout(resolve, 1000));
                 } else {
-                    // Store the data globally for the PDF window to pick up
-                    window.pdfDataForTemplate = pdfData;
+                    console.log('PDF window function not immediately available, data stored in parent window');
+                    // Also try posting a message as backup
+                    if (pdfWindow) {
+                        pdfWindow.postMessage({ type: 'pdfData', data: pdfData }, window.location.origin);
+                    }
                 }
                 
                 const clientName = pdfData.clientInfo?.companyName || 'Client';

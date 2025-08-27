@@ -1758,6 +1758,42 @@
         
         // Make function available globally
         window.populatePDFData = populatePDFData;
+        
+        // Check for data when the page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('PDF Template loaded, checking for data...');
+            
+            // Try to get data from the opener window (parent window)
+            if (window.opener) {
+                console.log('Parent window detected');
+                
+                // Check if the parent window has stored PDF data for us
+                if (window.opener.pdfDataForTemplate) {
+                    console.log('Found PDF data from parent window:', window.opener.pdfDataForTemplate);
+                    populatePDFData(window.opener.pdfDataForTemplate);
+                    
+                    // Clear the data after using it
+                    window.opener.pdfDataForTemplate = null;
+                } else {
+                    console.log('No PDF data found in parent window');
+                }
+            } else {
+                console.log('No parent window detected - this may be a direct load');
+            }
+            
+            // Also listen for postMessage in case the parent sends data that way
+            window.addEventListener('message', function(event) {
+                console.log('Received message:', event);
+                
+                // Only accept messages from the same origin for security
+                if (event.origin === window.location.origin) {
+                    if (event.data && event.data.type === 'pdfData') {
+                        console.log('Received PDF data via postMessage:', event.data.data);
+                        populatePDFData(event.data.data);
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
