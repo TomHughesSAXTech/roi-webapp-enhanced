@@ -4714,7 +4714,7 @@
                 return;
             }
             
-            // Generate text content first for the preview
+            // Generate text content for the preview ONLY - don't open PDF
             const clientName = currentState.clientName || 'Your Company';
             const processName = currentState.processName || 'Process Name';
             const includeROI = true; // Always include ROI
@@ -4725,15 +4725,7 @@
             // Update preview data immediately
             updateSOWPreview(currentState);
             
-            // Generate professional SOW using the existing template
-            const pdfData = generatePDFData(currentState);
-            
-            // Also open the professional SOW template and populate it
-            setTimeout(() => {
-                generateAndDownloadPDF(pdfData);
-            }, 500);
-            
-            addMessage('assistant', '✅ SOW generated! Review the detailed breakdown above, then use the PDF window to print your professional multi-page Statement of Work.');
+            addMessage('assistant', '✅ SOW generated! Review the detailed breakdown in the text area above. Use "Print SOW" or "Download SOW" buttons to generate the professional PDF.');
         }
         
         // SOW Client Info Management Functions
@@ -4790,151 +4782,242 @@
             const monthlyServiceCost = calculateMonthlyServiceFee();
             const contractLength = parseFloat(document.getElementById('contractLength').value) || 24;
             const totalDuration = timelinePhases.reduce((sum, phase) => sum + phase.duration, 0);
+            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
+            
+            // Calculate ROI metrics from current state
+            let manualTotalCost = 0;
+            let autoTotalCost = 0;
+            let manualTotalTime = 0;
+            let autoTotalTime = 0;
+            const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
+            
+            currentState.manualSteps.forEach(step => {
+                if (currentState.roles[step.role]) {
+                    const role = currentState.roles[step.role];
+                    manualTotalCost += (role.hourly * step.time / 60);
+                    manualTotalTime += step.time;
+                }
+            });
+            
+            currentState.automatedSteps.forEach(step => {
+                if (step.role >= 0 && currentState.roles[step.role]) {
+                    const role = currentState.roles[step.role];
+                    autoTotalCost += (role.hourly * step.time / 60);
+                    autoTotalTime += step.time;
+                } else if (step.isAI) {
+                    autoTotalCost += aiCostPerProcess;
+                }
+            });
+            
+            const costSavingsPerInstance = manualTotalCost - autoTotalCost;
+            const annualLaborSavings = costSavingsPerInstance * monthlyVolume * 12;
+            const timeSavingsPercent = manualTotalTime > 0 ? ((manualTotalTime - autoTotalTime) / manualTotalTime * 100).toFixed(1) : 0;
             
             let sow = `STATEMENT OF WORK\n`;
-            sow += `${clientName.toUpperCase()} - ${processName.toUpperCase()}\n`;
+            sow += `${clientName.toUpperCase()} - ${processName.toUpperCase()} AUTOMATION\n`;
             sow += `SAX Technology Advisors\n`;
             sow += `Date: ${date}\n`;
             sow += `${'='.repeat(80)}\n\n`;
             
-            // Executive Summary
+            // Executive Summary with ROI details
             sow += `EXECUTIVE SUMMARY\n`;
             sow += `${'─'.repeat(40)}\n`;
             sow += `SAX Technology Advisors proposes to design and implement an AI-powered automation\n`;
-            sow += `solution for ${clientName}'s ${processName.toLowerCase()} process. This solution will\n`;
-            sow += `reduce processing time by ${getCurrentTimeReduction()}%, eliminate manual errors, and provide\n`;
-            sow += `significant cost savings through intelligent workflow automation.\n\n`;
+            sow += `solution for ${clientName}'s ${processName.toLowerCase()} process. This comprehensive\n`;
+            sow += `solution will transform your current ${currentState.manualSteps?.length || 0}-step manual process into\n`;
+            sow += `a streamlined ${currentState.automatedSteps?.length || 0}-step automated workflow.\n\n`;
             
-            if (includeROI) {
-                const annualSavings = document.getElementById('annualSavings').textContent;
-                const paybackPeriod = document.getElementById('paybackPeriod').textContent;
-                const firstYearROI = document.getElementById('firstYearROI').textContent;
+            if (includeROI && annualLaborSavings > 0) {
+                const paybackMonths = (implementationCost + monthlyServiceCost * 12) / (annualLaborSavings / 12);
+                const firstYearROI = ((annualLaborSavings - implementationCost - monthlyServiceCost * 12) / (implementationCost + monthlyServiceCost * 12) * 100);
                 
-                sow += `KEY BENEFITS:\n`;
-                sow += `• Annual Labor Cost Savings: $${annualSavings}\n`;
-                sow += `• Processing Time Reduction: ${getCurrentTimeReduction()}%\n`;
-                sow += `• Payback Period: ${paybackPeriod} months\n`;
-                sow += `• First Year ROI: ${firstYearROI}%\n\n`;
+                sow += `QUANTIFIED BUSINESS IMPACT:\n`;
+                sow += `• Process Time Reduction: ${timeSavingsPercent}% (${manualTotalTime} min → ${autoTotalTime} min)\n`;
+                sow += `• Cost Savings per Instance: $${costSavingsPerInstance.toFixed(2)}\n`;
+                sow += `• Annual Labor Cost Savings: $${Math.round(annualLaborSavings).toLocaleString()}\n`;
+                sow += `• Monthly Processing Volume: ${monthlyVolume} instances\n`;
+                sow += `• Payback Period: ${paybackMonths.toFixed(1)} months\n`;
+                sow += `• First Year ROI: ${Math.round(firstYearROI)}%\n\n`;
             }
             
-            // Project Overview
-            sow += `PROJECT OVERVIEW\n`;
+            // Current State Analysis
+            sow += `CURRENT STATE ANALYSIS\n`;
             sow += `${'─'.repeat(40)}\n`;
-            sow += `Client: ${clientName}\n`;
-            sow += `Process: ${processName}\n`;
-            sow += `Implementation Duration: ${totalDuration} weeks\n`;
-            sow += `Service Contract: ${contractLength} months\n\n`;
+            sow += `Your current ${processName.toLowerCase()} process involves ${currentState.manualSteps?.length || 0} manual steps\n`;
+            sow += `requiring approximately ${Math.round(manualTotalTime)} minutes per instance and involving\n`;
+            sow += `multiple staff roles:\n\n`;
             
-            sow += `SCOPE OF WORK\n`;
-            sow += `${'─'.repeat(40)}\n\n`;
+            currentState.roles?.forEach((role, index) => {
+                const roleSteps = currentState.manualSteps?.filter(step => step.role === index) || [];
+                if (roleSteps.length > 0) {
+                    const roleTime = roleSteps.reduce((sum, step) => sum + step.time, 0);
+                    sow += `• ${role.title}: ${roleTime} minutes per instance ($${role.hourly.toFixed(2)}/hour)\n`;
+                }
+            });
+            sow += `\n`;
             
-            // Phase 1: Discovery & Planning
-            sow += `Phase 1: Discovery & Planning (2 weeks)\n`;
-            sow += `• Current state analysis and process documentation\n`;
-            sow += `• Stakeholder interviews and requirements gathering\n`;
-            sow += `• Technical architecture design\n`;
-            sow += `• Integration planning with existing systems\n`;
-            sow += `• Project plan finalization\n\n`;
-            
-            // Phase 2: AI & Automation Infrastructure
-            sow += `Phase 2: AI & Automation Infrastructure (1 week)\n`;
-            sow += `• Azure cloud environment setup\n`;
-            sow += `• OpenAI API integration and configuration\n`;
-            sow += `• Security framework implementation\n`;
-            sow += `• Database and storage configuration\n\n`;
-            
-            // Phase 3: Orchestration & Automation
-            sow += `Phase 3: Orchestration & Automation (3 weeks)\n`;
-            sow += `• n8n workflow development and testing\n`;
-            sow += `• Business logic implementation\n`;
-            sow += `• Error handling and exception management\n`;
-            sow += `• Performance optimization\n\n`;
-            
-            // Phase 4: AI Integration
-            sow += `Phase 4: AI Integration (1 week)\n`;
-            sow += `• AI agent configuration for process validation\n`;
-            sow += `• Prompt engineering and optimization\n`;
-            sow += `• AI decision logic implementation\n`;
-            sow += `• Quality assurance testing\n\n`;
-            
-            // Phase 5: Security & Access Controls
-            sow += `Phase 5: Security & Access Controls (0.5 weeks)\n`;
-            sow += `• User authentication and authorization\n`;
-            sow += `• Data encryption and security protocols\n`;
-            sow += `• Compliance framework implementation\n`;
-            sow += `• Security testing and validation\n\n`;
-            
-            // Phase 6: Knowledge Transfer & Demo
-            sow += `Phase 6: Knowledge Transfer & Demo (0.5 weeks)\n`;
-            sow += `• User training sessions\n`;
-            sow += `• System demonstration\n`;
-            sow += `• Documentation delivery\n`;
-            sow += `• Go-live support\n\n`;
-            
-            // Out of Scope
-            sow += `OUT OF SCOPE:\n`;
-            sow += `• Modifications to existing business systems\n`;
-            sow += `• Data migration from legacy systems\n`;
-            sow += `• Custom integrations beyond those specified\n`;
-            sow += `• Training beyond initial knowledge transfer\n\n`;
-            
-            // Pricing
-            sow += `PRICING STRUCTURE\n`;
+            // Solution Overview
+            sow += `PROPOSED SOLUTION OVERVIEW\n`;
             sow += `${'─'.repeat(40)}\n`;
-            sow += `Implementation Fee: $${implementationCost.toLocaleString()}\n`;
-            sow += `  (One-time fee covering all development, setup, and go-live support)\n\n`;
+            sow += `The automated solution will reduce the process to ${currentState.automatedSteps?.length || 0} streamlined steps\n`;
+            sow += `with minimal human intervention (${autoTotalTime} minutes vs ${manualTotalTime} minutes currently).\n\n`;
             
-            sow += `Monthly Managed Service: $${monthlyServiceCost.toLocaleString()}/month\n`;
-            sow += `  Includes:\n`;
-            sow += `  • Complete hosting and infrastructure management\n`;
-            sow += `  • AI token costs and usage\n`;
-            sow += `  • 24/7 monitoring and support\n`;
-            sow += `  • Monthly optimization and updates\n`;
-            sow += `  • Technical support and maintenance\n`;
-            sow += `  • 99.5% uptime SLA\n\n`;
+            const hasAI = currentState.automatedSteps?.some(step => step.isAI) || false;
+            const hasIntegrations = currentState.automatedSteps?.filter(step => step.feature?.toLowerCase().includes('api') || step.feature?.toLowerCase().includes('integration')).length || 0;
+            
+            sow += `KEY AUTOMATION FEATURES:\n`;
+            if (hasAI) {
+                sow += `• AI-Powered Decision Making: Intelligent validation and risk assessment\n`;
+            }
+            if (hasIntegrations > 0) {
+                sow += `• System Integrations: ${hasIntegrations} automated API connections\n`;
+            }
+            sow += `• Web-Based Process Initiation: User-friendly portal interface\n`;
+            sow += `• Real-Time Monitoring: Complete process visibility and alerts\n`;
+            sow += `• Automated Documentation: Digital audit trails and record keeping\n`;
+            sow += `• Exception Handling: Intelligent routing for complex cases\n\n`;
+            
+            // Project Timeline with Dynamic Phases
+            sow += `PROJECT TIMELINE & PHASES\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            timelinePhases.forEach((phase, index) => {
+                sow += `Phase ${index + 1}: ${phase.phase} (${phase.duration} weeks)\n`;
+                const activities = phase.activities.split(',').map(a => a.trim());
+                activities.forEach(activity => {
+                    sow += `  • ${activity}\n`;
+                });
+                sow += `\n`;
+            });
+            
+            // Implementation Cost Breakdown
+            sow += `IMPLEMENTATION COST BREAKDOWN\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            
+            let implementationTotal = 0;
+            implementationComponents.forEach(comp => {
+                const cost = comp.hours * comp.rate;
+                implementationTotal += cost;
+                sow += `• ${comp.name}: ${comp.hours} hours @ $${comp.rate}/hr = $${cost.toLocaleString()}\n`;
+            });
+            
+            const pmCost = Math.round(implementationTotal * 0.15);
+            implementationTotal += pmCost;
+            sow += `• Project Management (15%): $${pmCost.toLocaleString()}\n`;
+            
+            // Add one-time custom add-ons
+            let onetimeAddons = 0;
+            customAddons.forEach(addon => {
+                if (addon.frequency === 'one-time') {
+                    sow += `• ${addon.name}: $${addon.amount.toLocaleString()} (${addon.unit})\n`;
+                    onetimeAddons += addon.amount;
+                }
+            });
+            implementationTotal += onetimeAddons;
+            
+            sow += `\nTOTAL IMPLEMENTATION FEE: $${implementationTotal.toLocaleString()}\n\n`;
+            
+            // Monthly Service Fee Breakdown
+            sow += `MONTHLY MANAGED SERVICE BREAKDOWN\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            
+            let monthlyTotal = 0;
+            monthlyServiceComponents.forEach(comp => {
+                if (comp.fixedCost && comp.name !== "Infrastructure Hosting") {
+                    sow += `• ${comp.name}: $${comp.fixedCost.toLocaleString()}/month\n`;
+                    monthlyTotal += comp.fixedCost;
+                } else if (!comp.fixedCost) {
+                    const cost = comp.hours * comp.rate;
+                    sow += `• ${comp.name}: ${comp.hours} hrs @ $${comp.rate}/hr = $${cost.toLocaleString()}/month\n`;
+                    monthlyTotal += cost;
+                }
+            });
+            
+            // Add infrastructure management with markup
+            let operatingTotal = 0;
+            operatingCosts.forEach(cost => {
+                operatingTotal += cost.monthly;
+            });
+            operatingTotal += aiCostPerProcess * monthlyVolume; // Add AI costs
+            
+            const markupPercent = parseFloat(document.getElementById('infrastructureMarkup').value) || 20;
+            const infrastructureCost = Math.round(operatingTotal * (1 + markupPercent / 100));
+            sow += `• Infrastructure Management (${markupPercent}% markup): $${infrastructureCost.toLocaleString()}/month\n`;
+            sow += `  Includes: AI token costs, hosting, backups, monitoring\n`;
+            monthlyTotal += infrastructureCost;
+            
+            // Add monthly custom add-ons
+            customAddons.forEach(addon => {
+                if (addon.frequency === 'monthly') {
+                    sow += `• ${addon.name}: $${addon.amount.toLocaleString()}/month (${addon.unit})\n`;
+                    monthlyTotal += addon.amount;
+                }
+            });
+            
+            sow += `\nTOTAL MONTHLY SERVICE FEE: $${monthlyTotal.toLocaleString()}/month\n\n`;
             
             // Payment Terms
-            sow += `PAYMENT TERMS\n`;
+            sow += `PAYMENT TERMS & CONTRACT\n`;
             sow += `${'─'.repeat(40)}\n`;
             sow += `Implementation Fee: 50% upon contract signing, 50% upon go-live\n`;
             sow += `Monthly Service Fee: Billed monthly in advance\n`;
-            sow += `Contract Term: ${contractLength} months (minimum)\n\n`;
-            
-            // Implementation Duration
-            sow += `IMPLEMENTATION DURATION\n`;
-            sow += `${'─'.repeat(40)}\n`;
+            sow += `Contract Term: ${contractLength} months minimum\n`;
             sow += `Total Duration: ${totalDuration} weeks from project kickoff\n`;
-            sow += `Go-Live Target: Week ${totalDuration}\n`;
-            sow += `Hypercare Period: 30 days post go-live (included)\n\n`;
+            sow += `Hypercare Period: 30 days post go-live (included in implementation fee)\n\n`;
             
-            if (includeROI) {
-                // ROI Summary
-                sow += `RETURN ON INVESTMENT\n`;
+            if (includeROI && annualLaborSavings > 0) {
+                // Detailed ROI Analysis
+                sow += `RETURN ON INVESTMENT ANALYSIS\n`;
                 sow += `${'─'.repeat(40)}\n`;
-                const annualSavings = document.getElementById('annualSavings').textContent;
-                const paybackPeriod = document.getElementById('paybackPeriod').textContent;
-                const totalY1Investment = implementationCost + (monthlyServiceCost * 12);
+                const totalY1Investment = implementationTotal + (monthlyTotal * 12);
+                const netY1Benefit = annualLaborSavings - totalY1Investment;
+                const threeYearBenefit = (annualLaborSavings * 3) - totalY1Investment - (monthlyTotal * 24);
                 
-                sow += `Year 1 Investment: $${totalY1Investment.toLocaleString()}\n`;
-                sow += `Annual Labor Savings: $${annualSavings}\n`;
-                sow += `Payback Period: ${paybackPeriod} months\n`;
-                sow += `3-Year Net Benefit: $${(parseInt(annualSavings.replace(/,/g, '')) * 3 - totalY1Investment * 3).toLocaleString()}\n\n`;
+                sow += `Year 1 Analysis:\n`;
+                sow += `• Total Investment: $${totalY1Investment.toLocaleString()}\n`;
+                sow += `  - Implementation: $${implementationTotal.toLocaleString()}\n`;
+                sow += `  - Monthly Service (12 months): $${(monthlyTotal * 12).toLocaleString()}\n`;
+                sow += `• Labor Cost Savings: $${Math.round(annualLaborSavings).toLocaleString()}\n`;
+                sow += `• Net Benefit Year 1: $${Math.round(netY1Benefit).toLocaleString()}\n`;
+                sow += `• 3-Year Net Benefit: $${Math.round(threeYearBenefit).toLocaleString()}\n\n`;
+                
+                // Qualitative Benefits
+                sow += `ADDITIONAL QUALITATIVE BENEFITS:\n`;
+                sow += `• Eliminated Manual Errors: Improved accuracy and consistency\n`;
+                sow += `• Faster Processing: ${timeSavingsPercent}% reduction in cycle time\n`;
+                sow += `• Enhanced Compliance: Complete audit trails and documentation\n`;
+                sow += `• Improved Customer Experience: Faster response times\n`;
+                sow += `• Staff Satisfaction: Elimination of repetitive manual tasks\n`;
+                sow += `• Scalability: Handle increased volume without proportional staffing\n\n`;
             }
+            
+            // Success Metrics
+            sow += `SUCCESS METRICS & MILESTONES\n`;
+            sow += `${'─'.repeat(40)}\n`;
+            sow += `• Process completion time: Target ${autoTotalTime} minutes (${timeSavingsPercent}% improvement)\n`;
+            sow += `• System availability: 99.5% uptime SLA\n`;
+            sow += `• Error reduction: Target 95%+ accuracy improvement\n`;
+            sow += `• User adoption: 100% of process instances through automated system\n`;
+            sow += `• Cost savings realization: $${Math.round(costSavingsPerInstance).toLocaleString()} per instance\n\n`;
             
             // Next Steps
             sow += `NEXT STEPS\n`;
             sow += `${'─'.repeat(40)}\n`;
             sow += `1. Review and approve this Statement of Work\n`;
-            sow += `2. Execute service agreement\n`;
-            sow += `3. Schedule project kickoff meeting\n`;
-            sow += `4. Begin discovery and planning phase\n\n`;
+            sow += `2. Execute ${contractLength}-month service agreement\n`;
+            sow += `3. Schedule project kickoff meeting within 5 business days\n`;
+            sow += `4. Begin discovery and planning phase (Week 1)\n`;
+            sow += `5. Complete implementation and go-live (Week ${totalDuration})\n\n`;
             
             // Footer
             sow += `${'─'.repeat(80)}\n`;
-            sow += `SAX Technology Advisors\n`;
-            sow += `Contact: [Project Manager to be assigned]\n`;
-            sow += `Email: info@saxtechnology.com\n`;
-            sow += `This SOW is valid for 30 days from the date above.\n`;
+            sow += `SAX Technology Advisors - AI-Powered Business Process Automation\n`;
+            const sowSaxRep = document.getElementById('sowSaxRep')?.value || 'Leon Grassi, Partner, CRO';
+            const sowSaxEmail = document.getElementById('sowSaxEmail')?.value || 'leon.grassi@saxtechnology.com';
+            sow += `Primary Contact: ${sowSaxRep}\n`;
+            sow += `Email: ${sowSaxEmail}\n`;
+            sow += `Phone: (555) 123-4567\n`;
+            sow += `\nThis Statement of Work is valid for 30 days from the date above.\n`;
+            sow += `Upon approval, a detailed service agreement will be executed.\n`;
             
             return sow;
         }
