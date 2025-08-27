@@ -4210,7 +4210,8 @@
                 window.pdfDataForTemplate = pdfData;
                 
                 // Open the template directly in a new window/tab
-                const pdfWindow = window.open('/saxtech_pdf_template.html', '_blank');
+                // Use relative path that works in both GitHub Pages and Azure
+                const pdfWindow = window.open('saxtech_pdf_template.html', '_blank');
                 
                 if (!pdfWindow) {
                     throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
