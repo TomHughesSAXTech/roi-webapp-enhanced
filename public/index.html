@@ -3976,10 +3976,18 @@
                         savings: manualTotalCost - autoTotalCost
                     },
                     manualSteps: currentState.manualSteps?.map(step => ({
-                        task: step.task,
+                        task: step.step,
                         time: step.time,
                         role: currentState.roles[step.role]?.title || 'Role',
-                        description: `${step.task} performed by ${currentState.roles[step.role]?.title || 'Role'} (${step.time} minutes)`
+                        description: `${step.step} performed by ${currentState.roles[step.role]?.title || 'Role'} (${step.time} minutes)`
+                    })) || [],
+                    automatedSteps: currentState.automatedSteps?.map(step => ({
+                        task: step.step,
+                        time: step.time,
+                        role: step.role >= 0 ? currentState.roles[step.role]?.title : (step.isAI ? 'AI Agent' : 'Automated'),
+                        feature: step.feature,
+                        isAI: step.isAI,
+                        description: `${step.step} - ${step.role >= 0 ? currentState.roles[step.role]?.title : (step.isAI ? 'AI Agent' : 'Automated')} (${step.time || 0} minutes)`
                     })) || []
                 },
                 // Enhanced implementation component data

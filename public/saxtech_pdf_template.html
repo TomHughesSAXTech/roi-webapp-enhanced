@@ -1085,13 +1085,13 @@
             container.innerHTML = `
                 <p>The current ${data.projectOverview?.processName || 'process'} involves ${manualSteps} manual steps requiring approximately ${Math.round(manualTime)} minutes per instance at a cost of $${manualCost.toFixed(2)} per process.</p>
                 <p>This manual approach involves multiple stakeholders, creates opportunities for errors, and limits scalability as volume increases.</p>
-                ${data.processAnalysis?.manualSteps && data.processAnalysis.manualSteps.length > 0 ? '<h4>Key Manual Process Steps:</h4>' : ''}
+                ${data.processAnalysis?.manualSteps && data.processAnalysis.manualSteps.length > 0 ? '<h4>Current Manual Process Steps:</h4>' : ''}
                 <ul>
                     ${(data.processAnalysis?.manualSteps || []).map((step, index) => {
                         const stepName = step.task || `Step ${index + 1}`;
                         const roleName = step.role || 'Staff Member';
                         const timeText = step.time ? `${step.time} minutes` : 'Variable time';
-                        return `<li>${stepName} - ${roleName} (${timeText})</li>`;
+                        return `<li><strong>${stepName}</strong> - ${roleName} (${timeText})</li>`;
                     }).join('')}
                 </ul>
             `;
@@ -1110,16 +1110,26 @@
             
             container.innerHTML = `
                 <p>The proposed automation solution reduces the process to ${automatedSteps} automated steps, completing in approximately ${Math.round(automatedTime)} minutes - a ${timeReduction} reduction in processing time.</p>
-                <h4>Automation Features:</h4>
+                
+                ${data.processAnalysis?.automatedSteps && data.processAnalysis.automatedSteps.length > 0 ? '<h4>Proposed Automated Process Steps:</h4>' : ''}
                 <ul>
-                    <li>AI-powered decision making and data processing</li>
-                    <li>Intelligent document processing and extraction</li>
-                    <li>Real-time system integrations and data synchronization</li>
-                    <li>Automated workflow orchestration</li>
-                    <li>Exception handling and escalation protocols</li>
-                    <li>Comprehensive audit trail and reporting</li>
+                    ${(data.processAnalysis?.automatedSteps || []).map((step, index) => {
+                        const stepName = step.task || `Step ${index + 1}`;
+                        const roleName = step.role || (step.isAI ? 'AI Agent' : 'Automated');
+                        const timeText = step.time ? `${step.time} minutes` : 'Automated';
+                        const feature = step.feature ? ` (${step.feature})` : '';
+                        return `<li><strong>${stepName}</strong> - ${roleName} (${timeText})${feature}</li>`;
+                    }).join('')}
                 </ul>
-                ${data.addedValue ? `<h4>Key Benefits:</h4><ul>${data.addedValue.map(benefit => `<li>${benefit}</li>`).join('')}</ul>` : ''}
+                
+                <h4>Key Automation Benefits:</h4>
+                <ul>
+                    <li>Eliminates manual data entry and reduces errors</li>
+                    <li>Provides real-time processing and notifications</li>
+                    <li>Enables scalability without proportional staff increases</li>
+                    <li>Creates comprehensive audit trails and reporting</li>
+                    <li>Integrates seamlessly with existing business systems</li>
+                </ul>
             `;
         }
         
