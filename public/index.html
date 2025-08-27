@@ -3853,6 +3853,31 @@
                 }
             });
             
+            // Calculate manual and automated process totals for PDF data
+            let manualTotalTime = 0;
+            let manualTotalCost = 0;
+            let autoTotalTime = 0;
+            let autoTotalCost = 0;
+            const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
+            
+            currentState.manualSteps.forEach(step => {
+                if (currentState.roles[step.role]) {
+                    const role = currentState.roles[step.role];
+                    manualTotalTime += step.time;
+                    manualTotalCost += (role.hourly * step.time / 60);
+                }
+            });
+            
+            currentState.automatedSteps.forEach(step => {
+                if (step.role >= 0 && currentState.roles[step.role]) {
+                    const role = currentState.roles[step.role];
+                    autoTotalTime += step.time;
+                    autoTotalCost += (role.hourly * step.time / 60);
+                } else if (step.isAI) {
+                    autoTotalCost += aiCostPerProcess;
+                }
+            });
+            
             // Calculate partner hours freed (assuming first role is Partner)
             let partnerMinutes = 0;
             currentState.manualSteps.forEach(step => {
@@ -3860,7 +3885,11 @@
                     partnerMinutes += step.time;
                 }
             });
+            const monthlyVolume = parseFloat(document.getElementById('monthlyVolume').value) || 0;
             const partnerHoursFreed = Math.round(partnerMinutes / 60 * monthlyVolume * 12);
+            
+            // Calculate total Y1 investment for 3-year ROI calculation
+            const totalY1Investment = implementationCost + (monthlyServiceCost * 12);
             
             // Generate comprehensive project scope based on process analysis
             const projectScope = generateProjectScope(currentState, processName);
