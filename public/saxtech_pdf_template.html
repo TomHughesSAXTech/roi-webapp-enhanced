@@ -1053,6 +1053,115 @@
                 </div>
             </div>
 
+            <!-- ROI Model Analysis Table -->
+            <div style="background: rgba(255,255,255,0.15); border-radius: 15px; padding: 25px; margin-bottom: 30px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">
+                <h3 style="color: white; text-align: center; margin-bottom: 20px; font-size: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Return on Investment Analysis</h3>
+                
+                <!-- 3-Year ROI Table -->
+                <div style="overflow-x: auto; margin-bottom: 20px;">
+                    <table style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.9); border-radius: 10px; overflow: hidden; font-size: 11px;">
+                        <thead>
+                            <tr style="background: rgba(0,0,0,0.7);">
+                                <th style="padding: 12px 8px; text-align: left; color: white; font-weight: 600; border-bottom: 2px solid #F1C40F;">ROI Component</th>
+                                <th style="padding: 12px 8px; text-align: center; color: white; font-weight: 600; border-bottom: 2px solid #F1C40F;">Year 1</th>
+                                <th style="padding: 12px 8px; text-align: center; color: white; font-weight: 600; border-bottom: 2px solid #F1C40F;">Year 2</th>
+                                <th style="padding: 12px 8px; text-align: center; color: white; font-weight: 600; border-bottom: 2px solid #F1C40F;">3-Year Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Investment Section -->
+                            <tr style="background: rgba(0,0,0,0.05);">
+                                <td colspan="4" style="padding: 8px; font-weight: 600; color: #2c3e50; background: rgba(52,152,219,0.1);"><strong>INVESTMENT</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; color: #2c3e50;">Implementation Cost</td>
+                                <td style="padding: 8px; text-align: center; color: #e74c3c; font-weight: 600;">($<span id="roiYear1Implementation">46,500</span>)</td>
+                                <td style="padding: 8px; text-align: center; color: #2c3e50;">$0</td>
+                                <td style="padding: 8px; text-align: center; color: #e74c3c; font-weight: 600;">($<span id="roi3YearImplementation">46,500</span>)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; color: #2c3e50;">Monthly Service Fee</td>
+                                <td style="padding: 8px; text-align: center; color: #e74c3c; font-weight: 600;">($<span id="roiYear1Service">25,200</span>)</td>
+                                <td style="padding: 8px; text-align: center; color: #e74c3c; font-weight: 600;">($<span id="roiYear2Service">25,200</span>)</td>
+                                <td style="padding: 8px; text-align: center; color: #e74c3c; font-weight: 600;">($<span id="roi3YearService">75,600</span>)</td>
+                            </tr>
+                            <tr style="background: rgba(231,76,60,0.1); border-top: 1px solid rgba(231,76,60,0.3);">
+                                <td style="padding: 8px; color: #2c3e50;"><strong>Total Investment</strong></td>
+                                <td style="padding: 8px; text-align: center; color: #e74c3c; font-weight: 700;"><strong>($<span id="roiYear1TotalInvest">71,700</span>)</strong></td>
+                                <td style="padding: 8px; text-align: center; color: #e74c3c; font-weight: 700;"><strong>($<span id="roiYear2TotalInvest">25,200</span>)</strong></td>
+                                <td style="padding: 8px; text-align: center; color: #e74c3c; font-weight: 700;"><strong>($<span id="roi3YearTotalInvest">122,100</span>)</strong></td>
+                            </tr>
+                            
+                            <!-- Benefits Section -->
+                            <tr style="background: rgba(0,0,0,0.05);">
+                                <td colspan="4" style="padding: 8px; font-weight: 600; color: #2c3e50; background: rgba(39,174,96,0.1);"><strong>BENEFITS</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; color: #2c3e50;">Labor Cost Savings</td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roiYear1LaborSavings">86,040</span></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roiYear2LaborSavings">86,040</span></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roi3YearLaborSavings">258,120</span></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; color: #2c3e50;">Error Reduction Benefits</td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roiYear1ErrorReduction">15,000</span></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roiYear2ErrorReduction">15,000</span></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roi3YearErrorReduction">45,000</span></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; color: #2c3e50;">Faster Time-to-Revenue</td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roiYear1Revenue">20,000</span></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roiYear2Revenue">20,000</span></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 600;">$<span id="roi3YearRevenue">60,000</span></td>
+                            </tr>
+                            <tr style="background: rgba(39,174,96,0.1); border-top: 1px solid rgba(39,174,96,0.3);">
+                                <td style="padding: 8px; color: #2c3e50;"><strong>Total Benefits</strong></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 700;"><strong>$<span id="roiYear1TotalBenefits">121,040</span></strong></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 700;"><strong>$<span id="roiYear2TotalBenefits">121,040</span></strong></td>
+                                <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: 700;"><strong>$<span id="roi3YearTotalBenefits">363,120</span></strong></td>
+                            </tr>
+                            
+                            <!-- Net Results -->
+                            <tr style="background: linear-gradient(135deg, rgba(241,196,15,0.2), rgba(243,156,18,0.2)); border-top: 2px solid #F1C40F;">
+                                <td style="padding: 12px 8px; color: #2c3e50;"><strong>NET BENEFIT</strong></td>
+                                <td style="padding: 12px 8px; text-align: center; color: #2c3e50; font-weight: 700; font-size: 12px;"><strong>$<span id="roiYear1NetBenefit">49,340</span></strong></td>
+                                <td style="padding: 12px 8px; text-align: center; color: #2c3e50; font-weight: 700; font-size: 12px;"><strong>$<span id="roiYear2NetBenefit">95,840</span></strong></td>
+                                <td style="padding: 12px 8px; text-align: center; color: #2c3e50; font-weight: 700; font-size: 12px;"><strong>$<span id="roi3YearNetBenefit">241,020</span></strong></td>
+                            </tr>
+                            <tr style="background: linear-gradient(135deg, rgba(241,196,15,0.3), rgba(243,156,18,0.3));">
+                                <td style="padding: 12px 8px; color: #2c3e50;"><strong>ROI PERCENTAGE</strong></td>
+                                <td style="padding: 12px 8px; text-align: center; color: #2c3e50; font-weight: 700; font-size: 12px;"><strong><span id="roiYear1Percentage">69</span>%</strong></td>
+                                <td style="padding: 12px 8px; text-align: center; color: #2c3e50; font-weight: 700; font-size: 12px;"><strong><span id="roiYear2Percentage">380</span>%</strong></td>
+                                <td style="padding: 12px 8px; text-align: center; color: #2c3e50; font-weight: 700; font-size: 12px;"><strong><span id="roi3YearPercentage">197</span>%</strong></td>
+                            </tr>
+                            <tr style="background: linear-gradient(135deg, rgba(241,196,15,0.4), rgba(243,156,18,0.4));">
+                                <td style="padding: 12px 8px; color: #2c3e50;"><strong>PAYBACK PERIOD</strong></td>
+                                <td style="padding: 12px 8px; text-align: center; color: #2c3e50; font-weight: 700; font-size: 12px;"><strong><span id="roiPaybackPeriod">4.9</span> months</strong></td>
+                                <td style="padding: 12px 8px; text-align: center; color: #7f8c8d;">-</td>
+                                <td style="padding: 12px 8px; text-align: center; color: #7f8c8d;">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Key Qualitative Benefits -->
+                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; margin-top: 15px;">
+                    <h4 style="color: white; margin-bottom: 10px; font-size: 14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Additional Qualitative Benefits:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 11px; color: rgba(255,255,255,0.95);">
+                        <ul style="margin: 0; padding-left: 15px; line-height: 1.5;">
+                            <li>Enhanced Customer Experience: Faster processing times</li>
+                            <li>Improved Data Quality: AI validation reduces errors</li>
+                            <li>Better Compliance: Automated validation checks</li>
+                        </ul>
+                        <ul style="margin: 0; padding-left: 15px; line-height: 1.5;">
+                            <li>Scalability: Handle 10x volume without staff increases</li>
+                            <li>Staff Satisfaction: Eliminates repetitive manual tasks</li>
+                            <li>Complete Audit Trail: Digital documentation transparency</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1185,6 +1294,99 @@
             document.getElementById('execSummaryTimeReduction').textContent = timeReduction;
             document.getElementById('execSummaryPaybackPeriod').textContent = paybackPeriod;
             document.getElementById('execSummaryFirstYearROI').textContent = firstYearROI;
+            
+            // Populate the new ROI Model Analysis Table
+            const numImplementationCost = parseInt(implementationCost);
+            const numMonthlyServiceCost = parseInt(monthlyServiceCost);
+            const numAnnualSavings = parseInt(annualSavings);
+            
+            // Year 1 calculations
+            const year1Implementation = numImplementationCost;
+            const year1Service = numMonthlyServiceCost * 12;
+            const year1TotalInvestment = year1Implementation + year1Service;
+            
+            // Year 2 calculations (only service fees)
+            const year2Service = numMonthlyServiceCost * 12;
+            const year2TotalInvestment = year2Service;
+            
+            // 3-Year total calculations
+            const threeYearImplementation = numImplementationCost;
+            const threeYearService = numMonthlyServiceCost * 36; // 3 years
+            const threeYearTotalInvestment = threeYearImplementation + threeYearService;
+            
+            // Benefits (assuming consistent year over year)
+            const year1LaborSavings = numAnnualSavings;
+            const year2LaborSavings = numAnnualSavings;
+            const threeYearLaborSavings = numAnnualSavings * 3;
+            
+            // Additional benefits (use data or defaults)
+            const errorReductionBenefit = data.investmentSummary?.errorReductionBenefit ? 
+                parseInt(data.investmentSummary.errorReductionBenefit.replace(/[$,]/g, '')) : 15000;
+            const revenueAccelerationBenefit = data.investmentSummary?.revenueAccelerationBenefit ? 
+                parseInt(data.investmentSummary.revenueAccelerationBenefit.replace(/[$,]/g, '')) : 20000;
+            
+            const year1ErrorReduction = errorReductionBenefit;
+            const year2ErrorReduction = errorReductionBenefit;
+            const threeYearErrorReduction = errorReductionBenefit * 3;
+            
+            const year1Revenue = revenueAccelerationBenefit;
+            const year2Revenue = revenueAccelerationBenefit;
+            const threeYearRevenue = revenueAccelerationBenefit * 3;
+            
+            // Total benefits
+            const year1TotalBenefits = year1LaborSavings + year1ErrorReduction + year1Revenue;
+            const year2TotalBenefits = year2LaborSavings + year2ErrorReduction + year2Revenue;
+            const threeYearTotalBenefits = threeYearLaborSavings + threeYearErrorReduction + threeYearRevenue;
+            
+            // Net benefits
+            const year1NetBenefit = year1TotalBenefits - year1TotalInvestment;
+            const year2NetBenefit = year2TotalBenefits - year2TotalInvestment;
+            const threeYearNetBenefit = threeYearTotalBenefits - threeYearTotalInvestment;
+            
+            // ROI percentages
+            const year1ROI = Math.round((year1NetBenefit / year1TotalInvestment) * 100);
+            const year2ROI = Math.round((year2NetBenefit / year2TotalInvestment) * 100);
+            const threeYearROI = Math.round((threeYearNetBenefit / threeYearTotalInvestment) * 100);
+            
+            // Investment section
+            document.getElementById('roiYear1Implementation').textContent = year1Implementation.toLocaleString();
+            document.getElementById('roi3YearImplementation').textContent = threeYearImplementation.toLocaleString();
+            
+            document.getElementById('roiYear1Service').textContent = year1Service.toLocaleString();
+            document.getElementById('roiYear2Service').textContent = year2Service.toLocaleString();
+            document.getElementById('roi3YearService').textContent = threeYearService.toLocaleString();
+            
+            document.getElementById('roiYear1TotalInvest').textContent = year1TotalInvestment.toLocaleString();
+            document.getElementById('roiYear2TotalInvest').textContent = year2TotalInvestment.toLocaleString();
+            document.getElementById('roi3YearTotalInvest').textContent = threeYearTotalInvestment.toLocaleString();
+            
+            // Benefits section
+            document.getElementById('roiYear1LaborSavings').textContent = year1LaborSavings.toLocaleString();
+            document.getElementById('roiYear2LaborSavings').textContent = year2LaborSavings.toLocaleString();
+            document.getElementById('roi3YearLaborSavings').textContent = threeYearLaborSavings.toLocaleString();
+            
+            document.getElementById('roiYear1ErrorReduction').textContent = year1ErrorReduction.toLocaleString();
+            document.getElementById('roiYear2ErrorReduction').textContent = year2ErrorReduction.toLocaleString();
+            document.getElementById('roi3YearErrorReduction').textContent = threeYearErrorReduction.toLocaleString();
+            
+            document.getElementById('roiYear1Revenue').textContent = year1Revenue.toLocaleString();
+            document.getElementById('roiYear2Revenue').textContent = year2Revenue.toLocaleString();
+            document.getElementById('roi3YearRevenue').textContent = threeYearRevenue.toLocaleString();
+            
+            document.getElementById('roiYear1TotalBenefits').textContent = year1TotalBenefits.toLocaleString();
+            document.getElementById('roiYear2TotalBenefits').textContent = year2TotalBenefits.toLocaleString();
+            document.getElementById('roi3YearTotalBenefits').textContent = threeYearTotalBenefits.toLocaleString();
+            
+            // Net results
+            document.getElementById('roiYear1NetBenefit').textContent = year1NetBenefit.toLocaleString();
+            document.getElementById('roiYear2NetBenefit').textContent = year2NetBenefit.toLocaleString();
+            document.getElementById('roi3YearNetBenefit').textContent = threeYearNetBenefit.toLocaleString();
+            
+            document.getElementById('roiYear1Percentage').textContent = year1ROI;
+            document.getElementById('roiYear2Percentage').textContent = year2ROI;
+            document.getElementById('roi3YearPercentage').textContent = threeYearROI;
+            
+            document.getElementById('roiPaybackPeriod').textContent = paybackPeriod;
             
             // Old total metrics elements (keep for backward compatibility if they exist)
             const totalAnnualSavingsEl = document.getElementById('totalAnnualSavings');
