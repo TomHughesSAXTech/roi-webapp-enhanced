@@ -4010,13 +4010,57 @@
                 timelinePhases: currentState.timelinePhases?.map(phase => ({
                     name: phase.phase,
                     duration: `${phase.duration} ${phase.duration === 1 ? 'week' : 'weeks'}`,
-                    deliverables: phase.deliverables ? phase.deliverables.split(', ') : [],
-                    activities: phase.activities ? phase.activities.split(', ') : []
+                    deliverables: phase.deliverables ? phase.deliverables.split(/,|\n/).map(d => d.trim()).filter(d => d) : [],
+                    activities: phase.activities ? phase.activities.split(/,|\n/).map(a => a.trim()).filter(a => a) : []
                 })) || [
                     { name: 'Discovery & Planning', duration: '2 weeks', deliverables: ['Requirements analysis', 'Architecture design', 'Project plan'], activities: ['Requirements gathering', 'Stakeholder interviews', 'Current state analysis'] },
                     { name: 'Development & Integration', duration: '4 weeks', deliverables: ['AI model development', 'System integrations', 'Workflow implementation'], activities: ['Core automation development', 'API integrations', 'AI agent setup'] },
                     { name: 'Testing & Deployment', duration: '2 weeks', deliverables: ['Quality assurance', 'User acceptance testing', 'Production deployment'], activities: ['System testing', 'User testing', 'Staff training'] },
                     { name: 'Training & Handover', duration: '1 week', deliverables: ['User training', 'Documentation', 'Knowledge transfer'], activities: ['Staff training', 'Documentation creation', 'Go-live support'] }
+                ],
+                // Out of scope items from ROI model
+                outOfScope: [
+                    'Legacy system modifications or upgrades',
+                    'Data migration from systems not included in scope', 
+                    'Custom integrations beyond those specified in scope',
+                    'Extensive UI/UX customization outside of standard templates',
+                    'Third-party software licensing costs',
+                    'On-premise infrastructure or hardware procurement',
+                    'Business process re-engineering outside of automation scope'
+                ],
+                // Acceptance criteria from ROI workflows
+                acceptanceCriteria: [
+                    `Automated ${processName.toLowerCase()} workflow processes instances successfully with ${timeSavingsPercent}% time reduction`,
+                    `System achieves target processing time of ${Math.round(autoTotalTime)} minutes per instance`,
+                    'All specified system integrations function correctly and pass testing',
+                    'User training completed and staff can operate the system independently',
+                    'System monitoring and alerting mechanisms are operational',
+                    `Cost savings of $${Math.round(manualTotalCost - autoTotalCost)} per process instance verified`,
+                    '99.5% uptime SLA requirements met during testing period'
+                ],
+                // Project assumptions from ROI model
+                projectAssumptions: [
+                    'Client provides timely access to systems and stakeholders as required',
+                    'All infrastructure is hosted and managed by SAX Technology Advisors',
+                    'Current business processes and requirements remain stable during implementation',
+                    'Client staff are available for training and user acceptance testing',
+                    `Monthly process volume remains at approximately ${monthlyVolume} instances`,
+                    'Azure and automation platform costs are included in the managed service fee',
+                    'Integration APIs remain stable and accessible during implementation'
+                ],
+                // Monthly service components from ROI model for managed services pricing
+                monthlyServiceComponents: currentState.monthlyServiceComponents?.map(comp => ({
+                    name: comp.name,
+                    hours: comp.hours || 0,
+                    rate: comp.rate || 0,
+                    cost: comp.fixedCost || (comp.hours * comp.rate),
+                    type: comp.fixedCost ? 'Fixed' : 'Hourly'
+                })) || [
+                    { name: 'System Monitoring & Maintenance', hours: 8, rate: 125, cost: 1000, type: 'Hourly' },
+                    { name: 'Monthly Performance Optimization', hours: 6, rate: 150, cost: 900, type: 'Hourly' },
+                    { name: 'Technical Support (8hrs/month)', hours: 8, rate: 125, cost: 1000, type: 'Hourly' },
+                    { name: 'Infrastructure & Hosting', hours: 0, rate: 0, cost: 750, type: 'Fixed' },
+                    { name: 'AI Processing & Platform Costs', hours: 0, rate: 0, cost: Math.round((aiCostPerProcess * monthlyVolume) * 1.2), type: 'Fixed' }
                 ],
                 addedValue: [
                     'AI-powered intelligent decision making',

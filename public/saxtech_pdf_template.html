@@ -1271,42 +1271,74 @@
             if (!container) return;
             
             const processName = data.projectOverview?.processName || 'process automation';
-            const hasAI = data.processAnalysis?.automatedSteps > 0;
-            const hasIntegrations = data.implementationComponents?.some(comp => comp.name.toLowerCase().includes('integration'));
+            const hasAI = data.processAnalysis?.automatedSteps?.some(step => step.isAI) || false;
+            const hasIntegrations = data.implementationComponents?.some(comp => comp.name.toLowerCase().includes('integration')) || false;
+            const timelinePhases = data.timelinePhases || [];
             
-            let activitiesHTML = `
-                <h4>Discovery & Planning</h4>
-                <ul>
-                    <li>Conduct stakeholder workshops to define business objectives and success metrics</li>
-                    <li>Map current ${processName.toLowerCase()} process and identify automation opportunities</li>
-                    <li>Design technical architecture and system integration points</li>
-                </ul>
+            let activitiesHTML = '';
+            
+            // Use actual timeline phases if available, otherwise use default structure
+            if (timelinePhases.length > 0) {
+                timelinePhases.forEach((phase, index) => {
+                    activitiesHTML += `<h4>${phase.name || `Phase ${index + 1}`}</h4>`;
+                    
+                    // Add activities
+                    if (phase.activities && phase.activities.length > 0) {
+                        activitiesHTML += '<p><strong>Key Activities:</strong></p><ul>';
+                        phase.activities.forEach(activity => {
+                            activitiesHTML += `<li>${activity}</li>`;
+                        });
+                        activitiesHTML += '</ul>';
+                    }
+                    
+                    // Add deliverables
+                    if (phase.deliverables && phase.deliverables.length > 0) {
+                        activitiesHTML += '<p><strong>Deliverables:</strong></p><ul>';
+                        phase.deliverables.forEach(deliverable => {
+                            activitiesHTML += `<li>${deliverable}</li>`;
+                        });
+                        activitiesHTML += '</ul>';
+                    }
+                });
+            } else {
+                // Fallback to default structure
+                activitiesHTML = `
+                    <h4>Discovery & Planning</h4>
+                    <ul>
+                        <li>Conduct stakeholder workshops to define business objectives and success metrics</li>
+                        <li>Map current ${processName.toLowerCase()} process and identify automation opportunities</li>
+                        <li>Design technical architecture and system integration points</li>
+                        <li>Create detailed project plan and resource allocation</li>
+                    </ul>
+                    
+                    <h4>Automation Development</h4>
+                    <ul>
+                        <li>Configure SAXTech Automation Engine workflows</li>
+                        <li>Develop automated ${processName.toLowerCase()} processing logic</li>`;
                 
-                <h4>Automation Development</h4>
-                <ul>
-                    <li>Configure SAXTech Automation Engine workflows</li>
-                    <li>Develop automated ${processName.toLowerCase()} processing logic</li>`;
-            
-            if (hasAI) {
-                activitiesHTML += '<li>Implement AI-powered validation and decision-making capabilities</li>';
-            }
-            
-            if (hasIntegrations) {
-                activitiesHTML += '<li>Build API integrations with existing business systems</li>';
-            }
-            
-            activitiesHTML += `
-                    <li>Create user-friendly web interfaces for process initiation</li>
-                </ul>
+                if (hasAI) {
+                    activitiesHTML += '<li>Implement AI-powered validation and decision-making capabilities</li>';
+                }
                 
-                <h4>Testing & Deployment</h4>
-                <ul>
-                    <li>Comprehensive system testing and quality assurance</li>
-                    <li>User acceptance testing with key stakeholders</li>
-                    <li>Production deployment and go-live support</li>
-                    <li>Staff training and documentation</li>
-                </ul>
-            `;
+                if (hasIntegrations) {
+                    activitiesHTML += '<li>Build API integrations with existing business systems</li>';
+                }
+                
+                activitiesHTML += `
+                        <li>Create user-friendly web interfaces for process initiation</li>
+                        <li>Implement monitoring, logging, and alerting systems</li>
+                    </ul>
+                    
+                    <h4>Testing & Deployment</h4>
+                    <ul>
+                        <li>Comprehensive system testing and quality assurance</li>
+                        <li>User acceptance testing with key stakeholders</li>
+                        <li>Production deployment and go-live support</li>
+                        <li>Staff training and documentation delivery</li>
+                        <li>30-day hypercare period with enhanced support</li>
+                    </ul>
+                `;
+            }
             
             container.innerHTML = activitiesHTML;
         }
@@ -1316,12 +1348,14 @@
             const container = document.getElementById('outOfScopeItems');
             if (!container) return;
             
-            const outOfScope = [
+            const outOfScope = data.outOfScope || [
                 'Legacy system modifications or upgrades',
                 'Data migration from systems not included in scope',
-                'Custom integrations beyond those specified',
+                'Custom integrations beyond those specified in scope',
                 'Extensive UI/UX customization outside of standard templates',
-                'Third-party software licensing costs'
+                'Third-party software licensing costs',
+                'On-premise infrastructure or hardware procurement',
+                'Business process re-engineering outside of automation scope'
             ];
             
             let scopeHTML = '<ul>';
@@ -1338,19 +1372,17 @@
             const container = document.getElementById('acceptanceCriteria');
             if (!container) return;
             
-            const processName = data.projectOverview?.processName || 'process';
-            const timeSavings = data.investmentSummary?.timeReduction || '80%';
-            
-            const criteria = [
-                `Automated ${processName.toLowerCase()} workflow processes instances successfully`,
-                `System achieves target ${timeSavings} time reduction in processing`,
-                'All specified integrations function correctly',
+            const acceptanceCriteria = data.acceptanceCriteria || [
+                `Automated ${data.projectOverview?.processName?.toLowerCase() || 'process'} workflow processes instances successfully`,
+                `System achieves target ${data.investmentSummary?.timeReduction || '80%'} time reduction in processing`,
+                'All specified system integrations function correctly and pass testing',
                 'User training completed and staff can operate the system independently',
-                'System monitoring and alerting mechanisms are operational'
+                'System monitoring and alerting mechanisms are operational',
+                '99.5% uptime SLA requirements met during testing period'
             ];
             
             let criteriaHTML = '<p>The implementation is considered successful when:</p><ul>';
-            criteria.forEach(criterion => {
+            acceptanceCriteria.forEach(criterion => {
                 criteriaHTML += `<li>${criterion}</li>`;
             });
             criteriaHTML += '</ul>';
@@ -1363,16 +1395,17 @@
             const container = document.getElementById('projectAssumptions');
             if (!container) return;
             
-            const assumptions = [
+            const projectAssumptions = data.projectAssumptions || [
                 'Client provides timely access to systems and stakeholders as required',
                 'All infrastructure is hosted and managed by SAX Technology Advisors',
                 'Current business processes and requirements remain stable during implementation',
                 'Client staff are available for training and user acceptance testing',
-                'Azure and automation platform costs are included in the managed service fee'
+                'Azure and automation platform costs are included in the managed service fee',
+                'Integration APIs remain stable and accessible during implementation'
             ];
             
             let assumptionsHTML = '<ul>';
-            assumptions.forEach(assumption => {
+            projectAssumptions.forEach(assumption => {
                 assumptionsHTML += `<li>${assumption}</li>`;
             });
             assumptionsHTML += '</ul>';
@@ -1388,12 +1421,13 @@
             const monthlyFee = data.commercials?.monthlyServiceFee?.replace(/[$,]/g, '') || '2100';
             const monthlyTotal = parseInt(monthlyFee);
             
-            // Use the same breakdown logic as the main monthly service breakdown
-            const breakdown = [
-                { name: 'Infrastructure & Hosting', cost: Math.round(monthlyTotal * 0.3) },
-                { name: 'AI Processing & Platform Costs', cost: Math.round(monthlyTotal * 0.25) },
-                { name: 'System Monitoring & Support', cost: Math.round(monthlyTotal * 0.25) },
-                { name: 'Platform Management & Updates', cost: Math.round(monthlyTotal * 0.2) }
+            // Use enhanced monthly service components from ROI model
+            const monthlyComponents = data.monthlyServiceComponents || [
+                { name: 'System Monitoring & Maintenance', hours: 8, rate: 125, cost: 1000, type: 'Hourly' },
+                { name: 'Monthly Performance Optimization', hours: 6, rate: 150, cost: 900, type: 'Hourly' },
+                { name: 'Technical Support (8hrs/month)', hours: 8, rate: 125, cost: 1000, type: 'Hourly' },
+                { name: 'Infrastructure & Hosting', hours: 0, rate: 0, cost: 750, type: 'Fixed' },
+                { name: 'AI Processing & Platform Costs', hours: 0, rate: 0, cost: 450, type: 'Fixed' }
             ];
             
             let pricingHTML = `
@@ -1404,19 +1438,29 @@
                     <div style="font-size: 16px; color: #666;">Complete Managed Service</div>
                 </div>
                 
-                <h4>Service Includes:</h4>
+                <h4>Service Breakdown:</h4>
                 <ul>
             `;
             
-            breakdown.forEach(item => {
-                pricingHTML += `<li><strong>${item.name}:</strong> $${item.cost.toLocaleString()}/month</li>`;
+            monthlyComponents.forEach(comp => {
+                if (comp.type === 'Hourly' && comp.hours > 0) {
+                    pricingHTML += `<li><strong>${comp.name}:</strong> ${comp.hours} hrs × $${comp.rate}/hr = $${comp.cost.toLocaleString()}/month</li>`;
+                } else {
+                    pricingHTML += `<li><strong>${comp.name}:</strong> $${comp.cost.toLocaleString()}/month</li>`;
+                }
             });
             
             pricingHTML += `
-                    <li><strong>24/7 System Monitoring</strong> with proactive alerts</li>
-                    <li><strong>Monthly Optimization Reviews</strong> and performance tuning</li>
-                    <li><strong>Technical Support</strong> during business hours</li>
-                    <li><strong>Platform Updates & Enhancements</strong> included</li>
+                </ul>
+                
+                <h4>Additional Services Included:</h4>
+                <ul>
+                    <li><strong>24/7 System Monitoring</strong> with proactive alerts and incident response</li>
+                    <li><strong>Monthly Optimization Reviews</strong> and performance tuning sessions</li>
+                    <li><strong>Technical Support</strong> during business hours with dedicated support portal</li>
+                    <li><strong>Platform Updates & Enhancements</strong> automatically deployed</li>
+                    <li><strong>Quarterly Business Reviews</strong> with stakeholder reporting</li>
+                    <li><strong>99.5% Uptime SLA</strong> with redundancy and failover capabilities</li>
                 </ul>
             `;
             
