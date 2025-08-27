@@ -684,6 +684,83 @@
             line-height: 1.6;
         }
         
+        /* Signature Section */
+        .signature-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            page-break-before: always;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        
+        .signature-content {
+            padding: 45px 50px;
+            flex: 1;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .signature-section {
+            margin-top: 35px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 15px;
+            border: 2px solid #F1C40F;
+        }
+        
+        .signature-section h2 {
+            color: #2c3e50;
+            font-size: 19px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .signature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 30px;
+        }
+        
+        .signature-block {
+            text-align: center;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #2c3e50;
+            width: 100%;
+            height: 50px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .signature-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .signature-details {
+            font-size: 12px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .acceptance-text {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(241, 196, 15, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #F1C40F;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        
         @media print {
             body { -webkit-print-color-adjust: exact; }
             .page-break { page-break-before: always; }
@@ -986,6 +1063,55 @@
         </div>
     </div>
 
+    <!-- Signature Page -->
+    <div class="signature-page">
+        <div class="page-header">
+            <h1>Agreement</h1>
+            <div class="yellow-arrow"></div>
+        </div>
+        
+        <div class="signature-content">
+            <div class="acceptance-text">
+                <strong>By signing below, both parties acknowledge and agree to the following:</strong>
+                <br><br>
+                • The terms, conditions, and pricing outlined in this proposal are accepted as presented<br>
+                • The project scope, timeline, and deliverables detailed in this Statement of Work are agreed upon<br>
+                • Payment terms follow Net 30 invoice cycles with implementation fee due upon contract signing<br>
+                • This agreement is subject to SAX Technology Advisors' standard terms and conditions<br>
+                • All intellectual property developed remains the property of SAX Technology Advisors<br>
+                • The managed service agreement begins immediately following successful implementation
+            </div>
+            
+            <div class="signature-section">
+                <h2>Client Acceptance & Authorization</h2>
+                
+                <div class="signature-grid">
+                    <div class="signature-block">
+                        <div class="signature-label">Client Signature</div>
+                        <div class="signature-line"></div>
+                        <div class="signature-details">
+                            Print Name: <span id="signatureClientName">Neil Singh</span><br>
+                            Title: <span id="signatureClientTitle">President</span><br>
+                            Company: <span id="signatureClientCompany">FCS Group, LLC</span><br>
+                            Date: _________________
+                        </div>
+                    </div>
+                    
+                    <div class="signature-block">
+                        <div class="signature-label">SAX Technology Advisors</div>
+                        <div class="signature-line"></div>
+                        <div class="signature-details">
+                            Print Name: Leon Grassi<br>
+                            Title: Partner, CRO<br>
+                            Company: SAX Technology Advisors<br>
+                            Date: _________________
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Function to populate PDF with data
         function populatePDFData(data) {
@@ -1070,6 +1196,11 @@
             document.getElementById('threeYearROI').textContent = data.investmentSummary?.threeYearNetBenefit || '265';
             document.getElementById('contractLengthFinal').textContent = contractLength;
             document.getElementById('implementationTimelineFinal').textContent = implementationTimeline.replace('Approximately ', '').replace(' weeks', '-week');
+            
+            // Populate signature section
+            document.getElementById('signatureClientName').textContent = contactName;
+            document.getElementById('signatureClientTitle').textContent = data.clientInfo?.title || 'President';
+            document.getElementById('signatureClientCompany').textContent = clientName;
         }
         
         // Helper function to populate current state analysis
@@ -1078,22 +1209,12 @@
             if (!container) return;
             
             const analysis = data.processAnalysis || {};
-            const manualSteps = analysis.currentSteps || 0;
             const manualTime = analysis.manualTime || 0;
             const manualCost = analysis.costPerProcess?.manual || 0;
             
             container.innerHTML = `
-                <p>The current ${data.projectOverview?.processName || 'process'} involves ${manualSteps} manual steps requiring approximately ${Math.round(manualTime)} minutes per instance at a cost of $${manualCost.toFixed(2)} per process.</p>
-                <p>This manual approach involves multiple stakeholders, creates opportunities for errors, and limits scalability as volume increases.</p>
-                ${data.processAnalysis?.manualSteps && data.processAnalysis.manualSteps.length > 0 ? '<h4>Current Manual Process Steps:</h4>' : ''}
-                <ul>
-                    ${(data.processAnalysis?.manualSteps || []).map((step, index) => {
-                        const stepName = step.task || `Step ${index + 1}`;
-                        const roleName = step.role || 'Staff Member';
-                        const timeText = step.time ? `${step.time} minutes` : 'Variable time';
-                        return `<li><strong>${stepName}</strong> - ${roleName} (${timeText})</li>`;
-                    }).join('')}
-                </ul>
+                <p>The current ${data.projectOverview?.processName || 'process'} involves multiple manual steps requiring approximately ${Math.round(manualTime)} minutes per instance at a cost of $${manualCost.toFixed(2)} per process.</p>
+                <p>This manual approach involves multiple stakeholders, creates opportunities for errors, and limits scalability as volume increases. The process requires significant coordination and is prone to delays and inconsistencies.</p>
             `;
         }
         
@@ -1103,32 +1224,22 @@
             if (!container) return;
             
             const analysis = data.processAnalysis || {};
-            const automatedSteps = analysis.automatedSteps || 0;
+            const automatedStepsArray = analysis.automatedSteps || [];
+            const automatedStepsCount = Array.isArray(automatedStepsArray) ? automatedStepsArray.length : (analysis.automatedSteps || 0);
             const automatedTime = analysis.automatedTime || 0;
-            const timeSaved = analysis.timeSaved || 0;
             const timeReduction = data.investmentSummary?.timeReduction || '0%';
             
             container.innerHTML = `
-                <p>The proposed automation solution reduces the process to ${automatedSteps} automated steps, completing in approximately ${Math.round(automatedTime)} minutes - a ${timeReduction} reduction in processing time.</p>
-                
-                ${data.processAnalysis?.automatedSteps && data.processAnalysis.automatedSteps.length > 0 ? '<h4>Proposed Automated Process Steps:</h4>' : ''}
-                <ul>
-                    ${(data.processAnalysis?.automatedSteps || []).map((step, index) => {
-                        const stepName = step.task || `Step ${index + 1}`;
-                        const roleName = step.role || (step.isAI ? 'AI Agent' : 'Automated');
-                        const timeText = step.time ? `${step.time} minutes` : 'Automated';
-                        const feature = step.feature ? ` (${step.feature})` : '';
-                        return `<li><strong>${stepName}</strong> - ${roleName} (${timeText})${feature}</li>`;
-                    }).join('')}
-                </ul>
+                <p>The proposed automation solution streamlines the process to ${automatedStepsCount} automated steps, completing in approximately ${Math.round(automatedTime)} minutes - a ${timeReduction} reduction in processing time.</p>
                 
                 <h4>Key Automation Benefits:</h4>
                 <ul>
-                    <li>Eliminates manual data entry and reduces errors</li>
-                    <li>Provides real-time processing and notifications</li>
-                    <li>Enables scalability without proportional staff increases</li>
-                    <li>Creates comprehensive audit trails and reporting</li>
-                    <li>Integrates seamlessly with existing business systems</li>
+                    <li><strong>Eliminates manual data entry</strong> and reduces human errors</li>
+                    <li><strong>Provides real-time processing</strong> with instant notifications</li>
+                    <li><strong>Enables scalability</strong> without proportional staff increases</li>
+                    <li><strong>Creates comprehensive audit trails</strong> and automated reporting</li>
+                    <li><strong>Integrates seamlessly</strong> with existing business systems</li>
+                    <li><strong>AI-powered intelligence</strong> for enhanced decision-making accuracy</li>
                 </ul>
             `;
         }
@@ -1273,72 +1384,51 @@
             const processName = data.projectOverview?.processName || 'process automation';
             const hasAI = data.processAnalysis?.automatedSteps?.some(step => step.isAI) || false;
             const hasIntegrations = data.implementationComponents?.some(comp => comp.name.toLowerCase().includes('integration')) || false;
-            const timelinePhases = data.timelinePhases || [];
             
-            let activitiesHTML = '';
+            // Standardized consolidated approach
+            let activitiesHTML = `
+                <h4>Discovery & Planning (Week 1-2)</h4>
+                <ul>
+                    <li><strong>Requirements analysis & stakeholder workshops</strong> - Define business objectives and success criteria</li>
+                    <li><strong>Current state assessment</strong> - Map existing ${processName.toLowerCase()} workflow and pain points</li>
+                    <li><strong>Technical architecture design</strong> - Define system integration points and data flows</li>
+                    <li><strong>Project planning</strong> - Finalize timeline, resources, and deliverable schedule</li>
+                </ul>
+                
+                <h4>Development & Configuration (Week 3-6)</h4>
+                <ul>
+                    <li><strong>Platform setup & configuration</strong> - Deploy SAXTech Automation Engine in Azure environment</li>
+                    <li><strong>Workflow development</strong> - Build automated ${processName.toLowerCase()} processing workflows</li>`;
             
-            // Use actual timeline phases if available, otherwise use default structure
-            if (timelinePhases.length > 0) {
-                timelinePhases.forEach((phase, index) => {
-                    activitiesHTML += `<h4>${phase.name || `Phase ${index + 1}`}</h4>`;
-                    
-                    // Add activities
-                    if (phase.activities && phase.activities.length > 0) {
-                        activitiesHTML += '<p><strong>Key Activities:</strong></p><ul>';
-                        phase.activities.forEach(activity => {
-                            activitiesHTML += `<li>${activity}</li>`;
-                        });
-                        activitiesHTML += '</ul>';
-                    }
-                    
-                    // Add deliverables
-                    if (phase.deliverables && phase.deliverables.length > 0) {
-                        activitiesHTML += '<p><strong>Deliverables:</strong></p><ul>';
-                        phase.deliverables.forEach(deliverable => {
-                            activitiesHTML += `<li>${deliverable}</li>`;
-                        });
-                        activitiesHTML += '</ul>';
-                    }
-                });
-            } else {
-                // Fallback to default structure
-                activitiesHTML = `
-                    <h4>Discovery & Planning</h4>
-                    <ul>
-                        <li>Conduct stakeholder workshops to define business objectives and success metrics</li>
-                        <li>Map current ${processName.toLowerCase()} process and identify automation opportunities</li>
-                        <li>Design technical architecture and system integration points</li>
-                        <li>Create detailed project plan and resource allocation</li>
-                    </ul>
-                    
-                    <h4>Automation Development</h4>
-                    <ul>
-                        <li>Configure SAXTech Automation Engine workflows</li>
-                        <li>Develop automated ${processName.toLowerCase()} processing logic</li>`;
-                
-                if (hasAI) {
-                    activitiesHTML += '<li>Implement AI-powered validation and decision-making capabilities</li>';
-                }
-                
-                if (hasIntegrations) {
-                    activitiesHTML += '<li>Build API integrations with existing business systems</li>';
-                }
-                
-                activitiesHTML += `
-                        <li>Create user-friendly web interfaces for process initiation</li>
-                        <li>Implement monitoring, logging, and alerting systems</li>
-                    </ul>
-                    
-                    <h4>Testing & Deployment</h4>
-                    <ul>
-                        <li>Comprehensive system testing and quality assurance</li>
-                        <li>User acceptance testing with key stakeholders</li>
-                        <li>Production deployment and go-live support</li>
-                        <li>Staff training and documentation delivery</li>
-                        <li>30-day hypercare period with enhanced support</li>
-                    </ul>
-                `;
+            if (hasAI) {
+                activitiesHTML += '<li><strong>AI model integration</strong> - Implement intelligent validation and decision-making capabilities</li>';
             }
+            
+            if (hasIntegrations) {
+                activitiesHTML += '<li><strong>System integrations</strong> - Develop API connections with existing business systems</li>';
+            }
+            
+            activitiesHTML += `
+                    <li><strong>User interface development</strong> - Create intuitive web interfaces for process initiation</li>
+                    <li><strong>Monitoring & alerting setup</strong> - Implement comprehensive logging and notification systems</li>
+                </ul>
+                
+                <h4>Testing & Quality Assurance (Week 7)</h4>
+                <ul>
+                    <li><strong>Unit & integration testing</strong> - Validate individual components and system interactions</li>
+                    <li><strong>User acceptance testing</strong> - Conduct testing sessions with key stakeholders</li>
+                    <li><strong>Performance optimization</strong> - Fine-tune workflows for optimal processing speed</li>
+                    <li><strong>Security validation</strong> - Ensure compliance with enterprise security standards</li>
+                </ul>
+                
+                <h4>Training, Deployment & Go-Live (Week 8)</h4>
+                <ul>
+                    <li><strong>Staff training sessions</strong> - Comprehensive user training and documentation handover</li>
+                    <li><strong>Production deployment</strong> - Move solution to live environment with data migration</li>
+                    <li><strong>Go-live support</strong> - Dedicated support during initial production period</li>
+                    <li><strong>Knowledge transfer</strong> - Final documentation delivery and process handover</li>
+                </ul>
+            `;
             
             container.innerHTML = activitiesHTML;
         }
@@ -1421,15 +1511,6 @@
             const monthlyFee = data.commercials?.monthlyServiceFee?.replace(/[$,]/g, '') || '2100';
             const monthlyTotal = parseInt(monthlyFee);
             
-            // Use enhanced monthly service components from ROI model
-            const monthlyComponents = data.monthlyServiceComponents || [
-                { name: 'System Monitoring & Maintenance', hours: 8, rate: 125, cost: 1000, type: 'Hourly' },
-                { name: 'Monthly Performance Optimization', hours: 6, rate: 150, cost: 900, type: 'Hourly' },
-                { name: 'Technical Support (8hrs/month)', hours: 8, rate: 125, cost: 1000, type: 'Hourly' },
-                { name: 'Infrastructure & Hosting', hours: 0, rate: 0, cost: 750, type: 'Fixed' },
-                { name: 'AI Processing & Platform Costs', hours: 0, rate: 0, cost: 450, type: 'Fixed' }
-            ];
-            
             let pricingHTML = `
                 <div style="text-align: center; margin: 20px 0;">
                     <div style="font-size: 32px; font-weight: bold; color: #3498db; margin-bottom: 10px;">
@@ -1438,26 +1519,14 @@
                     <div style="font-size: 16px; color: #666;">Complete Managed Service</div>
                 </div>
                 
-                <h4>Service Breakdown:</h4>
+                <h4>Services Included:</h4>
                 <ul>
-            `;
-            
-            monthlyComponents.forEach(comp => {
-                if (comp.type === 'Hourly' && comp.hours > 0) {
-                    pricingHTML += `<li><strong>${comp.name}:</strong> ${comp.hours} hrs × $${comp.rate}/hr = $${comp.cost.toLocaleString()}/month</li>`;
-                } else {
-                    pricingHTML += `<li><strong>${comp.name}:</strong> $${comp.cost.toLocaleString()}/month</li>`;
-                }
-            });
-            
-            pricingHTML += `
-                </ul>
-                
-                <h4>Additional Services Included:</h4>
-                <ul>
+                    <li><strong>System Monitoring & Maintenance</strong></li>
+                    <li><strong>Monthly Performance Optimization</strong></li>
+                    <li><strong>Technical Support</strong> during business hours</li>
+                    <li><strong>Infrastructure & Hosting</strong></li>
+                    <li><strong>AI Processing & Platform Costs</strong></li>
                     <li><strong>24/7 System Monitoring</strong> with proactive alerts and incident response</li>
-                    <li><strong>Monthly Optimization Reviews</strong> and performance tuning sessions</li>
-                    <li><strong>Technical Support</strong> during business hours with dedicated support portal</li>
                     <li><strong>Platform Updates & Enhancements</strong> automatically deployed</li>
                     <li><strong>Quarterly Business Reviews</strong> with stakeholder reporting</li>
                     <li><strong>99.5% Uptime SLA</strong> with redundancy and failover capabilities</li>
