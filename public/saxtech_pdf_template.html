@@ -400,6 +400,7 @@
             display: flex;
             flex-direction: column;
             page-break-before: always;
+            page-break-inside: avoid;
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
         }
         
@@ -526,6 +527,7 @@
             color: white;
             min-height: 100vh;
             page-break-before: always;
+            page-break-inside: avoid;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -690,6 +692,7 @@
             display: flex;
             flex-direction: column;
             page-break-before: always;
+            page-break-inside: avoid;
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
         }
         
@@ -762,8 +765,34 @@
         }
         
         @media print {
-            body { -webkit-print-color-adjust: exact; }
+            body { 
+                -webkit-print-color-adjust: exact;
+                margin: 0;
+                padding: 0;
+            }
             .page-break { page-break-before: always; }
+            
+            /* Ensure pages don't break in the middle of content */
+            .roi-page, .investment-page, .signature-page, .sow-page {
+                page-break-inside: avoid;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            /* Fix content overflow */
+            .roi-content, .investment-content, .signature-content, .section-content {
+                max-height: calc(100vh - 200px);
+                overflow: visible;
+                page-break-inside: avoid;
+            }
+            
+            /* Ensure all text is visible */
+            * {
+                box-sizing: border-box;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
         }
     </style>
 </head>
@@ -1137,7 +1166,7 @@
             document.getElementById('processNameLower').textContent = processName.toLowerCase();
             document.getElementById('processNameSOW').textContent = processName.toLowerCase();
             
-            // **COMMERCIALS DATA - Pull from ROI analysis**
+            // **COMMERCIALS DATA - Pull from actual data structure**
             // Implementation cost from the ROI implementation components total
             const implementationCost = data.commercials?.implementationFee?.replace(/[$,]/g, '') || 
                                      data.investmentSummary?.implementationCost?.replace(/[$,]/g, '') || '46500';
@@ -1145,6 +1174,13 @@
             // Monthly service cost from ROI monthly service calculation
             const monthlyServiceCost = data.commercials?.monthlyServiceFee?.replace(/[$,]/g, '') || 
                                      data.investmentSummary?.monthlyManagedService?.replace(/[$,]/g, '') || '2100';
+            
+            console.log('Commercials Data being used:', {
+                implementationCost: implementationCost,
+                monthlyServiceCost: monthlyServiceCost,
+                rawCommercials: data.commercials,
+                rawInvestmentSummary: data.investmentSummary
+            });
             
             // Implementation timeline from ROI analysis
             const implementationTimeline = data.commercials?.duration || '8–10 weeks';
@@ -1165,11 +1201,19 @@
             populateManagedServicesPricing(data);
             populateAddedValue(data);
             
-            // ROI metrics from the analysis
-            const annualSavings = data.investmentSummary?.annualLaborSavings?.replace(/[$,]/g, '') || data.analysis?.annualSavings?.replace(/[$,]/g, '') || '86040';
-            const timeReduction = data.investmentSummary?.timeReduction?.replace('%', '') || data.analysis?.timeReduction?.replace('%', '') || '86.7';
-            const paybackPeriod = data.investmentSummary?.paybackPeriod || data.analysis?.paybackMonths || '4.9';
-            const firstYearROI = data.investmentSummary?.firstYearROI?.replace('%', '') || data.analysis?.firstYearROI?.replace('%', '') || '143';
+            // ROI metrics from the analysis - use actual data structure from generatePDFData
+            const annualSavings = data.investmentSummary?.annualLaborSavings?.replace(/[$,]/g, '') || '86040';
+            const timeReduction = data.investmentSummary?.timeReduction?.replace('%', '') || '86.7';
+            const paybackPeriod = data.investmentSummary?.paybackPeriod || '4.9';
+            const firstYearROI = data.investmentSummary?.firstYearROI?.replace('%', '') || '143';
+            
+            console.log('ROI Data being used:', {
+                annualSavings: annualSavings,
+                timeReduction: timeReduction,
+                paybackPeriod: paybackPeriod,
+                firstYearROI: firstYearROI,
+                rawData: data.investmentSummary
+            });
             
             // Populate Executive Summary metrics (top of ROI page)
             document.getElementById('execSummaryAnnualSavings').textContent = parseInt(annualSavings).toLocaleString();
