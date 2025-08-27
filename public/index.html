@@ -3865,9 +3865,9 @@
             
             // Return data structure matching saxtech_pdf_template.html expectations
             return {
-                client: {
-                    name: clientName,
-                    contact: extractContactName(clientName),
+                clientInfo: {
+                    companyName: clientName,
+                    contactName: extractContactName(clientName),
                     address: 'Client Address\nTo be provided',
                     date: new Date().toLocaleDateString('en-US', { 
                         year: 'numeric', 
@@ -3875,27 +3875,32 @@
                         day: 'numeric' 
                     })
                 },
-                project: {
-                    name: `${processName} Automation`,
+                projectOverview: {
+                    processName: processName,
                     description: `SAX Technology Advisors will design and deploy an AI-powered automation solution using Azure cloud services and n8n workflow orchestration to enhance ${processName.toLowerCase()} accessibility and efficiency.`,
                     objective: projectScope.businessObjective,
                     scope: projectScope.scope,
                     deliverables: deliverables,
                     approach: technicalApproach
                 },
-                implementation: {
-                    timeline: implementationPlan,
+                commercials: {
+                    implementationFee: `$${implementationCost.toLocaleString()}`,
+                    monthlyServiceFee: `$${monthlyServiceCost.toLocaleString()}`,
                     duration: `${totalDuration} weeks`,
-                    phases: implementationPlan.length
+                    contractLength: `${contractLength}-month minimum`,
+                    paymentTerms: '50% upfront, 50% upon completion'
                 },
-                investment: {
-                    implementationFee: implementationCost,
-                    monthlyServiceFee: monthlyServiceCost,
-                    contractLength: contractLength,
-                    paymentTerms: '50% upfront, 50% upon completion',
-                    totalY1Investment: implementationCost + (monthlyServiceCost * 12)
+                investmentSummary: {
+                    implementationCost: `$${implementationCost.toLocaleString()}`,
+                    monthlyManagedService: `$${monthlyServiceCost.toLocaleString()}`,
+                    annualLaborSavings: `$${Math.round(annualLaborSavings).toLocaleString()}`,
+                    timeReduction: `${timeSavingsPercent}%`,
+                    paybackPeriod: paybackMonths.toFixed(1),
+                    firstYearROI: `${Math.round(firstYearROI)}%`,
+                    partnerHoursFreed: partnerHoursFreed.toString(),
+                    threeYearNetBenefit: Math.round((annualLaborSavings * 3 - totalY1Investment * 3) / (totalY1Investment * 3) * 100).toString()
                 },
-                services: {
+                managedServices: {
                     monthlyFee: monthlyServiceCost,
                     includes: [
                         'Complete hosting and management within the SAX Tech environment',
@@ -3909,18 +3914,6 @@
                     ],
                     sla: '99.5% uptime guarantee',
                     support: '24/7 monitoring with business hours direct support'
-                },
-                roi: {
-                    implementationCost: implementationCost,
-                    monthlyService: monthlyServiceCost,
-                    annualService: monthlyServiceCost * 12,
-                    laborSavings: Math.round(annualLaborSavings),
-                    timeReduction: parseFloat(timeSavingsPercent),
-                    paybackMonths: paybackMonths,
-                    firstYearROI: Math.round(firstYearROI),
-                    partnerHoursFreed: partnerHoursFreed,
-                    threeYearBenefit: Math.round((annualLaborSavings * 3 - totalY1Investment * 3)),
-                    netAnnualSavings: Math.round(annualLaborSavings - (monthlyServiceCost * 12))
                 },
                 risks: currentState.riskFactors?.map(risk => ({
                     factor: risk.risk,
