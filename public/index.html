@@ -3953,30 +3953,6 @@
                         mitigation: 'Comprehensive training program and change management support'
                     }
                 ],
-                // Calculate actual manual and automated totals based on current state
-                let manualTotalTime = 0;
-                let manualTotalCost = 0;
-                let autoTotalTime = 0;
-                let autoTotalCost = 0;
-                const aiCostPerProcess = parseFloat(document.getElementById('aiCostPerProcess').textContent) || 0;
-                
-                currentState.manualSteps.forEach(step => {
-                    if (currentState.roles[step.role]) {
-                        const role = currentState.roles[step.role];
-                        manualTotalTime += step.time;
-                        manualTotalCost += (role.hourly * step.time / 60);
-                    }
-                });
-                
-                currentState.automatedSteps.forEach(step => {
-                    if (step.role >= 0 && currentState.roles[step.role]) {
-                        const role = currentState.roles[step.role];
-                        autoTotalTime += step.time;
-                        autoTotalCost += (role.hourly * step.time / 60);
-                    } else if (step.isAI) {
-                        autoTotalCost += aiCostPerProcess;
-                    }
-                });
                 
                 // Additional data for comprehensive PDF
                 processAnalysis: {
