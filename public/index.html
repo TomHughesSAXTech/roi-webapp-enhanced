@@ -3974,8 +3974,42 @@
                         manual: manualTotalCost,
                         automated: autoTotalCost,
                         savings: manualTotalCost - autoTotalCost
-                    }
+                    },
+                    manualSteps: currentState.manualSteps?.map(step => ({
+                        task: step.task,
+                        time: step.time,
+                        role: currentState.roles[step.role]?.title || 'Role',
+                        description: `${step.task} performed by ${currentState.roles[step.role]?.title || 'Role'} (${step.time} minutes)`
+                    })) || []
                 },
+                // Enhanced implementation component data
+                implementationComponents: currentState.implementationComponents?.map(comp => ({
+                    name: comp.name,
+                    hours: comp.hours,
+                    rate: comp.rate,
+                    cost: comp.hours * comp.rate,
+                    resourceType: comp.resourceType
+                })) || [
+                    { name: 'Project Management & Planning', hours: 40, rate: 200, cost: 8000, resourceType: 'Project Manager' },
+                    { name: 'System Architecture & Design', hours: 60, rate: 200, cost: 12000, resourceType: 'Solution Architect' },
+                    { name: 'AI Model Development & Training', hours: 80, rate: 200, cost: 16000, resourceType: 'AI Specialist' },
+                    { name: 'Integration Development', hours: 100, rate: 175, cost: 17500, resourceType: 'Senior Developer' },
+                    { name: 'Testing & Quality Assurance', hours: 40, rate: 150, cost: 6000, resourceType: 'QA Engineer' },
+                    { name: 'Deployment & Configuration', hours: 30, rate: 175, cost: 5250, resourceType: 'DevOps Engineer' },
+                    { name: 'Documentation & Training', hours: 20, rate: 150, cost: 3000, resourceType: 'Technical Writer' }
+                ],
+                // Enhanced timeline phases
+                timelinePhases: currentState.timelinePhases?.map(phase => ({
+                    name: phase.phase,
+                    duration: `${phase.duration} ${phase.duration === 1 ? 'week' : 'weeks'}`,
+                    deliverables: phase.deliverables ? phase.deliverables.split(', ') : [],
+                    activities: phase.activities ? phase.activities.split(', ') : []
+                })) || [
+                    { name: 'Discovery & Planning', duration: '2 weeks', deliverables: ['Requirements analysis', 'Architecture design', 'Project plan'], activities: ['Requirements gathering', 'Stakeholder interviews', 'Current state analysis'] },
+                    { name: 'Development & Integration', duration: '4 weeks', deliverables: ['AI model development', 'System integrations', 'Workflow implementation'], activities: ['Core automation development', 'API integrations', 'AI agent setup'] },
+                    { name: 'Testing & Deployment', duration: '2 weeks', deliverables: ['Quality assurance', 'User acceptance testing', 'Production deployment'], activities: ['System testing', 'User testing', 'Staff training'] },
+                    { name: 'Training & Handover', duration: '1 week', deliverables: ['User training', 'Documentation', 'Knowledge transfer'], activities: ['Staff training', 'Documentation creation', 'Go-live support'] }
+                ],
                 addedValue: [
                     'AI-powered intelligent decision making',
                     'Real-time process monitoring and alerts',

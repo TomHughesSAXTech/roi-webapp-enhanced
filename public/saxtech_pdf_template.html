@@ -879,13 +879,29 @@
                 <li>Extensive UI/UX customization outside of the prototype.</li>
             </ul>
             
-            <h3>Implementation Pricing</h3>
-            <div class="pricing-box">
-                <ul>
-                    <li><strong>Fixed Fee:</strong> $<span id="implementationCost">46,500</span></li>
-                    <li><strong>Payment Terms:</strong> 50% upfront, 50% upon completion</li>
-                    <li><strong>Duration:</strong> Approximately <span id="implementationTimeline">8–10 weeks</span></li>
-                </ul>
+            <h3>Current State Analysis</h3>
+            <div id="currentStateAnalysis">
+                <!-- Dynamic current state content will be inserted here -->
+            </div>
+            
+            <h3>Proposed Solution Overview</h3>
+            <div id="proposedSolution">
+                <!-- Dynamic solution overview content will be inserted here -->
+            </div>
+            
+            <h3>Implementation Cost Breakdown</h3>
+            <div id="implementationBreakdown" class="pricing-box">
+                <!-- Dynamic implementation cost breakdown will be inserted here -->
+            </div>
+            
+            <h3>Monthly Managed Service Breakdown</h3>
+            <div id="monthlyServiceBreakdown" class="pricing-box">
+                <!-- Dynamic monthly service breakdown will be inserted here -->
+            </div>
+            
+            <h3>Project Timeline</h3>
+            <div id="projectTimeline">
+                <!-- Dynamic timeline content will be inserted here -->
             </div>
         </div>
     </div>
@@ -898,6 +914,20 @@
         </div>
         
         <div class="investment-content">
+            <div class="transition-section">
+                <h2>Risk Mitigation Strategy</h2>
+                <div id="riskMitigationSection">
+                    <!-- Dynamic risk factors and mitigations will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="transition-section">
+                <h2>Added Value & Benefits</h2>
+                <div id="addedValueSection">
+                    <!-- Dynamic added value content will be inserted here -->
+                </div>
+            </div>
+            
             <div class="transition-section">
                 <h2>Transition to Managed Service</h2>
                 <p>Upon implementation completion, the solution will transition into a fully managed service operated by SAX Tech. This service includes:</p>
@@ -1054,10 +1084,14 @@
             // Contract length from ROI settings
             const contractLength = data.commercials?.contractLength?.replace('-month minimum', '') || '24';
             
-            document.getElementById('implementationCost').textContent = parseInt(implementationCost).toLocaleString();
-            document.getElementById('monthlyServiceCost').textContent = parseInt(monthlyServiceCost).toLocaleString();
-            document.getElementById('implementationTimeline').textContent = implementationTimeline;
-            document.getElementById('contractLength').textContent = contractLength;
+            // Populate comprehensive sections
+            populateCurrentStateAnalysis(data);
+            populateProposedSolution(data);
+            populateImplementationBreakdown(data);
+            populateMonthlyServiceBreakdown(data);
+            populateProjectTimeline(data);
+            populateRiskMitigation(data);
+            populateAddedValue(data);
             
             // ROI metrics from the analysis
             const annualSavings = data.investmentSummary?.annualLaborSavings?.replace(/[$,]/g, '') || '156000';
@@ -1089,6 +1123,183 @@
             document.getElementById('threeYearROI').textContent = data.investmentSummary?.threeYearNetBenefit || '265';
             document.getElementById('contractLengthFinal').textContent = contractLength;
             document.getElementById('implementationTimelineFinal').textContent = implementationTimeline.replace('Approximately ', '').replace(' weeks', '-week');
+        }
+        
+        // Helper function to populate current state analysis
+        function populateCurrentStateAnalysis(data) {
+            const container = document.getElementById('currentStateAnalysis');
+            if (!container) return;
+            
+            const analysis = data.processAnalysis || {};
+            const manualSteps = analysis.currentSteps || 0;
+            const manualTime = analysis.manualTime || 0;
+            const manualCost = analysis.costPerProcess?.manual || 0;
+            
+            container.innerHTML = `
+                <p>Current ${data.projectOverview?.processName || 'process'} involves ${manualSteps} manual steps requiring approximately ${Math.round(manualTime)} minutes per instance at a cost of $${manualCost.toFixed(2)} per process.</p>
+                <p>The manual approach involves multiple stakeholders, creates opportunities for errors, and limits scalability as volume increases.</p>
+                ${data.processAnalysis?.manualSteps ? '<h4>Manual Process Steps:</h4>' : ''}
+                <ul>
+                    ${(data.processAnalysis?.manualSteps || []).map((step, index) => 
+                        `<li>${step.description || `Step ${index + 1}: ${step.task || 'Manual task'} (${step.time || 'N/A'} minutes)`}</li>`
+                    ).join('')}
+                </ul>
+            `;
+        }
+        
+        // Helper function to populate proposed solution
+        function populateProposedSolution(data) {
+            const container = document.getElementById('proposedSolution');
+            if (!container) return;
+            
+            const analysis = data.processAnalysis || {};
+            const automatedSteps = analysis.automatedSteps || 0;
+            const automatedTime = analysis.automatedTime || 0;
+            const timeSaved = analysis.timeSaved || 0;
+            const timeReduction = data.investmentSummary?.timeReduction || '0%';
+            
+            container.innerHTML = `
+                <p>The proposed automation solution reduces the process to ${automatedSteps} automated steps, completing in approximately ${Math.round(automatedTime)} minutes - a ${timeReduction} reduction in processing time.</p>
+                <h4>Automation Features:</h4>
+                <ul>
+                    <li>AI-powered decision making and data processing</li>
+                    <li>Intelligent document processing and extraction</li>
+                    <li>Real-time system integrations and data synchronization</li>
+                    <li>Automated workflow orchestration</li>
+                    <li>Exception handling and escalation protocols</li>
+                    <li>Comprehensive audit trail and reporting</li>
+                </ul>
+                ${data.addedValue ? `<h4>Key Benefits:</h4><ul>${data.addedValue.map(benefit => `<li>${benefit}</li>`).join('')}</ul>` : ''}
+            `;
+        }
+        
+        // Helper function to populate implementation breakdown
+        function populateImplementationBreakdown(data) {
+            const container = document.getElementById('implementationBreakdown');
+            if (!container) return;
+            
+            const implCost = data.commercials?.implementationFee?.replace(/[$,]/g, '') || '46500';
+            const components = data.implementationComponents || [
+                { name: 'Project Management & Planning', hours: 40, rate: 200 },
+                { name: 'System Architecture & Design', hours: 60, rate: 200 },
+                { name: 'AI Model Development & Training', hours: 80, rate: 200 },
+                { name: 'Integration Development', hours: 100, rate: 175 },
+                { name: 'Testing & Quality Assurance', hours: 40, rate: 150 },
+                { name: 'Deployment & Configuration', hours: 30, rate: 175 },
+                { name: 'Documentation & Training', hours: 20, rate: 150 }
+            ];
+            
+            const totalImplCost = parseInt(implCost);
+            let componentHTML = '<ul>';
+            
+            components.forEach(comp => {
+                const cost = (comp.hours * comp.rate);
+                componentHTML += `<li><strong>${comp.name}:</strong> ${comp.hours} hours @ $${comp.rate}/hr = $${cost.toLocaleString()}</li>`;
+            });
+            
+            componentHTML += `<li style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;"><strong>Total Implementation Fee: $${totalImplCost.toLocaleString()}</strong></li>`;
+            componentHTML += '</ul>';
+            
+            container.innerHTML = componentHTML;
+        }
+        
+        // Helper function to populate monthly service breakdown
+        function populateMonthlyServiceBreakdown(data) {
+            const container = document.getElementById('monthlyServiceBreakdown');
+            if (!container) return;
+            
+            const monthlyCost = data.commercials?.monthlyServiceFee?.replace(/[$,]/g, '') || '2100';
+            const monthlyTotal = parseInt(monthlyCost);
+            
+            const breakdown = [
+                { name: 'Infrastructure & Hosting', cost: Math.round(monthlyTotal * 0.3) },
+                { name: 'AI Processing & API Costs', cost: Math.round(monthlyTotal * 0.25) },
+                { name: 'Monitoring & Support', cost: Math.round(monthlyTotal * 0.2) },
+                { name: 'Platform Management', cost: Math.round(monthlyTotal * 0.15) },
+                { name: 'Updates & Optimization', cost: Math.round(monthlyTotal * 0.1) }
+            ];
+            
+            let breakdownHTML = '<ul>';
+            breakdown.forEach(item => {
+                breakdownHTML += `<li><strong>${item.name}:</strong> $${item.cost.toLocaleString()}/month</li>`;
+            });
+            breakdownHTML += `<li style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;"><strong>Total Monthly Service Fee: $${monthlyTotal.toLocaleString()}</strong></li>`;
+            breakdownHTML += '</ul>';
+            
+            container.innerHTML = breakdownHTML;
+        }
+        
+        // Helper function to populate project timeline
+        function populateProjectTimeline(data) {
+            const container = document.getElementById('projectTimeline');
+            if (!container) return;
+            
+            const phases = data.timelinePhases || [
+                { name: 'Discovery & Planning', duration: '2 weeks', deliverables: ['Requirements analysis', 'Architecture design', 'Project plan'] },
+                { name: 'Development & Integration', duration: '4 weeks', deliverables: ['AI model development', 'System integrations', 'Workflow implementation'] },
+                { name: 'Testing & Deployment', duration: '2 weeks', deliverables: ['Quality assurance', 'User acceptance testing', 'Production deployment'] },
+                { name: 'Training & Handover', duration: '1 week', deliverables: ['User training', 'Documentation', 'Knowledge transfer'] }
+            ];
+            
+            let timelineHTML = '';
+            phases.forEach((phase, index) => {
+                timelineHTML += `
+                    <h4>Phase ${index + 1}: ${phase.name} (${phase.duration})</h4>
+                    <ul>
+                        ${(phase.deliverables || []).map(deliverable => `<li>${deliverable}</li>`).join('')}
+                    </ul>
+                `;
+            });
+            
+            container.innerHTML = timelineHTML;
+        }
+        
+        // Helper function to populate risk mitigation
+        function populateRiskMitigation(data) {
+            const container = document.getElementById('riskMitigationSection');
+            if (!container) return;
+            
+            const risks = data.risks || [
+                { factor: 'Implementation Delays', probability: 'Low', impact: 'Medium', mitigation: 'Experienced project management and phased approach' },
+                { factor: 'User Adoption', probability: 'Medium', impact: 'Medium', mitigation: 'Comprehensive training and change management support' }
+            ];
+            
+            let riskHTML = '<div class="risk-factors">';
+            risks.forEach(risk => {
+                riskHTML += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <h4>${risk.factor}</h4>
+                        <p><strong>Probability:</strong> ${risk.probability} | <strong>Impact:</strong> ${risk.impact}</p>
+                        <p><strong>Mitigation:</strong> ${risk.mitigation}</p>
+                    </div>
+                `;
+            });
+            riskHTML += '</div>';
+            
+            container.innerHTML = riskHTML;
+        }
+        
+        // Helper function to populate added value
+        function populateAddedValue(data) {
+            const container = document.getElementById('addedValueSection');
+            if (!container) return;
+            
+            const benefits = data.addedValue || [
+                'AI-powered intelligent decision making',
+                'Real-time process monitoring and alerts',
+                'Seamless integration with existing systems',
+                'Enterprise-grade security and compliance',
+                'Scalable cloud-based architecture',
+                'Continuous optimization and improvement'
+            ];
+            
+            let benefitsHTML = '<ul>';
+            benefits.forEach(benefit => {
+                benefitsHTML += `<li>${benefit}</li>`;
+            });
+            benefitsHTML += '</ul>';
+            
+            container.innerHTML = benefitsHTML;
         }
         
         // Make function available globally
