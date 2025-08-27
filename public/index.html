@@ -4209,9 +4209,22 @@
                 // Store the data globally for the PDF window to pick up BEFORE opening
                 window.pdfDataForTemplate = pdfData;
                 
+                // Also encode data as URL parameter as fallback for cross-origin issues
+                const encodedData = encodeURIComponent(JSON.stringify(pdfData));
+                const maxUrlLength = 2000; // Keep URL under browser limits
+                
+                let pdfUrl = 'saxtech_pdf_template.html';
+                if (encodedData.length < maxUrlLength) {
+                    // If data is small enough, pass it via URL
+                    pdfUrl = `saxtech_pdf_template.html?data=${encodedData}`;
+                    console.log('Passing PDF data via URL parameter');
+                } else {
+                    console.log('PDF data too large for URL, relying on window.opener method');
+                }
+                
                 // Open the template directly in a new window/tab
                 // Use relative path that works in both GitHub Pages and Azure
-                const pdfWindow = window.open('saxtech_pdf_template.html', '_blank');
+                const pdfWindow = window.open(pdfUrl, '_blank');
                 
                 if (!pdfWindow) {
                     throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
