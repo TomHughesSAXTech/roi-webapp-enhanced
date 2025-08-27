@@ -1759,26 +1759,82 @@
         // Make function available globally
         window.populatePDFData = populatePDFData;
         
-        // Check for data when the page loads
-        window.addEventListener('DOMContentLoaded', function() {
-            console.log('PDF Template loaded, checking for data...');
+        // Function to check for PDF data with retries
+        function checkForPDFData() {
+            console.log('Checking for PDF data...');
+            
+            // Check URL parameters first
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataParam = urlParams.get('data');
+            if (dataParam) {
+                try {
+                    const data = JSON.parse(decodeURIComponent(dataParam));
+                    console.log('Found PDF data in URL parameters:', data);
+                    populatePDFData(data);
+                    return true;
+                } catch (e) {
+                    console.error('Error parsing URL data:', e);
+                }
+            }
             
             // Try to get data from the opener window (parent window)
             if (window.opener) {
                 console.log('Parent window detected');
                 
-                // Check if the parent window has stored PDF data for us
-                if (window.opener.pdfDataForTemplate) {
-                    console.log('Found PDF data from parent window:', window.opener.pdfDataForTemplate);
-                    populatePDFData(window.opener.pdfDataForTemplate);
-                    
-                    // Clear the data after using it
-                    window.opener.pdfDataForTemplate = null;
-                } else {
-                    console.log('No PDF data found in parent window');
+                try {
+                    // Check if the parent window has stored PDF data for us
+                    if (window.opener.pdfDataForTemplate) {
+                        console.log('Found PDF data from parent window:', window.opener.pdfDataForTemplate);
+                        populatePDFData(window.opener.pdfDataForTemplate);
+                        
+                        // Clear the data after using it
+                        window.opener.pdfDataForTemplate = null;
+                        return true;
+                    } else {
+                        console.log('No PDF data found in parent window yet');
+                    }
+                } catch (e) {
+                    console.error('Error accessing parent window:', e);
                 }
             } else {
                 console.log('No parent window detected - this may be a direct load');
+            }
+            
+            return false;
+        }
+        
+        // Check for data when the page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('PDF Template loaded, initializing data check...');
+            
+            let dataLoaded = false;
+            let attempts = 0;
+            const maxAttempts = 20; // Try for up to 10 seconds
+            
+            // Try immediately
+            dataLoaded = checkForPDFData();
+            
+            // If not loaded, set up polling with exponential backoff
+            if (!dataLoaded) {
+                const checkInterval = setInterval(function() {
+                    attempts++;
+                    console.log(`Attempt ${attempts} to load PDF data...`);
+                    
+                    dataLoaded = checkForPDFData();
+                    
+                    if (dataLoaded || attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        if (!dataLoaded) {
+                            console.warn('Could not load PDF data after ' + maxAttempts + ' attempts');
+                            // Show default/sample data message
+                            document.body.insertAdjacentHTML('afterbegin', 
+                                '<div style="background: #fff3cd; color: #856404; padding: 10px; text-align: center; border-bottom: 2px solid #ffc107;">' +
+                                'Note: This PDF is showing default data. Generate from the ROI calculator for actual values.' +
+                                '</div>'
+                            );
+                        }
+                    }
+                }, 500); // Check every 500ms
             }
             
             // Also listen for postMessage in case the parent sends data that way
@@ -1786,14 +1842,20 @@
                 console.log('Received message:', event);
                 
                 // Only accept messages from the same origin for security
-                if (event.origin === window.location.origin) {
+                if (event.origin === window.location.origin || event.origin === window.location.protocol + '//' + window.location.host) {
                     if (event.data && event.data.type === 'pdfData') {
                         console.log('Received PDF data via postMessage:', event.data.data);
                         populatePDFData(event.data.data);
+                        dataLoaded = true;
                     }
                 }
             });
         });
+        
+        // Also check immediately in case DOMContentLoaded already fired
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            // Trigger check if DOM is already ready
+            setTimeout(checkForPDFData, 100);
     </script>
 </body>
 </html>
