@@ -3833,7 +3833,7 @@
             // Use the actual calculated values from the ROI UI instead of recalculating
             // This ensures the PDF matches exactly what the user sees in the calculator
             const timeSavingsPercent = document.getElementById('timeSavingsPercent')?.textContent || '0';
-            const annualLaborSavingsText = document.getElementById('annualLaborCostSavings')?.textContent || '$0';
+            const annualLaborSavingsText = document.getElementById('annualSavings')?.textContent || '$0';
             const annualLaborSavings = parseFloat(annualLaborSavingsText.replace(/[$,]/g, '')) || 0;
             const paybackMonthsText = document.getElementById('paybackPeriod')?.textContent || '0 months';
             const paybackMonths = parseFloat(paybackMonthsText.replace(' months', '').replace(' Months', '')) || 0;
@@ -3847,7 +3847,7 @@
                 firstYearROI,
                 sources: {
                     timeSavingsElement: document.getElementById('timeSavingsPercent')?.textContent,
-                    annualSavingsElement: document.getElementById('annualLaborCostSavings')?.textContent,
+                    annualSavingsElement: document.getElementById('annualSavings')?.textContent,
                     paybackElement: document.getElementById('paybackPeriod')?.textContent,
                     roiElement: document.getElementById('firstYearROI')?.textContent
                 }
