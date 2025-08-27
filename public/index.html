@@ -4714,28 +4714,72 @@
                 return;
             }
             
+            // Generate text content first for the preview
+            const clientName = currentState.clientName || 'Your Company';
+            const processName = currentState.processName || 'Process Name';
+            const includeROI = true; // Always include ROI
+            
+            const sowContent = generateSOWContent(currentState, 'saxtechnology', 'detailed', includeROI);
+            document.getElementById('sowContent').value = sowContent;
+            
+            // Update preview data immediately
+            updateSOWPreview(currentState);
+            
             // Generate professional SOW using the existing template
             const pdfData = generatePDFData(currentState);
             
-            // Open the professional SOW template and populate it
+            // Also open the professional SOW template and populate it
             setTimeout(() => {
                 generateAndDownloadPDF(pdfData);
             }, 500);
             
-            // Also generate text preview for the textarea
-            const clientName = currentState.clientName || 'Your Company';
-            const processName = currentState.processName || 'Process Name';
-            const templateType = document.getElementById('sowTemplate').value || 'saxtechnology';
-            const detailLevel = document.getElementById('sowDetailLevel').value || 'detailed';
-            const includeROI = document.getElementById('sowIncludeROI').value === 'yes';
-            
-            const sowContent = generateSOWContent(currentState, templateType, detailLevel, includeROI);
-            document.getElementById('sowContent').value = sowContent;
-            
-            // Update preview data
+            addMessage('assistant', '✅ SOW generated! Review the detailed breakdown above, then use the PDF window to print your professional multi-page Statement of Work.');
+        }
+        
+        // SOW Client Info Management Functions
+        function updateSOWClientInfo() {
+            // Update the preview when SOW client info changes
+            const currentState = getCurrentROIState();
             updateSOWPreview(currentState);
+        }
+        
+        function loadClientInfoFromROI() {
+            // Load client info from the main ROI analysis fields
+            const clientName = document.getElementById('inputClientName').value || '';
+            const processName = document.getElementById('inputProcessName').value || '';
             
-            addMessage('assistant', '✅ Professional SOW generated using your existing template! The comprehensive PDF has been opened in a new window. You can also review the text summary in the textarea below.');
+            if (!clientName || clientName === 'Your Company') {
+                alert('Please enter a client name in the ROI analysis section first.');
+                return;
+            }
+            
+            // Populate SOW fields with ROI data
+            document.getElementById('sowClientCompany').value = clientName;
+            document.getElementById('sowClientContact').value = extractContactName(clientName);
+            document.getElementById('sowClientAddress').value = `${clientName}\nAddress to be provided`;
+            
+            // Set today's date as proposal date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('sowProposalDate').value = today;
+            
+            // Update preview
+            updateSOWPreview(getCurrentROIState());
+            
+            addMessage('system', '📋 Client information loaded from ROI analysis into SOW fields.');
+        }
+        
+        function clearClientInfo() {
+            // Clear all SOW client information fields
+            document.getElementById('sowClientCompany').value = '';
+            document.getElementById('sowClientContact').value = '';
+            document.getElementById('sowClientAddress').value = '';
+            document.getElementById('sowProposalDate').value = '';
+            
+            // Keep SAX info but allow editing
+            // Update preview
+            updateSOWPreview(getCurrentROIState());
+            
+            addMessage('system', '🗑️ SOW client information fields cleared.');
         }
         
         function generateSOWContent(currentState, templateType, detailLevel, includeROI) {
