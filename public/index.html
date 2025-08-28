@@ -1635,7 +1635,7 @@
                     </div>
                     <br>
                     <p style="font-size: 1.1em; font-weight: 600;">
-                        <strong>Next Steps:</strong> Sign <span id="execContractLength">24</span>-month service agreement and begin 8-week implementation immediately to capture Q2 2025 benefits.
+                        <strong>Next Steps:</strong> Sign <span id="execContractLength">24</span>-month service agreement and begin 8-week implementation immediately to capture <span id="execTargetQuarter">Q1 2025</span> benefits.
                     </p>
                 </div>
                 
@@ -3549,6 +3549,42 @@
             document.getElementById('execPartnerHours').textContent = partnerHoursFreed;
             document.getElementById('execContractLength').textContent = contractLength;
             
+            // Calculate target quarter dynamically
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1; // JavaScript months are 0-based
+            const currentYear = now.getFullYear();
+            let targetQuarter, targetYear;
+            
+            // Add 8 weeks (2 months) for implementation
+            const targetMonth = currentMonth + 2;
+            
+            if (targetMonth <= 3) {
+                targetQuarter = 'Q1';
+                targetYear = currentYear;
+            } else if (targetMonth <= 6) {
+                targetQuarter = 'Q2';
+                targetYear = currentYear;
+            } else if (targetMonth <= 9) {
+                targetQuarter = 'Q3';
+                targetYear = currentYear;
+            } else if (targetMonth <= 12) {
+                targetQuarter = 'Q4';
+                targetYear = currentYear;
+            } else {
+                // Spills into next year
+                const spilloverMonth = targetMonth - 12;
+                if (spilloverMonth <= 3) {
+                    targetQuarter = 'Q1';
+                } else if (spilloverMonth <= 6) {
+                    targetQuarter = 'Q2';
+                } else {
+                    targetQuarter = 'Q3';
+                }
+                targetYear = currentYear + 1;
+            }
+            
+            document.getElementById('execTargetQuarter').textContent = `${targetQuarter} ${targetYear}`;
+            
             // Update competitive analysis with new calculations
             updateCompetitiveAnalysis();
         }
@@ -3934,9 +3970,10 @@
                 commercials: {
                     implementationFee: `$${implementationCost.toLocaleString()}`,
                     monthlyServiceFee: `$${monthlyServiceCost.toLocaleString()}`,
-                    duration: `${totalDuration} weeks`,
-                    contractLength: `${contractLength}-month minimum`,
-                    paymentTerms: '50% upfront, 50% upon completion'
+                    duration: totalDuration + ' weeks',
+                    contractLength: contractLength + '-month minimum'
+                },
+                implementationComponents: implementationComponents,
                 },
                 investmentSummary: {
                     implementationCost: `$${implementationCost.toLocaleString()}`,

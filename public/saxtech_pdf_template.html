@@ -1484,22 +1484,37 @@
             
             const implCost = data.commercials?.implementationFee?.replace(/[$,]/g, '') || '46500';
             const components = data.implementationComponents || [
-                { name: 'Project Management & Planning', hours: 40, rate: 200 },
-                { name: 'System Architecture & Design', hours: 60, rate: 200 },
-                { name: 'AI Model Development & Training', hours: 80, rate: 200 },
-                { name: 'Integration Development', hours: 100, rate: 175 },
-                { name: 'Testing & Quality Assurance', hours: 40, rate: 150 },
-                { name: 'Deployment & Configuration', hours: 30, rate: 175 },
-                { name: 'Documentation & Training', hours: 20, rate: 150 }
+                { name: 'Project Management & Planning', hours: 40, rate: 200, cost: 8000 },
+                { name: 'System Architecture & Design', hours: 60, rate: 200, cost: 12000 },
+                { name: 'AI Model Development & Training', hours: 80, rate: 200, cost: 16000 },
+                { name: 'Integration Development', hours: 100, rate: 175, cost: 17500 },
+                { name: 'Testing & Quality Assurance', hours: 40, rate: 150, cost: 6000 },
+                { name: 'Deployment & Configuration', hours: 30, rate: 175, cost: 5250 },
+                { name: 'Documentation & Training', hours: 20, rate: 150, cost: 3000 }
             ];
             
+            // The total implementation cost from commercials includes PM and add-ons
             const totalImplCost = parseInt(implCost);
             let componentHTML = '<ul>';
             
+            // Calculate base cost from components
+            let baseComponentCost = 0;
             components.forEach(comp => {
-                const cost = (comp.hours * comp.rate);
+                const cost = comp.cost || (comp.hours * comp.rate);
+                baseComponentCost += cost;
                 componentHTML += `<li><strong>${comp.name}:</strong> ${comp.hours} hours @ $${comp.rate}/hr = $${cost.toLocaleString()}</li>`;
             });
+            
+            // Add Project Management (15% of base)
+            const pmCost = Math.round(baseComponentCost * 0.15);
+            componentHTML += `<li><strong>Project Management (15%):</strong> $${pmCost.toLocaleString()}</li>`;
+            
+            // Check if there are any custom add-ons included
+            const subtotal = baseComponentCost + pmCost;
+            if (totalImplCost > subtotal) {
+                const addonsTotal = totalImplCost - subtotal;
+                componentHTML += `<li><strong>Custom Add-ons:</strong> $${addonsTotal.toLocaleString()}</li>`;
+            }
             
             componentHTML += `<li style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;"><strong>Total Implementation Fee: $${totalImplCost.toLocaleString()}</strong></li>`;
             componentHTML += '</ul>';
