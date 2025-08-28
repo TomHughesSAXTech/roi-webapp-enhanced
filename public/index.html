@@ -5005,8 +5005,9 @@
             sow += `a streamlined ${currentState.automatedSteps?.length || 0}-step automated workflow.\n\n`;
             
             if (includeROI && annualLaborSavings > 0) {
-                const paybackMonths = (implementationCost + monthlyServiceCost * 12) / (annualLaborSavings / 12);
-                const firstYearROI = ((annualLaborSavings - implementationCost - monthlyServiceCost * 12) / (implementationCost + monthlyServiceCost * 12) * 100);
+                const actualImplementationCost = calculateImplementationCost();
+                const paybackMonths = (actualImplementationCost + monthlyServiceCost * 12) / (annualLaborSavings / 12);
+                const firstYearROI = ((annualLaborSavings - actualImplementationCost - monthlyServiceCost * 12) / (actualImplementationCost + monthlyServiceCost * 12) * 100);
                 
                 sow += `QUANTIFIED BUSINESS IMPACT:\n`;
                 sow += `• Process Time Reduction: ${timeSavingsPercent}% (${manualTotalTime} min → ${autoTotalTime} min)\n`;
@@ -5070,16 +5071,16 @@
             sow += `IMPLEMENTATION COST BREAKDOWN\n`;
             sow += `${'─'.repeat(40)}\n`;
             
-            let implementationTotal = 0;
+            // Use the same calculation method as calculateImplementationCost()
+            const calculatedImplementationCost = calculateImplementationCost();
+            
+            // Show breakdown of components
+            let subtotal = 0;
             implementationComponents.forEach(comp => {
                 const cost = comp.hours * comp.rate;
-                implementationTotal += cost;
+                subtotal += cost;
                 sow += `• ${comp.name}: ${comp.hours} hours @ $${comp.rate}/hr = $${cost.toLocaleString()}\n`;
             });
-            
-            const pmCost = Math.round(implementationTotal * 0.15);
-            implementationTotal += pmCost;
-            sow += `• Project Management (15%): $${pmCost.toLocaleString()}\n`;
             
             // Add one-time custom add-ons
             let onetimeAddons = 0;
@@ -5087,11 +5088,15 @@
                 if (addon.frequency === 'one-time') {
                     sow += `• ${addon.name}: $${addon.amount.toLocaleString()} (${addon.unit})\n`;
                     onetimeAddons += addon.amount;
+                    subtotal += addon.amount;
                 }
             });
-            implementationTotal += onetimeAddons;
             
-            sow += `\nTOTAL IMPLEMENTATION FEE: $${implementationTotal.toLocaleString()}\n\n`;
+            // Show PM cost (15% of subtotal)
+            const pmCost = Math.round(subtotal * 0.15);
+            sow += `• Project Management (15%): $${pmCost.toLocaleString()}\n`;
+            
+            sow += `\nTOTAL IMPLEMENTATION FEE: $${calculatedImplementationCost.toLocaleString()}\n\n`;
             
             // Monthly Service Fee Breakdown
             sow += `MONTHLY MANAGED SERVICE BREAKDOWN\n`;
@@ -5145,13 +5150,14 @@
                 // Detailed ROI Analysis
                 sow += `RETURN ON INVESTMENT ANALYSIS\n`;
                 sow += `${'─'.repeat(40)}\n`;
-                const totalY1Investment = implementationTotal + (monthlyTotal * 12);
+                const actualImplementationCost = calculateImplementationCost();
+                const totalY1Investment = actualImplementationCost + (monthlyTotal * 12);
                 const netY1Benefit = annualLaborSavings - totalY1Investment;
-                const threeYearBenefit = (annualLaborSavings * 3) - totalY1Investment - (monthlyTotal * 24);
+                const threeYearBenefit = (annualLaborSavings * 3) - actualImplementationCost - (monthlyTotal * 36);
                 
                 sow += `Year 1 Analysis:\n`;
                 sow += `• Total Investment: $${totalY1Investment.toLocaleString()}\n`;
-                sow += `  - Implementation: $${implementationTotal.toLocaleString()}\n`;
+                sow += `  - Implementation: $${actualImplementationCost.toLocaleString()}\n`;
                 sow += `  - Monthly Service (12 months): $${(monthlyTotal * 12).toLocaleString()}\n`;
                 sow += `• Labor Cost Savings: $${Math.round(annualLaborSavings).toLocaleString()}\n`;
                 sow += `• Net Benefit Year 1: $${Math.round(netY1Benefit).toLocaleString()}\n`;
