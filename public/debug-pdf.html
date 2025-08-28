@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>PDF Data Passing Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Test SessionStorage</h2>
+        <button onclick="testSessionStorage()">Test SessionStorage Write/Read</button>
+        <button onclick="clearSessionStorage()">Clear SessionStorage</button>
+        <pre id="sessionResult"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test Window.opener</h2>
+        <button onclick="testWindowOpener()">Test Window.opener Access</button>
+        <pre id="openerResult"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test Full PDF Generation Flow</h2>
+        <button onclick="testFullFlow()">Test Complete PDF Flow</button>
+        <pre id="flowResult"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Open PDF with Test Data</h2>
+        <button onclick="openWithTestData()">Open PDF with Test Data</button>
+        <button onclick="checkPDFWindow()">Check PDF Window Status</button>
+        <pre id="pdfResult"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Console Output</h2>
+        <pre id="console"></pre>
+    </div>
+
+    <script>
+        let pdfWindow = null;
+        
+        function log(message, type = 'info') {
+            const consoleEl = document.getElementById('console');
+            const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'blue';
+            consoleEl.innerHTML += `<span class="${type}">[${timestamp}] ${message}</span>\n`;
+            console.log(message);
+        }
+
+        function testSessionStorage() {
+            const result = document.getElementById('sessionResult');
+            try {
+                // Test write
+                const testData = {
+                    test: 'value',
+                    timestamp: new Date().toISOString(),
+                    nested: { foo: 'bar' }
+                };
+                
+                sessionStorage.setItem('testData', JSON.stringify(testData));
+                result.innerHTML = '<span class="success">✅ Write successful</span>\n';
+                
+                // Test read
+                const readData = sessionStorage.getItem('testData');
+                const parsed = JSON.parse(readData);
+                result.innerHTML += '<span class="success">✅ Read successful</span>\n';
+                result.innerHTML += 'Data: ' + JSON.stringify(parsed, null, 2);
+                
+                log('SessionStorage test passed', 'success');
+            } catch (e) {
+                result.innerHTML = '<span class="error">❌ Error: ' + e.message + '</span>';
+                log('SessionStorage test failed: ' + e.message, 'error');
+            }
+        }
+
+        function clearSessionStorage() {
+            sessionStorage.clear();
+            document.getElementById('sessionResult').innerHTML = '<span class="info">SessionStorage cleared</span>';
+            log('SessionStorage cleared', 'info');
+        }
+
+        function testWindowOpener() {
+            const result = document.getElementById('openerResult');
+            const testWindow = window.open('about:blank', 'test', 'width=400,height=300');
+            
+            if (!testWindow) {
+                result.innerHTML = '<span class="error">❌ Pop-up blocked!</span>';
+                log('Pop-up blocked', 'error');
+                return;
+            }
+            
+            // Set data on parent window
+            window.testDataForChild = { parent: 'data', timestamp: Date.now() };
+            
+            // Try to access from child
+            setTimeout(() => {
+                try {
+                    testWindow.document.write('<html><body><script>' +
+                        'try {' +
+                        '  const data = window.opener.testDataForChild;' +
+                        '  document.body.innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";' +
+                        '} catch(e) {' +
+                        '  document.body.innerHTML = "Error: " + e.message;' +
+                        '}' +
+                        '</script></body></html>');
+                    
+                    result.innerHTML = '<span class="success">✅ Window.opener access works</span>\n';
+                    result.innerHTML += 'Data passed: ' + JSON.stringify(window.testDataForChild, null, 2);
+                    log('Window.opener test passed', 'success');
+                } catch (e) {
+                    result.innerHTML = '<span class="error">❌ Error: ' + e.message + '</span>';
+                    log('Window.opener test failed: ' + e.message, 'error');
+                }
+            }, 500);
+        }
+
+        function testFullFlow() {
+            const result = document.getElementById('flowResult');
+            result.innerHTML = 'Testing full flow...\n';
+            
+            // Create realistic test data matching the actual structure
+            const testPdfData = {
+                clientInfo: {
+                    companyName: 'Test Company LLC',
+                    contactName: 'John Smith',
+                    address: '123 Test Street\nTest City, TC 12345',
+                    date: new Date().toLocaleDateString()
+                },
+                projectOverview: {
+                    processName: 'Invoice Processing',
+                    description: 'Test automation solution'
+                },
+                commercials: {
+                    implementationFee: '$45,000',
+                    monthlyServiceFee: '$2,500',
+                    duration: '8 weeks',
+                    contractLength: '24-month minimum'
+                },
+                investmentSummary: {
+                    implementationCost: '$45,000',
+                    monthlyManagedService: '$2,500',
+                    annualLaborSavings: '$120,000',
+                    timeReduction: '85%',
+                    paybackPeriod: '6.5',
+                    firstYearROI: '135%'
+                }
+            };
+
+            result.innerHTML += '\n1. Storing data in sessionStorage...\n';
+            try {
+                sessionStorage.setItem('pdfTemplateData', JSON.stringify(testPdfData));
+                result.innerHTML += '<span class="success">✅ SessionStorage write successful</span>\n';
+                log('Stored PDF data in sessionStorage', 'success');
+            } catch (e) {
+                result.innerHTML += '<span class="error">❌ SessionStorage write failed: ' + e.message + '</span>\n';
+                log('SessionStorage write failed: ' + e.message, 'error');
+                return;
+            }
+
+            result.innerHTML += '\n2. Setting window global variable...\n';
+            window.pdfDataForTemplate = testPdfData;
+            result.innerHTML += '<span class="success">✅ Window variable set</span>\n';
+            log('Set window.pdfDataForTemplate', 'success');
+
+            result.innerHTML += '\n3. Testing URL encoding...\n';
+            const encodedData = encodeURIComponent(JSON.stringify(testPdfData));
+            result.innerHTML += `URL encoded size: ${encodedData.length} characters\n`;
+            if (encodedData.length < 2000) {
+                result.innerHTML += '<span class="success">✅ Small enough for URL (< 2000 chars)</span>\n';
+                log('Data fits in URL parameters', 'success');
+            } else {
+                result.innerHTML += '<span class="info">ℹ️ Too large for URL, will use sessionStorage</span>\n';
+                log('Data too large for URL, using sessionStorage', 'info');
+            }
+
+            result.innerHTML += '\n<span class="success">✨ Full flow test complete - ready to open PDF</span>';
+        }
+
+        function openWithTestData() {
+            const result = document.getElementById('pdfResult');
+            
+            // First run the full flow test
+            testFullFlow();
+            
+            setTimeout(() => {
+                result.innerHTML = 'Opening PDF template...\n';
+                
+                const testData = window.pdfDataForTemplate;
+                const encodedData = encodeURIComponent(JSON.stringify(testData));
+                
+                let pdfUrl;
+                if (encodedData.length < 2000) {
+                    pdfUrl = `saxtech_pdf_template.html?data=${encodedData}`;
+                    result.innerHTML += 'Using URL parameters method\n';
+                    log('Opening PDF with URL parameters', 'info');
+                } else {
+                    pdfUrl = 'saxtech_pdf_template.html?useSession=true';
+                    result.innerHTML += 'Using sessionStorage method\n';
+                    log('Opening PDF with sessionStorage', 'info');
+                }
+                
+                pdfWindow = window.open(pdfUrl, '_blank');
+                
+                if (!pdfWindow) {
+                    result.innerHTML += '<span class="error">❌ Pop-up blocked!</span>';
+                    log('PDF window blocked', 'error');
+                    return;
+                }
+                
+                result.innerHTML += '<span class="success">✅ PDF window opened</span>\n';
+                log('PDF window opened successfully', 'success');
+                
+                // Try to send data via postMessage after window loads
+                setTimeout(() => {
+                    try {
+                        pdfWindow.postMessage({
+                            type: 'pdfData',
+                            data: testData
+                        }, '*');
+                        result.innerHTML += '<span class="info">📤 PostMessage sent to PDF window</span>\n';
+                        log('PostMessage sent to PDF window', 'info');
+                    } catch (e) {
+                        result.innerHTML += '<span class="error">❌ PostMessage failed: ' + e.message + '</span>\n';
+                        log('PostMessage failed: ' + e.message, 'error');
+                    }
+                }, 2000);
+                
+            }, 500);
+        }
+
+        function checkPDFWindow() {
+            const result = document.getElementById('pdfResult');
+            if (!pdfWindow) {
+                result.innerHTML += '\n<span class="error">No PDF window reference</span>';
+                return;
+            }
+            
+            try {
+                result.innerHTML += '\n<span class="info">PDF Window Status:</span>\n';
+                result.innerHTML += `Closed: ${pdfWindow.closed}\n`;
+                result.innerHTML += `Location: ${pdfWindow.location.href}\n`;
+                
+                // Try to check if populatePDFData function exists
+                if (pdfWindow.populatePDFData) {
+                    result.innerHTML += '<span class="success">✅ populatePDFData function found</span>\n';
+                    
+                    // Try to call it directly
+                    const testData = window.pdfDataForTemplate;
+                    if (testData) {
+                        pdfWindow.populatePDFData(testData);
+                        result.innerHTML += '<span class="success">✅ Called populatePDFData directly</span>\n';
+                    }
+                } else {
+                    result.innerHTML += '<span class="info">ℹ️ populatePDFData function not accessible</span>\n';
+                }
+            } catch (e) {
+                result.innerHTML += '<span class="error">❌ Cannot access PDF window: ' + e.message + '</span>\n';
+            }
+        }
+
+        // Listen for any messages from child windows
+        window.addEventListener('message', function(event) {
+            log('Received message from ' + event.origin + ': ' + JSON.stringify(event.data), 'info');
+        });
+
+        // Initial log
+        log('Debug page loaded', 'info');
+    </script>
+</body>
+</html>
