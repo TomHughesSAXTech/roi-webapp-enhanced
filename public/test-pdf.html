@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test PDF Data Passing</title>
+</head>
+<body>
+    <h1>Test PDF Data Passing</h1>
+    <button onclick="testSmallData()">Test Small Data (URL Param)</button>
+    <button onclick="testLargeData()">Test Large Data (SessionStorage)</button>
+    <button onclick="openPDFDirectly()">Open PDF Directly</button>
+    
+    <pre id="output"></pre>
+
+    <script>
+        function log(message) {
+            document.getElementById('output').innerHTML += message + '\n';
+            console.log(message);
+        }
+
+        function testSmallData() {
+            log('Testing small data via URL parameter...');
+            
+            const testData = {
+                clientInfo: {
+                    companyName: 'Test Company Small',
+                    contactName: 'John Smith'
+                }
+            };
+            
+            const encodedData = encodeURIComponent(JSON.stringify(testData));
+            const pdfUrl = `saxtech_pdf_template.html?data=${encodedData}`;
+            
+            log(`Data size: ${encodedData.length} chars`);
+            log(`Opening: ${pdfUrl.substring(0, 100)}...`);
+            
+            window.open(pdfUrl, '_blank');
+        }
+
+        function testLargeData() {
+            log('Testing large data via sessionStorage...');
+            
+            // Create large test data
+            const testData = {
+                clientInfo: {
+                    companyName: 'Test Company Large',
+                    contactName: 'Jane Doe',
+                    address: 'A very long address that makes the data larger ' + 'x'.repeat(2000)
+                }
+            };
+            
+            try {
+                sessionStorage.setItem('pdfTemplateData', JSON.stringify(testData));
+                log('Data stored in sessionStorage');
+                
+                const pdfUrl = 'saxtech_pdf_template.html?useSession=true';
+                log(`Opening: ${pdfUrl}`);
+                
+                window.open(pdfUrl, '_blank');
+            } catch (e) {
+                log('Error: ' + e.message);
+            }
+        }
+
+        function openPDFDirectly() {
+            log('Opening PDF without data...');
+            window.open('saxtech_pdf_template.html', '_blank');
+        }
+    </script>
+</body>
+</html>
