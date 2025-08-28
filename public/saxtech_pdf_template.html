@@ -1404,19 +1404,19 @@
             const finalPaybackPeriodEl = document.getElementById('finalPaybackPeriod');
             if (finalPaybackPeriodEl) finalPaybackPeriodEl.textContent = paybackPeriod;
             
-            // Calculate investment summary from ROI data
-            const year1Implementation = parseInt(implementationCost);
-            const year1Service = parseInt(monthlyServiceCost) * 12;
-            const year1Total = year1Implementation + year1Service;
-            const year1Benefits = parseInt(annualSavings);
-            const year1Net = year1Benefits - year1Total;
+            // Calculate investment summary from ROI data (using different variable names to avoid conflicts)
+            const year1ImplementationAlt = parseInt(implementationCost);
+            const year1ServiceAlt = parseInt(monthlyServiceCost) * 12;
+            const year1TotalAlt = year1ImplementationAlt + year1ServiceAlt;
+            const year1BenefitsAlt = parseInt(annualSavings);
+            const year1NetAlt = year1BenefitsAlt - year1TotalAlt;
             
             // Only try to update elements that exist
             const year1TotalInvestmentEl = document.getElementById('year1TotalInvestment');
-            if (year1TotalInvestmentEl) year1TotalInvestmentEl.textContent = year1Total.toLocaleString();
+            if (year1TotalInvestmentEl) year1TotalInvestmentEl.textContent = year1TotalAlt.toLocaleString();
             
             const year1NetSavingsEl = document.getElementById('year1NetSavings');
-            if (year1NetSavingsEl) year1NetSavingsEl.textContent = year1Net.toLocaleString();
+            if (year1NetSavingsEl) year1NetSavingsEl.textContent = year1NetAlt.toLocaleString();
             
             const partnerHoursFreedEl = document.getElementById('partnerHoursFreed');
             if (partnerHoursFreedEl) partnerHoursFreedEl.textContent = data.investmentSummary?.partnerHoursFreed || '240';
