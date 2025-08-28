@@ -3076,17 +3076,17 @@
                 tbody.appendChild(row);
             });
             
-            // Add project management (15% of total)
+            // Add project management (15% of subtotal before PM)
+            const pmCost = Math.round(totalCost * 0.15);
             const pmHours = Math.round(totalHours * 0.15);
-            const avgRate = totalHours > 0 ? totalCost / totalHours : 150;
-            const pmCost = pmHours * avgRate;
+            const avgRate = totalHours > 0 ? Math.round(totalCost / totalHours) : 150;
             
             const pmRow = document.createElement('tr');
             pmRow.innerHTML = `
                 <td>Project Management (15%)</td>
                 <td>${pmHours}</td>
-                <td>${avgRate.toFixed(0)}</td>
-                <td>${pmCost.toLocaleString()}</td>
+                <td>-</td>
+                <td>$${pmCost.toLocaleString()}</td>
                 <td></td>
             `;
             tbody.appendChild(pmRow);
@@ -3106,8 +3106,8 @@
             `;
             tbody.appendChild(totalRow);
             
-            // Update display
-            document.getElementById('displayImplementationCost').textContent = totalCost.toLocaleString();
+            // Update display - but don't override the calculated value here
+            // Let updateCalculations() handle the final display update
         }
         
         function addImplementationComponent() {
@@ -3451,12 +3451,8 @@
             document.getElementById('annualCostAuto').textContent = annualAutoCost.toFixed(0);
             document.getElementById('annualCostSaved').textContent = annualCostSaved.toFixed(0);
             
-            // Calculate implementation cost
-            let implementationCost = 0;
-            implementationComponents.forEach(comp => {
-                implementationCost += comp.hours * comp.rate;
-            });
-            implementationCost = implementationCost * 1.15; // Add 15% PM
+            // Calculate implementation cost using the centralized function
+            const implementationCost = calculateImplementationCost();
             
             // Calculate monthly service fee (including infrastructure costs)
             const monthlyServiceFee = calculateMonthlyServiceFee();
