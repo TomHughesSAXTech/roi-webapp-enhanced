@@ -764,85 +764,219 @@
         }
         
         @media print {
-            .chat-container, .config-panel, .btn-update, .btn-print, .workflow-section, .btn-add, .btn-remove, .logo-upload {
+            /* Hide non-essential elements for print */
+            .chat-container, .config-panel, .btn-update, .btn-print, .workflow-section, .btn-add, .btn-remove, .logo-upload,
+            #sopGeneratorSection, .auth-status-box, .quick-actions, .sop-tabs, .ai-model-selector, .token-calculator {
                 display: none !important;
+            }
+            
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
             
             body {
                 background: white !important;
                 padding: 0 !important;
-                font-size: 12px !important;
+                margin: 0 !important;
+                font-size: 11px !important;
+                line-height: 1.4 !important;
+                color: black !important;
             }
             
             .main-layout {
-                max-width: none !important;
+                max-width: 100% !important;
                 width: 100% !important;
+                height: auto !important;
                 flex-direction: column !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             
             .container {
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                max-width: none !important;
+                max-width: 100% !important;
                 width: 100% !important;
+                overflow: visible !important;
+                max-height: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .content {
+                padding: 15px !important;
+            }
+            
+            .header {
+                page-break-after: auto;
+                background: none !important;
+                color: black !important;
+                padding: 20px 15px !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .header h1, .header p {
+                color: black !important;
             }
             
             .section {
                 page-break-inside: avoid;
-                margin-bottom: 20px !important;
+                page-break-after: auto;
+                margin-bottom: 15px !important;
+                padding: 0 !important;
+            }
+            
+            /* Prevent widows and orphans */
+            p, li, h1, h2, h3, h4 {
+                orphans: 3;
+                widows: 3;
             }
             
             .section-title {
-                margin: 0 0 15px 0 !important;
-                font-size: 1.2em !important;
+                margin: 10px 0 10px 0 !important;
+                padding: 8px !important;
+                font-size: 1.1em !important;
+                background: #f8f9fa !important;
+                color: black !important;
+                page-break-after: avoid;
             }
             
             table {
-                font-size: 11px !important;
+                width: 100% !important;
+                font-size: 10px !important;
                 margin: 10px 0 !important;
+                page-break-inside: auto;
+                border-collapse: collapse !important;
+            }
+            
+            table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
             }
             
             th, td {
-                padding: 6px 8px !important;
+                padding: 4px 6px !important;
+                border: 1px solid #ddd !important;
+                text-align: left !important;
+            }
+            
+            th {
+                background: #f8f9fa !important;
+                color: black !important;
+                font-weight: bold !important;
+            }
+            
+            /* Better handling of large tables */
+            thead {
+                display: table-header-group;
+            }
+            
+            tbody {
+                display: table-row-group;
             }
             
             .roi-summary {
                 page-break-inside: avoid;
                 margin: 15px 0 !important;
-                padding: 20px !important;
+                padding: 15px !important;
+                background: #f8f9fa !important;
+            }
+            
+            .roi-summary * {
+                color: black !important;
             }
             
             .pricing-options {
-                display: block !important;
-            }
-            
-            .pricing-card {
-                display: inline-block !important;
-                width: 30% !important;
-                margin: 1% !important;
-                vertical-align: top;
+                display: flex !important;
+                flex-wrap: wrap !important;
                 page-break-inside: avoid;
             }
             
+            .pricing-card {
+                flex: 0 0 30% !important;
+                margin: 1% !important;
+                padding: 10px !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+            
+            .pricing-card ul {
+                margin-left: 15px !important;
+                font-size: 9px !important;
+            }
+            
             .metric-cards {
-                display: block !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                page-break-inside: avoid;
             }
             
             .metric-card {
-                display: inline-block !important;
-                width: 30% !important;
+                flex: 0 0 30% !important;
                 margin: 1% !important;
-                vertical-align: top;
+                padding: 8px !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
             }
             
-            h1 { font-size: 1.8em !important; }
-            h2 { font-size: 1.4em !important; }
-            h3 { font-size: 1.2em !important; }
+            .metric-value {
+                font-size: 1.5em !important;
+            }
+            
+            .note, .warning {
+                padding: 10px !important;
+                margin: 10px 0 !important;
+                page-break-inside: avoid;
+                border: 1px solid #ddd !important;
+            }
+            
+            .formula {
+                padding: 10px !important;
+                margin: 10px 0 !important;
+                font-size: 9px !important;
+                page-break-inside: avoid;
+            }
+            
+            h1 { font-size: 1.6em !important; page-break-after: avoid; }
+            h2 { font-size: 1.3em !important; page-break-after: avoid; }
+            h3 { font-size: 1.1em !important; page-break-after: avoid; }
+            h4 { font-size: 1em !important; page-break-after: avoid; }
+            
+            /* Prevent empty pages by avoiding unnecessary page breaks */
+            .section:last-child {
+                page-break-after: avoid !important;
+            }
+            
+            /* Hide scrollbars */
+            ::-webkit-scrollbar {
+                display: none !important;
+            }
             
             /* Force show all sections in print */
             .section, .roi-summary, .pricing-options, .metric-cards {
                 display: block !important;
                 visibility: visible !important;
+                overflow: visible !important;
+            }
+            
+            /* Logo container adjustments */
+            .logo-container {
+                width: 200px !important;
+                height: 120px !important;
+                page-break-inside: avoid;
+            }
+            
+            .logo-container img {
+                max-width: 100% !important;
+                max-height: 100% !important;
+            }
+            
+            /* Force page breaks only where really needed */
+            .section:nth-child(6), /* After section 5 */
+            .section:nth-child(9) { /* After section 8 */
+                page-break-after: always;
             }
         }
     </style>
@@ -3780,14 +3914,8 @@
                 });
             }
             
-            // Add one-time custom add-ons
-            if (Array.isArray(customAddons)) {
-                customAddons.forEach(addon => {
-                    if (addon.frequency === 'one-time') {
-                        total += addon.amount;
-                    }
-                });
-            }
+            // Do NOT include one-time custom add-ons - they are optional
+            // Add-ons should be shown separately in pricing
             
             return Math.round(total * 1.15); // Add 15% PM
         }
