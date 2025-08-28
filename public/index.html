@@ -3776,16 +3776,22 @@
         // Helper functions for calculations
         function calculateImplementationCost() {
             let total = 0;
-            implementationComponents.forEach(comp => {
-                total += comp.hours * comp.rate;
-            });
+            
+            // Ensure implementationComponents is defined and is an array
+            if (Array.isArray(implementationComponents)) {
+                implementationComponents.forEach(comp => {
+                    total += comp.hours * comp.rate;
+                });
+            }
             
             // Add one-time custom add-ons
-            customAddons.forEach(addon => {
-                if (addon.frequency === 'one-time') {
-                    total += addon.amount;
-                }
-            });
+            if (Array.isArray(customAddons)) {
+                customAddons.forEach(addon => {
+                    if (addon.frequency === 'one-time') {
+                        total += addon.amount;
+                    }
+                });
+            }
             
             return Math.round(total * 1.15); // Add 15% PM
         }
@@ -5248,7 +5254,7 @@
         }
         
         // SOW Assistant Chat Functions
-        function openSOWChat() {
+        window.openSOWChat = function() {
             const sowPanel = document.getElementById('sowChatPanel');
             sowPanel.style.display = 'block';
             
@@ -5264,11 +5270,11 @@
             addMessage('assistant', '💬 SOW Assistant opened! You can now chat about customizing your Statement of Work.');
         }
         
-        function closeSOWChat() {
+        window.closeSOWChat = function() {
             document.getElementById('sowChatPanel').style.display = 'none';
         }
         
-        function sendSOWChatMessage() {
+        window.sendSOWChatMessage = function() {
             const input = document.getElementById('sowChatInput');
             const message = input.value.trim();
             
